@@ -31,7 +31,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
-        //Prueba
+
         //Utilidades de navegacion
 
         var toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_main)
