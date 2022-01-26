@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "484909098707",
+    "project_id": "loginapp-764eb",
+    "storage_bucket": "loginapp-764eb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484909098707:android:770f8fc19c5924fb539626",
+        "android_client_info": {
+          "package_name": "com.danielmijens.loginapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484909098707-jfhe5bc0ilout6vktl0q5p5imehsp5ck.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.danielmijens.loginapp",
+            "certificate_hash": "2d18fa4a1320d6bda0e2ad8ab8b40fef90ac9bcb"
+          }
+        },
+        {
+          "client_id": "484909098707-eh65dchp6rcs9h2ga6stjisia0qptk7o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYpBAGEZqysz1j3uoe_4rZcxXE9dA08S4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484909098707-eh65dchp6rcs9h2ga6stjisia0qptk7o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
