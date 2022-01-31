@@ -45,15 +45,23 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView : NavigationView= findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
+        navigationView.bringToFront()
         navigationView.setNavigationItemSelectedListener {
-
             when (it.itemId) {
-                R.id.prueba1 -> {
-                    Snackbar.make(binding.root, "Se ha pulsado prueba1", Snackbar.LENGTH_SHORT).show()
+                R.id.verDatosUsuario -> {
+                    Snackbar.make(binding.root, "Aqui se mostraran los datos de usuario", Snackbar.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.cambiarFotoPerfil -> {
+                    Snackbar.make(binding.root, "Aqui se cambiara la foto de perfil del usuario", Snackbar.LENGTH_SHORT).show()
+                    true                }
+                R.id.logOutNav -> {
+                    logOut()
                     true
                 }
                 else -> false
             }
+
         }
         //Termino utilidades de navegacion
 
@@ -87,11 +95,11 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Snackbar.make(binding.root, "Se ha pulsado un item", Snackbar.LENGTH_SHORT).show()
         when(item.itemId) {
-            R.id.prueba1 -> Snackbar.make(binding.root, "Se ha pulsado prueba1", Snackbar.LENGTH_SHORT).show()
+            R.id.verDatosUsuario -> Snackbar.make(binding.root, "Se ha pulsado prueba1", Snackbar.LENGTH_SHORT).show()
 
-            R.id.prueba2 -> Toast.makeText(this,"Hola",Toast.LENGTH_SHORT).show()
+            R.id.cambiarFotoPerfil -> Toast.makeText(this,"Hola",Toast.LENGTH_SHORT).show()
 
-            R.id.prueba3 -> logOut()
+            R.id.logOutNav -> logOut()
 
          }
         drawer.closeDrawer(GravityCompat.START)

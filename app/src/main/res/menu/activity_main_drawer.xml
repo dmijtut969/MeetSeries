@@ -21,15 +21,15 @@
     <item android:title="menu">
         <menu>
             <item
-                android:id="@+id/prueba1"
+                android:id="@+id/verDatosUsuario"
                 android:icon="@drawable/ic_menu_camera"
                 android:title="Ver datos usuario" />
             <item
-                android:id="@+id/prueba2"
+                android:id="@+id/cambiarFotoPerfil"
                 android:icon="@drawable/ic_menu_gallery"
                 android:title="Cambiar foto de perfil" />
             <item
-                android:id="@+id/prueba3"
+                android:id="@+id/logOutNav"
                 android:icon="@drawable/ic_menu_slideshow"
                 android:title="Cerrar Sesion" />
         </menu>
