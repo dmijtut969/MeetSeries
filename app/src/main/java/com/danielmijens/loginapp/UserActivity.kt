@@ -1,20 +1,18 @@
 package com.danielmijens.loginapp
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.Gravity
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
-import android.widget.Toolbar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.AppBarMainBinding
+import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -22,12 +20,14 @@ import com.google.firebase.auth.FirebaseAuth
 class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     lateinit var binding : ActivityUserBinding
     lateinit var bindingToolbar: AppBarMainBinding
+    lateinit var bindingNavHeader : NavHeaderMainBinding
     private lateinit var drawer : DrawerLayout
     private lateinit var toggle : ActionBarDrawerToggle
-
+    lateinit var usuarioActual : UsuarioActual
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityUserBinding.inflate(layoutInflater)
         bindingToolbar = AppBarMainBinding.inflate(layoutInflater)
+        bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
@@ -65,8 +65,12 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         //Termino utilidades de navegacion
 
-        var usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
+        usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
         binding.textViewEmailUsuario.text = usuarioActual.email.toString()
+        bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
+        var email = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
+        email.setText(usuarioActual.email.toString())
+
 
         binding.buttonLogOut.setOnClickListener {
             logOut()
@@ -109,6 +113,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         toggle.syncState()
+        //bindingNavHeader.emailUsuarioNav.text = "patata"
 
     }
 
