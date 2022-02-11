@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.AppBarMainBinding
 import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
@@ -29,6 +30,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bindingToolbar = AppBarMainBinding.inflate(layoutInflater)
         bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
+
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,BlankFragment()).commit()
 
         setContentView(binding.root)
 
@@ -53,8 +56,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     true
                 }
                 R.id.cambiarFotoPerfil -> {
-                    Snackbar.make(binding.root, "Aqui se cambiara la foto de perfil del usuario", Snackbar.LENGTH_SHORT).show()
-                    true                }
+                    cambiarFragment(PruebaFragment())
+                    true
+                }
                 R.id.logOutNav -> {
                     logOut()
                     true
@@ -66,7 +70,6 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //Termino utilidades de navegacion
 
         usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
-        binding.textViewEmailUsuario.text = usuarioActual.email.toString()
         bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
         var email = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
         email.setText(usuarioActual.email.toString())
@@ -101,13 +104,17 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item.itemId) {
             R.id.verDatosUsuario -> Snackbar.make(binding.root, "Se ha pulsado prueba1", Snackbar.LENGTH_SHORT).show()
 
-            R.id.cambiarFotoPerfil -> Toast.makeText(this,"Hola",Toast.LENGTH_SHORT).show()
+            R.id.cambiarFotoPerfil -> cambiarFragment(PruebaFragment())
 
             R.id.logOutNav -> logOut()
 
          }
         drawer.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    private fun cambiarFragment(fragmentNuevo : Fragment) = supportFragmentManager.beginTransaction().apply {
+        replace(R.id.fragmentContainerView,fragmentNuevo).commit()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {

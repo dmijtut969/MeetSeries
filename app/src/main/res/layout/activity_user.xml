@@ -34,20 +34,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <ImageView
-            android:id="@+id/imageView"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            tools:srcCompat="@tools:sample/avatars" />
-
-        <TextView
-            android:id="@+id/textViewEmailUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="8"
-            android:text="TextView"
-            android:textColor="@color/white" />
+            android:layout_weight="1"
+            android:background="@android:color/holo_red_dark"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
 
         <Button
             android:id="@+id/buttonLogOut"

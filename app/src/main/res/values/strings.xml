@@ -14,4 +14,6 @@
     <string name="menu_slideshow">Slideshow</string>
     <string name="default_web_client_id_string" translatable="false">484909098707-eh65dchp6rcs9h2ga6stjisia0qptk7o.apps.googleusercontent.com</string>
     <string name="emailUsuarioActualString"> </string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
