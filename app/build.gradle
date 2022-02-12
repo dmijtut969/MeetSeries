@@ -69,6 +69,11 @@ dependencies {
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
 
+    //Recyclerview
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // For control over item selection of both touch and mouse driven selection
+    implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
+
 }
 
 apply plugin: 'com.google.gms.google-services'

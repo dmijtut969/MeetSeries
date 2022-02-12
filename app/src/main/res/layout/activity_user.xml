@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#011933"
+
     android:id="@+id/drawer_layout"
     tools:context=".UserActivity"
     tools:openDrawer="start">
@@ -40,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/holo_red_dark"
+            android:background="@drawable/fondo_gradiante"
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />
 

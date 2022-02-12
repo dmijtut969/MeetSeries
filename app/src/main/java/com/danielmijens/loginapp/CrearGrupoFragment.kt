@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.FragmentCrearGrupoBinding
+import com.google.android.material.snackbar.Snackbar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,7 +36,13 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonCrearGrupo.setOnClickListener {
-            Consultas.crearGrupo(usuarioActual,binding.nombreGrupoTextView.text.toString(),binding.editTextDescripcionGrupo.text.toString())
+            if(Consultas.crearGrupo(usuarioActual
+                ,binding.editTextNombreGrupo.text.toString()
+                ,binding.editTextDescripcionGrupo.text.toString())) {
+                Snackbar.make(binding.root, "Se ha creado el grupo", Snackbar.LENGTH_SHORT).show()
+            }else {
+                Snackbar.make(binding.root, "No se ha creado el grupo", Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
 

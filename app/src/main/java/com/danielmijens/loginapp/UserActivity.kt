@@ -31,7 +31,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,CrearGrupoFragment(usuarioActual)).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(usuarioActual)).commit()
 
         setContentView(binding.root)
 
@@ -53,6 +53,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             when (it.itemId) {
                 R.id.nav_mis_grupos -> {
                     Snackbar.make(binding.root, "Aqui se mostraran los grupos del usuario", Snackbar.LENGTH_SHORT).show()
+                    cambiarFragment(MisGruposFragment(usuarioActual))
                     drawer.closeDrawer(GravityCompat.START)
                     true
                 }
@@ -72,7 +73,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     true
                 }
                 R.id.nav_cambiarFotoPerfil -> {
-                    cambiarFragment(PruebaFragment())
+                    Consultas.consultaGruposCreadosPorUsuario(usuarioActual)
                     drawer.closeDrawer(GravityCompat.START)
                     true
                 }
@@ -112,16 +113,6 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        Snackbar.make(binding.root, "Se ha pulsado un item", Snackbar.LENGTH_SHORT).show()
-        when(item.itemId) {
-            R.id.nav_verDatosUsuario -> Snackbar.make(binding.root, "Se ha pulsado prueba1", Snackbar.LENGTH_SHORT).show()
-
-            R.id.nav_cambiarFotoPerfil -> cambiarFragment(PruebaFragment())
-
-            R.id.nav_logOut -> logOut()
-
-         }
-
         return true
     }
 
