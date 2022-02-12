@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#011933"
+    android:background="@drawable/fondo_login"
     tools:context=".AuthActivity">
 
     <LinearLayout
         android:id="@+id/authLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
+        android:background="#81101010"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,6 +20,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="10dp"
             android:layout_weight="2"
             android:orientation="vertical"
             android:visibility="visible">
@@ -30,7 +31,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:visibility="visible"
-                app:srcCompat="@drawable/splash" />
+                app:srcCompat="@drawable/auth_logo" />
 
             <EditText
                 android:id="@+id/editTextEmail"
@@ -60,6 +61,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="7"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonIniciarSesion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="#01454E"
+                android:text="Iniciar Sesion"
+                android:textColor="#D3D3D3"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/googleButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:drawableRight="@drawable/logo_google" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
             android:layout_weight="7"
             android:orientation="horizontal">
 
@@ -74,39 +104,7 @@
                 android:textColor="#D3D3D3"
                 android:textSize="14sp" />
 
-            <Button
-                android:id="@+id/buttonIniciarSesion"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:background="#01454E"
-                android:text="Iniciar Sesion"
-                android:textColor="#D3D3D3"
-                android:textSize="14sp" />
-
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="7"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/googleButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#00FFFFFF"
-                android:drawableStart="@drawable/logo_google"
-                android:paddingLeft="70dp" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="8" />
 
     </LinearLayout>
 

@@ -5,31 +5,31 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/nav_mis_grupos"
             android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:title="@string/menu_mis_grupos" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_buscar_grupos"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:title="@string/menu_buscar_grupos" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_crear_grupo"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:title="@string/menu_crear_grupo" />
     </group>
 
     <item android:title="menu">
         <menu>
             <item
-                android:id="@+id/verDatosUsuario"
+                android:id="@+id/nav_verDatosUsuario"
                 android:icon="@drawable/ic_menu_camera"
                 android:title="Ver datos usuario" />
             <item
-                android:id="@+id/cambiarFotoPerfil"
+                android:id="@+id/nav_cambiarFotoPerfil"
                 android:icon="@drawable/ic_menu_gallery"
                 android:title="Cambiar foto de perfil" />
             <item
-                android:id="@+id/logOutNav"
+                android:id="@+id/nav_logOut"
                 android:icon="@drawable/ic_menu_slideshow"
                 android:title="Cerrar Sesion" />
         </menu>

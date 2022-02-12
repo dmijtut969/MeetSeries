@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -31,7 +30,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
 
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,BlankFragment()).commit()
+        usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,CrearGrupoFragment(usuarioActual)).commit()
 
         setContentView(binding.root)
 
@@ -51,15 +51,32 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.bringToFront()
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
-                R.id.verDatosUsuario -> {
+                R.id.nav_mis_grupos -> {
+                    Snackbar.make(binding.root, "Aqui se mostraran los grupos del usuario", Snackbar.LENGTH_SHORT).show()
+                    drawer.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.nav_buscar_grupos -> {
+                    Snackbar.make(binding.root, "Aqui se podran buscar grupos", Snackbar.LENGTH_SHORT).show()
+                    drawer.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.nav_crear_grupo -> {
+                    cambiarFragment(CrearGrupoFragment(usuarioActual))
+                    drawer.closeDrawer(GravityCompat.START)
+                    true
+                }
+                R.id.nav_verDatosUsuario -> {
                     Snackbar.make(binding.root, "Aqui se mostraran los datos de usuario", Snackbar.LENGTH_SHORT).show()
+                    drawer.closeDrawer(GravityCompat.START)
                     true
                 }
-                R.id.cambiarFotoPerfil -> {
+                R.id.nav_cambiarFotoPerfil -> {
                     cambiarFragment(PruebaFragment())
+                    drawer.closeDrawer(GravityCompat.START)
                     true
                 }
-                R.id.logOutNav -> {
+                R.id.nav_logOut -> {
                     logOut()
                     true
                 }
@@ -69,15 +86,10 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         //Termino utilidades de navegacion
 
-        usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
+
         bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
         var email = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
         email.setText(usuarioActual.email.toString())
-
-
-        binding.buttonLogOut.setOnClickListener {
-            logOut()
-        }
 
         //Guardado de datos
 
@@ -102,14 +114,14 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Snackbar.make(binding.root, "Se ha pulsado un item", Snackbar.LENGTH_SHORT).show()
         when(item.itemId) {
-            R.id.verDatosUsuario -> Snackbar.make(binding.root, "Se ha pulsado prueba1", Snackbar.LENGTH_SHORT).show()
+            R.id.nav_verDatosUsuario -> Snackbar.make(binding.root, "Se ha pulsado prueba1", Snackbar.LENGTH_SHORT).show()
 
-            R.id.cambiarFotoPerfil -> cambiarFragment(PruebaFragment())
+            R.id.nav_cambiarFotoPerfil -> cambiarFragment(PruebaFragment())
 
-            R.id.logOutNav -> logOut()
+            R.id.nav_logOut -> logOut()
 
          }
-        drawer.closeDrawer(GravityCompat.START)
+
         return true
     }
 

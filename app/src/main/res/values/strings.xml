@@ -9,9 +9,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_mis_grupos">Mis grupos</string>
+    <string name="menu_buscar_grupos">Busqueda de grupos</string>
+    <string name="menu_crear_grupo">Crear grupos</string>
     <string name="default_web_client_id_string" translatable="false">484909098707-eh65dchp6rcs9h2ga6stjisia0qptk7o.apps.googleusercontent.com</string>
     <string name="emailUsuarioActualString"> </string>
     <!-- TODO: Remove or change this placeholder text -->
