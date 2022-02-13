@@ -21,7 +21,7 @@ class Consultas() {
                 "descripcionGrupo" to descripcionGrupo,
                 "participantes" to usuarioActual.email.toString())
             var todoCorrecto = true
-            mFirestore.collection("grupos").add(mapaGrupo).addOnCompleteListener { task ->
+            mFirestore.collection("Grupos").add(mapaGrupo).addOnCompleteListener { task ->
                 if (task.isCanceled) {
                     todoCorrecto = false
                 }
@@ -29,29 +29,6 @@ class Consultas() {
             return todoCorrecto
         }
 
-        fun consultaGruposCreadosPorUsuario (usuarioActual: UsuarioActual) {
-            val gruposCreadores : Query = mFirestore.collection("grupos").whereEqualTo("creador",usuarioActual.email)
-            listaGruposEncontrados.removeAll(listaGruposEncontrados)
-            var lista = ArrayList<Grupo>()
-            gruposCreadores.get().addOnSuccessListener { grupos ->
-                for (grupo in grupos) {
-                    var grupoEncontrado = grupo.data.get("nombreGrupo")
-                    Log.d(TAG,"Nombre: ${grupoEncontrado.toString()}")
-                    lista.add(Grupo(grupoEncontrado.toString(),0))
-                }
-                Log.d(TAG, "Lista de grupos encontrados : $lista")
-                sacarListaEncontrada(lista)
-
-            }
-
-        }
-
-        fun sacarListaEncontrada (listaEncontrada :  ArrayList<Grupo>) : ArrayList<Grupo> {
-            listaGruposEncontrados.removeAll(listaGruposEncontrados)
-            listaGruposEncontrados.addAll(listaEncontrada)
-            Log.d(TAG,"Lista en funciona sacarListaEncontrada: ${listaGruposEncontrados}")
-            return listaGruposEncontrados
-        }
 
     }
 

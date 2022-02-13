@@ -1,5 +1,6 @@
 package com.danielmijens.loginapp
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
+import com.google.firebase.firestore.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -23,34 +25,59 @@ private const val ARG_PARAM2 = "param2"
 class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
     private lateinit var binding : FragmentMisGruposBinding
-    private var listaGrupos : ArrayList<Grupo> = ArrayList()
+    private lateinit var listaGrupos : ArrayList<Grupo>
+    private lateinit var  adapter : AdapterMisGrupos
+    private lateinit var db : FirebaseFirestore
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = FragmentMisGruposBinding.inflate(layoutInflater)
+        var recyclerView = binding.misGruposRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
 
+        listaGrupos = arrayListOf()
+        adapter = AdapterMisGrupos(binding,listaGrupos)
+
+        recyclerView.adapter = adapter
+
+        eventChangeListener()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMisGruposBinding.inflate(layoutInflater)
-        binding.misGruposRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        var adapter : AdapterMisGrupos = AdapterMisGrupos(binding,listaGrupos)
-
-        binding.misGruposRecyclerView.adapter = adapter
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        crearListaGrupos()
-    }
+    private fun eventChangeListener() {
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos").whereEqualTo("creador",usuarioActual.email)
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                @SuppressLint("LongLogTag")
+                override fun onEvent(
+                    value: QuerySnapshot?,
+                    error: FirebaseFirestoreException?
+                ) {
+                    if (error != null) {
+                        Log.e("Firestore Error",error.message.toString())
+                        return
+                    }
+                    Log.d("Value del document ", value!!.documents.toString())
+                    for (dc : DocumentChange in value?.documentChanges!!) {
+                        Log.d("Contadorrrr", dc.document.toString())
+                        if (dc.type == DocumentChange.Type.ADDED) {
+                            listaGrupos.add(dc.document.toObject(Grupo::class.java))
+                            Log.d("Eventchangelistener documento : ", dc.document.toString())
+                        }
+                    }
+                    Log.d("Eventchangelistener lista : ", listaGrupos.toString())
 
-    fun crearListaGrupos() {
-        Consultas.consultaGruposCreadosPorUsuario(usuarioActual)
-        Log.d(TAG,"Lista en fragment : ${Consultas.listaGruposEncontrados}")
-        listaGrupos.addAll(Consultas.listaGruposEncontrados)
+                    adapter.notifyDataSetChanged()
+                }
+
+            })
     }
 }

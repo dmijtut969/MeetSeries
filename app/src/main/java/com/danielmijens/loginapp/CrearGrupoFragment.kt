@@ -23,6 +23,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
     private lateinit var binding : FragmentCrearGrupoBinding
     private lateinit var bindingActivity : ActivityUserBinding
+    private var userActivity = UserActivity()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +40,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
             if(Consultas.crearGrupo(usuarioActual
                 ,binding.editTextNombreGrupo.text.toString()
                 ,binding.editTextDescripcionGrupo.text.toString())) {
+
                 Snackbar.make(binding.root, "Se ha creado el grupo", Snackbar.LENGTH_SHORT).show()
             }else {
                 Snackbar.make(binding.root, "No se ha creado el grupo", Snackbar.LENGTH_SHORT).show()

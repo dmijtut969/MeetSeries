@@ -73,7 +73,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     true
                 }
                 R.id.nav_cambiarFotoPerfil -> {
-                    Consultas.consultaGruposCreadosPorUsuario(usuarioActual)
+
                     drawer.closeDrawer(GravityCompat.START)
                     true
                 }
@@ -116,7 +116,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private fun cambiarFragment(fragmentNuevo : Fragment) = supportFragmentManager.beginTransaction().apply {
+    fun cambiarFragment(fragmentNuevo : Fragment) = supportFragmentManager.beginTransaction().apply {
         replace(R.id.fragmentContainerView,fragmentNuevo).commit()
     }
 
