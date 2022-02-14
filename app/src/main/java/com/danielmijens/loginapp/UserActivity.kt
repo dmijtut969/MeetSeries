@@ -144,6 +144,10 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         cambiarFragment(MisGruposFragment(usuarioActual))
     }
 
+    override fun onBuscarClick(campo: String, valorABuscar: String) {
+        cambiarFragment(BusquedaFragment(usuarioActual,campo,valorABuscar))
+    }
+
     override fun actualizarRecyclerMisGrupos() {
         cambiarFragment(MisGruposFragment(usuarioActual))
     }

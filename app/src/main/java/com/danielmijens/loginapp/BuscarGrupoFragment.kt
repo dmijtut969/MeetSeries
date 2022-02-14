@@ -1,5 +1,6 @@
 package com.danielmijens.loginapp
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -21,6 +22,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class BuscarGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
+    private lateinit var listener : OnFragmentListener
     private lateinit var binding : FragmentBuscarGrupoBinding
     private lateinit var bindingActivity : ActivityUserBinding
     private var userActivity = UserActivity()
@@ -37,15 +39,22 @@ class BuscarGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonBusquedaNombreGrupos.setOnClickListener {
-
+            listener.onBuscarClick("nombreGrupo",binding.editTextBusquedaNombreGrupo.text.toString())
         }
 
-        binding.buttonBusquedaNombreGrupos.setOnClickListener {
-
+        binding.buttonBusquedaCategoria.setOnClickListener {
+            listener.onBuscarClick("categoriaGrupo",binding.editTextBusquedaCategoria.text.toString())
         }
 
-        binding.buttonBusquedaNombreGrupos.setOnClickListener {
+        binding.editTextBusquedaParticipantes.setOnClickListener {
+            listener.onBuscarClick("participantes",binding.editTextBusquedaParticipantes.text.toString())
+        }
+    }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentListener) {
+            listener = context
         }
     }
 
