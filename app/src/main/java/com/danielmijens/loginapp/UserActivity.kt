@@ -17,7 +17,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
-class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,OnFragmentListener {
     lateinit var binding : ActivityUserBinding
     lateinit var bindingToolbar: AppBarMainBinding
     lateinit var bindingNavHeader : NavHeaderMainBinding
@@ -52,34 +52,34 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_mis_grupos -> {
-                    Snackbar.make(binding.root, "Aqui se mostraran los grupos del usuario", Snackbar.LENGTH_SHORT).show()
                     cambiarFragment(MisGruposFragment(usuarioActual))
                     drawer.closeDrawer(GravityCompat.START)
-                    true
+                    false
                 }
                 R.id.nav_buscar_grupos -> {
                     Snackbar.make(binding.root, "Aqui se podran buscar grupos", Snackbar.LENGTH_SHORT).show()
+                    cambiarFragment(BuscarGrupoFragment(usuarioActual))
                     drawer.closeDrawer(GravityCompat.START)
-                    true
+                    false
                 }
                 R.id.nav_crear_grupo -> {
                     cambiarFragment(CrearGrupoFragment(usuarioActual))
                     drawer.closeDrawer(GravityCompat.START)
-                    true
+                    false
                 }
                 R.id.nav_verDatosUsuario -> {
                     Snackbar.make(binding.root, "Aqui se mostraran los datos de usuario", Snackbar.LENGTH_SHORT).show()
                     drawer.closeDrawer(GravityCompat.START)
-                    true
+                    false
                 }
                 R.id.nav_cambiarFotoPerfil -> {
 
                     drawer.closeDrawer(GravityCompat.START)
-                    true
+                    false
                 }
                 R.id.nav_logOut -> {
                     logOut()
-                    true
+                    false
                 }
                 else -> false
             }
@@ -113,7 +113,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        return true
+        return false
     }
 
     fun cambiarFragment(fragmentNuevo : Fragment) = supportFragmentManager.beginTransaction().apply {
@@ -133,10 +133,20 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
         if (toggle.onOptionsItemSelected(item)) {
             return true
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onCrearGrupoClick() {
+        cambiarFragment(MisGruposFragment(usuarioActual))
+    }
+
+    override fun actualizarRecyclerMisGrupos() {
+        cambiarFragment(MisGruposFragment(usuarioActual))
+    }
+
 
 }

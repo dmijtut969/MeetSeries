@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="backgroundApp">#011933</color>
+    <color name="hintColor">#00F6FF</color>
 </resources>

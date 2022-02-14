@@ -1,13 +1,8 @@
 package com.danielmijens.loginapp
 
-import android.content.ContentValues.TAG
-import android.content.Context
+import android.annotation.SuppressLint
 import android.util.Log
-import com.danielmijens.loginapp.databinding.ActivityUserBinding
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import java.util.*
+import com.google.firebase.firestore.*
 import kotlin.collections.ArrayList
 
 class Consultas() {
@@ -15,9 +10,15 @@ class Consultas() {
     companion object {
         var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
         var listaGruposEncontrados = ArrayList<Grupo>()
-        fun  crearGrupo(usuarioActual: UsuarioActual,nombreGrupo : String,descripcionGrupo : String) : Boolean{
+        fun  crearGrupo(
+            usuarioActual: UsuarioActual,
+            nombreGrupo: String,
+            categoriaGrupo: String,
+            descripcionGrupo: String
+        ) : Boolean{
             var mapaGrupo : Map<String,String> = mapOf("creador" to usuarioActual.email.toString(),
                 "nombreGrupo" to nombreGrupo,
+                "categoriaGrupo" to categoriaGrupo,
                 "descripcionGrupo" to descripcionGrupo,
                 "participantes" to usuarioActual.email.toString())
             var todoCorrecto = true
@@ -27,6 +28,34 @@ class Consultas() {
                 }
             }
             return todoCorrecto
+        }
+
+        fun borrarGrupo (usuarioActual: UsuarioActual,
+                         nombreGrupo: String) {
+            mFirestore.collection("Grupos").whereEqualTo("creador",usuarioActual.email).whereEqualTo("nombreGrupo",nombreGrupo)
+                .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                    @SuppressLint("LongLogTag")
+                    override fun onEvent(
+                        value: QuerySnapshot?,
+                        error: FirebaseFirestoreException?
+                    ) {
+                        if (error != null) {
+                            Log.e("Firestore Error",error.message.toString())
+                            return
+                        }
+                        for (dc : DocumentChange in value?.documentChanges!!) {
+                            if (dc.type == DocumentChange.Type.ADDED) {
+                                mFirestore.collection("Grupos").document(dc.document.id).delete()
+
+                                Log.d("Se ha borrado", dc.document.id.toString())
+                            }
+                        }
+
+                    }
+
+                })
+
+
         }
 
 

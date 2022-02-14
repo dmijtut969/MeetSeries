@@ -2,6 +2,7 @@ package com.danielmijens.loginapp
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -28,6 +29,7 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
     private lateinit var listaGrupos : ArrayList<Grupo>
     private lateinit var  adapter : AdapterMisGrupos
     private lateinit var db : FirebaseFirestore
+    private lateinit var listener : OnFragmentListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentMisGruposBinding.inflate(layoutInflater)
@@ -36,10 +38,14 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         listaGrupos = arrayListOf()
-        adapter = AdapterMisGrupos(binding,listaGrupos)
+        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this)
 
         recyclerView.adapter = adapter
 
+    }
+
+    override fun onStart() {
+        super.onStart()
         eventChangeListener()
     }
 
@@ -79,5 +85,16 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
                 }
 
             })
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentListener) {
+            listener = context
+        }
+    }
+
+    fun refrescarRecycler() {
+        listener.actualizarRecyclerMisGrupos()
     }
 }
