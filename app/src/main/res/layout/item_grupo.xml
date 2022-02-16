@@ -5,22 +5,42 @@
     android:layout_width="match_parent"
     android:layout_height="100dp"
     android:layout_margin="5dp"
-    android:background="@drawable/fondo_gradiante">
+    android:background="@drawable/fondo_gradiante_blanca">
 
-    <ImageView
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/logoDelGrupoImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        app:srcCompat="@drawable/auth_logo" />
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animacion_item_grupo" />
 
-    <TextView
-        android:id="@+id/nombreItemGrupoTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textColor="@color/white"
-        android:textSize="24sp" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nombreItemGrupoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/categoriaItemGrupoTextView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
 </LinearLayout>

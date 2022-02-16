@@ -135,7 +135,7 @@ class AuthActivity : AppCompatActivity() {
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 Snackbar.make(binding.root, "Se ha registrado el usuario", Snackbar.LENGTH_SHORT).show()
-            }else {
+            }else{
                 Snackbar.make(binding.root, "No se ha podido registrar el usuario", Snackbar.LENGTH_SHORT).show()
             }
         }

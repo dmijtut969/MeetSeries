@@ -1,6 +1,8 @@
 package com.danielmijens.loginapp
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -38,17 +40,42 @@ class BuscarGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.buttonInfo1.setOnClickListener {
+            showAlert("Info Nombre Grupo","Se buscaran los grupos que contengan el nombre del parametro indicado.")
+        }
+
         binding.buttonBusquedaNombreGrupos.setOnClickListener {
             listener.onBuscarClick("nombreGrupo",binding.editTextBusquedaNombreGrupo.text.toString())
+        }
+
+        binding.buttonInfo2.setOnClickListener {
+            showAlert("Info Categoria","Se buscaran los grupos que contengan la categoria del parametro indicado.")
         }
 
         binding.buttonBusquedaCategoria.setOnClickListener {
             listener.onBuscarClick("categoriaGrupo",binding.editTextBusquedaCategoria.text.toString())
         }
 
-        binding.editTextBusquedaParticipantes.setOnClickListener {
+        binding.buttonInfo3.setOnClickListener {
+            showAlert("Info Nombre Grupo","Se buscaran los grupos que contengan el participante del parametro indicado.")
+        }
+
+        binding.buttonBusquedaParticipantes.setOnClickListener {
             listener.onBuscarClick("participantes",binding.editTextBusquedaParticipantes.text.toString())
         }
+    }
+
+    private fun showAlert(tittle : String,message : String) {
+        AlertDialog.Builder(this.context)
+            .setTitle(tittle)
+            .setMessage(message)
+            .setPositiveButton(android.R.string.ok,
+                DialogInterface.OnClickListener { dialog, which ->
+
+                })
+
+            .show()
     }
 
     override fun onAttach(context: Context) {

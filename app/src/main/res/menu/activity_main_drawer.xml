@@ -4,21 +4,25 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_mis_grupos"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_mis_grupos" />
-        <item
-            android:id="@+id/nav_buscar_grupos"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_buscar_grupos" />
-        <item
-            android:id="@+id/nav_crear_grupo"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_crear_grupo" />
+        <item android:title="Grupos">
+            <menu>
+                <item
+                    android:id="@+id/nav_mis_grupos"
+                    android:icon="@drawable/ic_menu_camera"
+                    android:title="@string/menu_mis_grupos" />
+                <item
+                    android:id="@+id/nav_buscar_grupos"
+                    android:icon="@drawable/ic_menu_gallery"
+                    android:title="@string/menu_buscar_grupos" />
+                <item
+                    android:id="@+id/nav_crear_grupo"
+                    android:icon="@drawable/ic_menu_slideshow"
+                    android:title="@string/menu_crear_grupo" />
+            </menu>
+        </item>
     </group>
 
-    <item android:title="menu">
+    <item android:title="Datos del usuario">
         <menu>
             <item
                 android:id="@+id/nav_verDatosUsuario"

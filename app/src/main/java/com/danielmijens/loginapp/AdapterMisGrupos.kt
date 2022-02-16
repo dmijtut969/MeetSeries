@@ -25,7 +25,7 @@ class AdapterMisGrupos(var binding: FragmentMisGruposBinding
     override fun onBindViewHolder(holder: AdapterMisGruposViewHolder, position: Int) {
         val grupo : Grupo = listaGrupos[position]
         holder.binding.nombreItemGrupoTextView.text = grupo.nombreGrupo
-        holder.binding.logoDelGrupoImageView.setImageResource(0)
+        holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
 
         holder.binding.itemGrupoLinearLayout.setOnLongClickListener() {
             showDialogAlertSimple(grupo)

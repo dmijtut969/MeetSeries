@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_header"
     android:layout_width="match_parent"
     android:layout_height="200dp"
@@ -9,23 +10,26 @@
     android:foreground="?attr/selectableItemBackgroundBorderless"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    >
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <ImageView
-        android:id="@+id/imagenPerfilUsuario"
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animationView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:src="@drawable/splash" />
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animacion_among_us" />
 
     <TextView
         android:id="@+id/emailUsuarioNav"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="5"
-        android:text="patata" />
+        android:background="#97078C72"
+        android:text="Email del usuario"
+        android:textAlignment="center"
+        android:textSize="20sp" />
 
 
 </LinearLayout>

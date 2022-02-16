@@ -25,7 +25,7 @@ class AdapterBusqueda(var binding: FragmentBusquedaBinding
     override fun onBindViewHolder(holder: AdapterBusquedaViewHolder, position: Int) {
         val grupo : Grupo = listaGruposBusqueda[position]
         holder.binding.nombreItemGrupoTextView.text = grupo.nombreGrupo
-        holder.binding.logoDelGrupoImageView.setImageResource(0)
+        holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
 
         holder.binding.itemGrupoLinearLayout.setOnLongClickListener() {
             showDialogAlertSimple(grupo)

@@ -33,10 +33,21 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
 
+                <Button
+                    android:id="@+id/buttonInfo1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:background="@drawable/boton_circular"
+                    android:text="Info"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
                 <EditText
                     android:id="@+id/editTextBusquedaNombreGrupo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:ems="10"
                     android:hint="Nombre del grupo..."
                     android:inputType="textPersonName"
@@ -47,8 +58,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:text="Buscar" />
+                    android:layout_weight="3"
+                    android:text="Buscar"
+                    android:textSize="8sp" />
 
             </LinearLayout>
 
@@ -60,10 +72,21 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
 
+                <Button
+                    android:id="@+id/buttonInfo2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:background="@drawable/boton_circular"
+                    android:text="Info"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
                 <EditText
                     android:id="@+id/editTextBusquedaCategoria"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:ems="10"
                     android:hint="Categoria..."
                     android:inputType="textPersonName"
@@ -74,8 +97,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:text="Buscar" />
+                    android:layout_weight="3"
+                    android:text="Buscar"
+                    android:textSize="8sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -86,10 +110,21 @@
                 android:paddingTop="5dp"
                 android:paddingBottom="5dp">
 
+                <Button
+                    android:id="@+id/buttonInfo3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:background="@drawable/boton_circular"
+                    android:text="Info"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
+
                 <EditText
                     android:id="@+id/editTextBusquedaParticipantes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:ems="10"
                     android:hint="Participantes..."
                     android:inputType="textPersonName"
@@ -100,8 +135,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:text="Buscar" />
+                    android:layout_weight="3"
+                    android:text="Buscar"
+                    android:textSize="8sp" />
             </LinearLayout>
 
         </LinearLayout>
