@@ -2,6 +2,7 @@ package com.danielmijens.loginapp
 
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -32,7 +33,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class ElegirCategoriaFragment(var usuarioActual: UsuarioActual,var nuevoNombreGrupo: String, var nuevaDescripcionGrupo: String) : Fragment(),SearchView.OnQueryTextListener {
     // TODO: Rename and change types of parameters
-    private lateinit var binding : FragmentElegirCategoriaBinding
+    lateinit var binding : FragmentElegirCategoriaBinding
     private lateinit var adapter : AdapterElegirCategoria
     private val categoriasImages = mutableListOf<String>()
     private val categoriasTitulos = mutableListOf<String>()
@@ -98,6 +99,8 @@ class ElegirCategoriaFragment(var usuarioActual: UsuarioActual,var nuevoNombreGr
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrEmpty()) {
+            binding.animationViewEsperando.visibility = View.GONE
+            binding.recyclerViewCategorias.visibility = View.VISIBLE
             searchByCategoria(query.lowercase())
         }
         return true

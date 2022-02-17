@@ -3,6 +3,7 @@ package com.danielmijens.loginapp
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.ItemSerieBinding
@@ -54,6 +55,8 @@ class AdapterElegirCategoria(
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
                     Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,categoriaElegida)
+                    elegirCategoriaFragment.binding.recyclerViewCategorias.visibility = View.GONE
+                    elegirCategoriaFragment.binding.animationViewEsperando.visibility = View.VISIBLE
                     elegirCategoriaFragment.listener.onElegirCategoria()
                 })
             .setNegativeButton(android.R.string.cancel,

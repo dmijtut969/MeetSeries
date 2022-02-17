@@ -97,6 +97,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
         Picasso.get().load(FirebaseAuth.getInstance().currentUser?.photoUrl.toString()).into(foto)
 
+
         //Guardado de datos
 
         val prefs = traerPrefs().edit()
@@ -154,6 +155,10 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCrearGrupoClick(nuevoNombreGrupo : String,nuevaDescripcionGrupo : String) {
         cambiarFragment(ElegirCategoriaFragment(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo))
+    }
+
+    override fun onElegirGrupoClick(usuarioActual: UsuarioActual) {
+        cambiarFragment(GrupoElegidoFragment(usuarioActual))
     }
 
     override fun onElegirCategoria() {

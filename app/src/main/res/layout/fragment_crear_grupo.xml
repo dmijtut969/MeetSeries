@@ -40,6 +40,7 @@
                 android:ems="10"
                 android:hint="Nombre del grupo..."
                 android:inputType="textPersonName"
+                android:textColor="@color/white"
                 android:textColorHint="@color/hintColor" />
 
             <TextView
@@ -57,6 +58,7 @@
                 android:ems="10"
                 android:hint="Descripcion del grupo"
                 android:inputType="textPersonName"
+                android:textColor="@color/white"
                 android:textColorHint="@color/hintColor" />
 
             <Button

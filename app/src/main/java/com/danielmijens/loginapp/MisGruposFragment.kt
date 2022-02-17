@@ -29,7 +29,7 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
     private lateinit var listaGrupos : ArrayList<Grupo>
     private lateinit var  adapter : AdapterMisGrupos
     private lateinit var db : FirebaseFirestore
-    private lateinit var listener : OnFragmentListener
+    lateinit var listener : OnFragmentListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentMisGruposBinding.inflate(layoutInflater)

@@ -27,6 +27,11 @@ class AdapterMisGrupos(var binding: FragmentMisGruposBinding
         holder.binding.nombreItemGrupoTextView.text = grupo.nombreGrupo
         holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
 
+        holder.binding.itemGrupoLinearLayout.setOnClickListener() {
+            misGruposFragment.listener.onElegirGrupoClick(usuarioActual)
+            true
+        }
+
         holder.binding.itemGrupoLinearLayout.setOnLongClickListener() {
             showDialogAlertSimple(grupo)
             true
