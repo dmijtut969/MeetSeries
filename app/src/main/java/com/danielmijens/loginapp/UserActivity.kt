@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -16,6 +17,8 @@ import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.squareup.picasso.Picasso
+import java.security.Provider
 
 class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,OnFragmentListener {
     lateinit var binding : ActivityUserBinding
@@ -92,6 +95,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         var email = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
         email.setText(usuarioActual.email.toString())
 
+        var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
+        Picasso.get().load(FirebaseAuth.getInstance().currentUser?.photoUrl.toString()).into(foto)
+
         //Guardado de datos
 
         val prefs = getSharedPreferences(getString(R.string.prefs_file),
@@ -141,7 +147,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onCrearGrupoClick() {
-        cambiarFragment(MisGruposFragment(usuarioActual))
+        //cambiarFragment(MisGruposFragment(usuarioActual))
+        cambiarFragment(ElegirCategoriaFragment())
     }
 
     override fun onBuscarClick(campo: String, valorABuscar: String) {
