@@ -1,6 +1,6 @@
 package com.danielmijens.loginapp
 
-import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -18,7 +18,6 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
-import java.security.Provider
 
 class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,OnFragmentListener {
     lateinit var binding : ActivityUserBinding
@@ -100,10 +99,17 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         //Guardado de datos
 
-        val prefs = getSharedPreferences(getString(R.string.prefs_file),
-            Context.MODE_PRIVATE).edit()
-        prefs.putString("emailUsuarioActual",usuarioActual.email)
-        prefs.apply()
+        val prefs = traerPrefs().edit()
+        prefs?.putString("emailUsuarioActual", usuarioActual.email)
+        prefs?.apply()
+    }
+
+    fun traerPrefs(): SharedPreferences{
+        val prefs = getSharedPreferences(
+            getString(R.string.prefs_file),
+            MODE_PRIVATE
+        )
+        return prefs
     }
 
     private fun logOut() {
@@ -146,9 +152,12 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCrearGrupoClick() {
-        //cambiarFragment(MisGruposFragment(usuarioActual))
-        cambiarFragment(ElegirCategoriaFragment())
+    override fun onCrearGrupoClick(nuevoNombreGrupo : String,nuevaDescripcionGrupo : String) {
+        cambiarFragment(ElegirCategoriaFragment(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo))
+    }
+
+    override fun onElegirCategoria() {
+        cambiarFragment(MisGruposFragment(usuarioActual))
     }
 
     override fun onBuscarClick(campo: String, valorABuscar: String) {

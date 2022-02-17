@@ -43,23 +43,6 @@
                 android:textColorHint="@color/hintColor" />
 
             <TextView
-                android:id="@+id/categoriaTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categoría"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/editTextCategoria"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Categoria..."
-                android:inputType="textPersonName"
-                android:textColorHint="@color/hintColor" />
-
-            <TextView
                 android:id="@+id/descripcionGrupoTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -1,5 +1,6 @@
 package com.danielmijens.loginapp
 
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.util.Log
@@ -29,12 +30,13 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ElegirCategoriaFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ElegirCategoriaFragment : Fragment(),SearchView.OnQueryTextListener {
+class ElegirCategoriaFragment(var usuarioActual: UsuarioActual,var nuevoNombreGrupo: String, var nuevaDescripcionGrupo: String) : Fragment(),SearchView.OnQueryTextListener {
     // TODO: Rename and change types of parameters
     private lateinit var binding : FragmentElegirCategoriaBinding
     private lateinit var adapter : AdapterElegirCategoria
     private val categoriasImages = mutableListOf<String>()
     private val categoriasTitulos = mutableListOf<String>()
+    lateinit var listener : OnFragmentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +46,7 @@ class ElegirCategoriaFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     private fun initRecyclerView() {
-        adapter = AdapterElegirCategoria(categoriasImages,categoriasTitulos)
+        adapter = AdapterElegirCategoria(categoriasImages,categoriasTitulos,this,nuevoNombreGrupo,nuevaDescripcionGrupo,usuarioActual)
         binding.recyclerViewCategorias.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewCategorias.adapter = adapter
 
@@ -57,6 +59,7 @@ class ElegirCategoriaFragment : Fragment(),SearchView.OnQueryTextListener {
         // Inflate the layout for this fragment
         return binding.root
     }
+
 
     private fun getRetrofit():Retrofit  {
         return Retrofit.Builder()
@@ -102,5 +105,12 @@ class ElegirCategoriaFragment : Fragment(),SearchView.OnQueryTextListener {
 
     override fun onQueryTextChange(newText: String?): Boolean {
         return true
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentListener) {
+            listener = context
+        }
     }
 }

@@ -27,7 +27,7 @@ class AdapterBusqueda(var binding: FragmentBusquedaBinding
         holder.binding.nombreItemGrupoTextView.text = grupo.nombreGrupo
         holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
 
-        holder.binding.itemGrupoLinearLayout.setOnLongClickListener() {
+        holder.binding.itemGrupoLinearLayout.setOnClickListener {
             showDialogAlertSimple(grupo)
             true
         }

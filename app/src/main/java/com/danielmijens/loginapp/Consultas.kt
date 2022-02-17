@@ -9,12 +9,12 @@ class Consultas() {
 
     companion object {
         var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
-        var listaGruposEncontrados = ArrayList<Grupo>()
+
         fun  crearGrupo(
             usuarioActual: UsuarioActual,
             nombreGrupo: String,
-            categoriaGrupo: String,
-            descripcionGrupo: String
+            descripcionGrupo: String,
+            categoriaGrupo: String
         ) : Boolean{
             var mapaGrupo : Map<String,String> = mapOf("creador" to usuarioActual.email.toString(),
                 "nombreGrupo" to nombreGrupo,

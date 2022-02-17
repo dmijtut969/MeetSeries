@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.FragmentCrearGrupoBinding
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.auth.User
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,15 +40,11 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonCrearGrupo.setOnClickListener {
-            if(Consultas.crearGrupo(usuarioActual
-                ,binding.editTextNombreGrupo.text.toString()
-                ,binding.editTextCategoria.text.toString()
-                ,binding.editTextDescripcionGrupo.text.toString())) {
-                    listener.onCrearGrupoClick()
-                Snackbar.make(binding.root, "Se ha creado el grupo", Snackbar.LENGTH_SHORT).show()
-            }else {
-                Snackbar.make(binding.root, "No se ha creado el grupo", Snackbar.LENGTH_SHORT).show()
-            }
+
+            var nuevoNombreGrupo = binding.editTextNombreGrupo.text.toString()
+            var nuevaDescripcionGrupo = binding.editTextDescripcionGrupo.text.toString()
+            listener.onCrearGrupoClick(nuevoNombreGrupo,nuevaDescripcionGrupo)
+
         }
     }
 
