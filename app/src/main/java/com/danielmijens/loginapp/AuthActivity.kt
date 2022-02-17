@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
 import com.danielmijens.loginapp.databinding.ActivityAuthBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -26,7 +27,8 @@ class AuthActivity : AppCompatActivity() {
         binding = ActivityAuthBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
-        binding.imageView2.setImageResource(R.drawable.auth_logo)
+        binding.imageView2.setImageResource(R.drawable.splash)
+        binding.googleButton.setImageResource(R.drawable.logo_google)
         mAuth = FirebaseAuth.getInstance()
 
 
@@ -83,6 +85,14 @@ class AuthActivity : AppCompatActivity() {
            googleClient.signOut()
            startActivityForResult(googleClient.signInIntent,GOOGLE_SIGN_IN)
        }
+
+        binding.animationView.setOnClickListener {
+            if (binding.animationView.isAnimating ){
+                binding.animationView.pauseAnimation()
+            }else {
+                binding.animationView.playAnimation()
+            }
+        }
 
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_login"
+    android:background="@drawable/fondo_login_xml"
     tools:context=".AuthActivity">
 
     <LinearLayout
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
-            android:layout_weight="2"
+            android:layout_weight="4"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -31,13 +31,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:visibility="visible"
-                app:srcCompat="@drawable/auth_logo" />
+                app:srcCompat="@drawable/splash" />
 
             <EditText
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:backgroundTint="#735FD4"
                 android:ems="10"
                 android:hint="Email..."
@@ -49,7 +49,7 @@
                 android:id="@+id/editTextTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="5"
+                android:layout_weight="3"
                 android:backgroundTint="#735FD4"
                 android:ems="10"
                 android:hint="Password..."
@@ -67,22 +67,22 @@
 
             <Button
                 android:id="@+id/buttonIniciarSesion"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
+                android:layout_weight="10"
                 android:background="#01454E"
                 android:text="Iniciar Sesion"
                 android:textColor="#D3D3D3"
                 android:textSize="14sp" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/googleButton"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="#00FFFFFF"
-                android:drawableRight="@drawable/logo_google" />
+                android:background="@drawable/boton_goggle_circular"
+                app:srcCompat="@drawable/logo_google" />
 
         </LinearLayout>
 
@@ -105,6 +105,15 @@
                 android:textSize="14sp" />
 
         </LinearLayout>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="6"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/animacion_among_us" />
 
     </LinearLayout>
 
