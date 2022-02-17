@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">LoginApp</string>
+    <string name="app_name">MeetSeries</string>
     <string name="prefs_file">com.danielmijens.loginapp.PREFERENCE_FILE_KEY</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

@@ -1,9 +1,8 @@
 package com.danielmijens.loginapp
 
-import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
-import android.content.Context.INPUT_SERVICE
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,10 +10,8 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.databinding.FragmentElegirCategoriaBinding
-import com.squareup.okhttp.Dispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,6 +34,7 @@ class ElegirCategoriaFragment : Fragment(),SearchView.OnQueryTextListener {
     private lateinit var binding : FragmentElegirCategoriaBinding
     private lateinit var adapter : AdapterElegirCategoria
     private val categoriasImages = mutableListOf<String>()
+    private val categoriasTitulos = mutableListOf<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +44,7 @@ class ElegirCategoriaFragment : Fragment(),SearchView.OnQueryTextListener {
     }
 
     private fun initRecyclerView() {
-        adapter = AdapterElegirCategoria(categoriasImages)
+        adapter = AdapterElegirCategoria(categoriasImages,categoriasTitulos)
         binding.recyclerViewCategorias.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewCategorias.adapter = adapter
 
@@ -62,20 +60,25 @@ class ElegirCategoriaFragment : Fragment(),SearchView.OnQueryTextListener {
 
     private fun getRetrofit():Retrofit  {
         return Retrofit.Builder()
-            .baseUrl("https://dog.ceo/api/breed/")
+            .baseUrl("https://api.jikan.moe/v4/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
 
     private fun searchByCategoria(query : String) {
         CoroutineScope(Dispatchers.IO).launch {
-            var call : Response<CategoriaResponse> = getRetrofit().create(ApiService::class.java).getCategoriaPorNombre("$query/images")
+            Log.d("Entro en coroutine","Entro en coroutine")
+            var call : Response<CategoriaResponse> = getRetrofit().create(ApiService::class.java).getCategoriaPorNombre("anime?q=$query")
+            Log.d("Paso call en coroutine","Paso call en coroutine")
             val categorias = call.body()
             activity?.runOnUiThread {
                 if(call.isSuccessful) {
-                    val images = categorias?.animes ?: emptyList()
                     categoriasImages.clear()
-                    categoriasImages.addAll(images)
+                    categorias?.dataAnime?.forEach {
+                        data ->
+                        categoriasImages.add(data.images.webp.image_url)
+                        categoriasTitulos.add(data.title)
+                    }
                     adapter.notifyDataSetChanged()
                 }else {
                     Toast.makeText(context,"Ha ocurrido un error",Toast.LENGTH_SHORT).show()

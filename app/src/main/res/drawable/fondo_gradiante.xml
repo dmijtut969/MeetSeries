@@ -6,4 +6,5 @@
         android:endColor="#3b9188"
         android:startColor="#3b9188"
         android:type="linear" />
+    <stroke android:color="@color/black" android:width="2dp"></stroke>
 </shape>

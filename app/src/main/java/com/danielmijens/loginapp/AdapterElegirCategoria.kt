@@ -3,11 +3,13 @@ package com.danielmijens.loginapp
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.danielmijens.loginapp.databinding.ItemGrupoBinding
 import com.danielmijens.loginapp.databinding.ItemSerieBinding
 import com.squareup.picasso.Picasso
 
-class AdapterElegirCategoria(val categorias: List<String>) :
+class AdapterElegirCategoria(
+    val categoriasImagenes: MutableList<String>,
+    val categoriasTitulos: MutableList<String>
+) :
     RecyclerView.Adapter<AdapterElegirCategoria.AdapterElegirCategoriaViewHolder>() {
     class AdapterElegirCategoriaViewHolder (val binding: ItemSerieBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -22,11 +24,13 @@ class AdapterElegirCategoria(val categorias: List<String>) :
     }
 
     override fun onBindViewHolder(holder: AdapterElegirCategoriaViewHolder, position: Int) {
-        val categoriaSerie : String = categorias[position]
-        Picasso.get().load(categoriaSerie).into(holder.binding.imageViewSerie)
+        val categoriaImagen : String = categoriasImagenes[position]
+        val categoriaTitulo : String = categoriasTitulos[position]
+        Picasso.get().load(categoriaImagen).into(holder.binding.imageViewSerie)
+        holder.binding.textViewNombreSerie.text = categoriaTitulo
     }
 
     override fun getItemCount(): Int {
-       return categorias.size
+       return categoriasImagenes.size
     }
 }
