@@ -1,5 +1,7 @@
 package com.danielmijens.loginapp
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -24,6 +26,19 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentGrupoElegidoBinding.inflate(layoutInflater)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.imageButton.setOnClickListener {
+            AlertDialog.Builder(this.context)
+                .setTitle("Aqui se podran enviar mensajes entre usuarios del grupo")
+                .setMessage("Por implementar...")
+                .setPositiveButton(android.R.string.ok,
+                    DialogInterface.OnClickListener { dialog, which ->
+
+                    }).show()
+        }
     }
 
     override fun onCreateView(

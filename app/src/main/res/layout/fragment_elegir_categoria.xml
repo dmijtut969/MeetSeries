@@ -14,11 +14,12 @@
             android:id="@+id/searchViewCategoria"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintVertical_bias="0"
+            android:background="@drawable/fondo_gradiante"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0">
 
         </androidx.appcompat.widget.SearchView>
 
@@ -31,15 +32,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/searchViewCategoria" />
+
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animationViewEsperando"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="6"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:lottie_autoPlay="true"
             app:lottie_loop="true"
             app:lottie_rawRes="@raw/animacion_esperando_busqueda" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:text="Busque una categoria de anime"
+            android:textAlignment="center"
+            android:textColor="@color/hintColor"
+            android:textSize="30dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

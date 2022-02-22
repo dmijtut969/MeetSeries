@@ -8,15 +8,15 @@
             <menu>
                 <item
                     android:id="@+id/nav_mis_grupos"
-                    android:icon="@drawable/ic_menu_camera"
+                    android:icon="@mipmap/icono_mis_grupos"
                     android:title="@string/menu_mis_grupos" />
                 <item
                     android:id="@+id/nav_buscar_grupos"
-                    android:icon="@drawable/ic_menu_gallery"
+                    android:icon="@mipmap/icono_lupa"
                     android:title="@string/menu_buscar_grupos" />
                 <item
                     android:id="@+id/nav_crear_grupo"
-                    android:icon="@drawable/ic_menu_slideshow"
+                    android:icon="@mipmap/icono_lapiz"
                     android:title="@string/menu_crear_grupo" />
             </menu>
         </item>
@@ -26,15 +26,15 @@
         <menu>
             <item
                 android:id="@+id/nav_verDatosUsuario"
-                android:icon="@drawable/ic_menu_camera"
+                android:icon="@mipmap/icono_ver_perfil"
                 android:title="Ver datos usuario" />
             <item
                 android:id="@+id/nav_cambiarFotoPerfil"
-                android:icon="@drawable/ic_menu_gallery"
-                android:title="Cambiar foto de perfil" />
+                android:icon="@mipmap/icono_cambiar_perfil"
+                android:title="Cambiar datos del perfil" />
             <item
                 android:id="@+id/nav_logOut"
-                android:icon="@drawable/ic_menu_slideshow"
+                android:icon="@mipmap/icono_logout"
                 android:title="Cerrar Sesion" />
         </menu>
     </item>

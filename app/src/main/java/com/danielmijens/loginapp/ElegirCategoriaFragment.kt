@@ -100,6 +100,7 @@ class ElegirCategoriaFragment(var usuarioActual: UsuarioActual,var nuevoNombreGr
     override fun onQueryTextSubmit(query: String?): Boolean {
         if (!query.isNullOrEmpty()) {
             binding.animationViewEsperando.visibility = View.GONE
+            binding.textView.visibility = View.GONE
             binding.recyclerViewCategorias.visibility = View.VISIBLE
             searchByCategoria(query.lowercase())
         }
