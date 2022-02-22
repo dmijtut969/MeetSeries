@@ -30,6 +30,7 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
     private lateinit var  adapter : AdapterMisGrupos
     private lateinit var db : FirebaseFirestore
     lateinit var listener : OnFragmentListener
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentMisGruposBinding.inflate(layoutInflater)
@@ -53,8 +54,6 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-
         return binding.root
     }
 
