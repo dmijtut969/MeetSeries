@@ -7,15 +7,6 @@
     android:layout_margin="5dp"
     android:background="@drawable/fondo_gradiante_blanca">
 
-    <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/logoDelGrupoImageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        app:lottie_autoPlay="true"
-        app:lottie_loop="true"
-        app:lottie_rawRes="@raw/animacion_item_grupo" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,5 +33,14 @@
             android:textColor="@color/white"
             android:textSize="20sp" />
     </LinearLayout>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/logoDelGrupoImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/animacion_item_grupo" />
 
 </LinearLayout>

@@ -35,7 +35,12 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
         adapter = AdapterBusqueda(binding,listaGruposBusqueda,usuarioActual,this)
 
         recyclerView.adapter = adapter
-        eventChangeListener(campo,valorABuscar)
+        if (!valorABuscar.isNullOrEmpty()) { //Con esto permitimos que si no se busca nada, se traigan todos los grupos existentes.
+            eventChangeListener(campo,valorABuscar)
+        }else {
+            eventChangeListenerTodos()
+        }
+
     }
 
     override fun onStart() {
@@ -74,7 +79,36 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
                         }
                     }
                     Log.d("Valor a buscar : ", valorABuscar?.toString())
-                    Log.d("Eventchangelistener lista patata : ", listaGruposBusqueda.toString())
+                    Log.d("Eventchangelistener lista : ", listaGruposBusqueda.toString())
+
+                    adapter.notifyDataSetChanged()
+                }
+
+            })
+    }
+    private fun eventChangeListenerTodos() {
+        db = FirebaseFirestore.getInstance()
+        db.collection("Grupos")
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                @SuppressLint("LongLogTag")
+                override fun onEvent(
+                    value: QuerySnapshot?,
+                    error: FirebaseFirestoreException?
+                ) {
+                    if (error != null) {
+                        Log.e("Firestore Error",error.message.toString())
+                        return
+                    }
+                    Log.d("Value del document ", value!!.documents.toString())
+                    for (dc : DocumentChange in value?.documentChanges!!) {
+                        Log.d("Contadorrrr", dc.document.toString())
+                        if (dc.type == DocumentChange.Type.ADDED) {
+                            listaGruposBusqueda.add(dc.document.toObject(Grupo::class.java))
+                            Log.d("Eventchangelistener documento : ", dc.document.toString())
+                        }
+                    }
+                    Log.d("Valor a buscar : ", valorABuscar?.toString())
+                    Log.d("Eventchangelistener lista : ", listaGruposBusqueda.toString())
 
                     adapter.notifyDataSetChanged()
                 }

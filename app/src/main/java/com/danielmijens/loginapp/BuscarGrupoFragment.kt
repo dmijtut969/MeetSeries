@@ -27,7 +27,6 @@ class BuscarGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     private lateinit var listener : OnFragmentListener
     private lateinit var binding : FragmentBuscarGrupoBinding
     private lateinit var bindingActivity : ActivityUserBinding
-    private var userActivity = UserActivity()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,7 +41,7 @@ class BuscarGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.buttonInfo1.setOnClickListener {
-            showAlert("Info Nombre Grupo","Se buscaran los grupos que contengan el nombre del parametro indicado.")
+            showAlert("Info Nombre Grupo","Se buscaran los grupos que contengan el nombre del parametro indicado. Se diferencian mayusculas y minusculas.")
         }
 
         binding.buttonBusquedaNombreGrupos.setOnClickListener {
@@ -50,7 +49,7 @@ class BuscarGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
         }
 
         binding.buttonInfo2.setOnClickListener {
-            showAlert("Info Categoria","Se buscaran los grupos que contengan la categoria del parametro indicado.")
+            showAlert("Info Categoria","Se buscaran los grupos que contengan la categoria del parametro indicado. Se diferencian mayusculas y minusculas.")
         }
 
         binding.buttonBusquedaCategoria.setOnClickListener {
@@ -58,7 +57,7 @@ class BuscarGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
         }
 
         binding.buttonInfo3.setOnClickListener {
-            showAlert("Info Nombre Grupo","Se buscaran los grupos que contengan el participante del parametro indicado.")
+            showAlert("Info Nombre Grupo","Se buscaran los grupos que contengan el participante del parametro indicado. Se diferencian mayusculas y minusculas.")
         }
 
         binding.buttonBusquedaParticipantes.setOnClickListener {

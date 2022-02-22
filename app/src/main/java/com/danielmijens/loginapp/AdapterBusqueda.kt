@@ -42,7 +42,7 @@ class AdapterBusqueda(var binding: FragmentBusquedaBinding
 
     fun showDialogAlertSimple(grupo: Grupo) {
         AlertDialog.Builder(busquedaFragment.context)
-            .setTitle("Ha elegido un grupo")
+            .setTitle("Ha elegido un grupo para unirse")
             .setMessage("¿Esta seguro?")
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
