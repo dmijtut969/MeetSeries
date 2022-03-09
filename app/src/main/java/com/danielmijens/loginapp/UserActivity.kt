@@ -74,7 +74,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_cambiarFotoPerfil -> {
-                    Snackbar.make(binding.root, "Se implementara en un futuro", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, "Se implementara en un futuro ", Snackbar.LENGTH_SHORT).show()
                     false
                 }
                 R.id.nav_logOut -> {
@@ -93,7 +93,13 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         email.setText(usuarioActual.email.toString())
 
         var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
-        Picasso.get().load(FirebaseAuth.getInstance().currentUser?.photoUrl.toString()).into(foto)
+        if (FirebaseAuth.getInstance().currentUser?.photoUrl==null) {
+            Snackbar.make(binding.root, "No tiene foto", Snackbar.LENGTH_SHORT).show()
+            Picasso.get().load(R.drawable.icono_meet).into(foto)
+        }else {
+            Picasso.get().load(FirebaseAuth.getInstance().currentUser?.photoUrl.toString()).into(foto)
+        }
+
 
 
         //Guardado de datos

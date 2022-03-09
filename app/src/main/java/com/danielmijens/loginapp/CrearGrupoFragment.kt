@@ -1,6 +1,8 @@
 package com.danielmijens.loginapp
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -40,12 +42,27 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonCrearGrupo.setOnClickListener {
-
             var nuevoNombreGrupo = binding.editTextNombreGrupo.text.toString()
             var nuevaDescripcionGrupo = binding.editTextDescripcionGrupo.text.toString()
-            listener.onCrearGrupoClick(nuevoNombreGrupo,nuevaDescripcionGrupo)
+            if(nuevoNombreGrupo.isNullOrEmpty()) { //La descripcion si puede estar vacia.
+                showAlert()
+            }else {
+                listener.onCrearGrupoClick(nuevoNombreGrupo,nuevaDescripcionGrupo)
+            }
+
+
 
         }
+    }
+
+    fun showAlert() {
+        AlertDialog.Builder(this.context)
+            .setTitle("No puede crear el grupo.")
+            .setMessage("El campo nombre de grupo esta vacio.")
+            .setPositiveButton(android.R.string.ok,
+                DialogInterface.OnClickListener { dialog, which ->
+
+                }).show()
     }
 
     override fun onAttach(context: Context) {
