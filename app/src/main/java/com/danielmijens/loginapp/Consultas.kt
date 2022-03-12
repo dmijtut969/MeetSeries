@@ -27,6 +27,7 @@ class Consultas() {
                     todoCorrecto = false
                 }
             }
+
             return todoCorrecto
         }
 
