@@ -4,17 +4,7 @@ import android.annotation.SuppressLint
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.android.awaitFrame
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.*
-import kotlin.collections.ArrayList
 
 class Consultas() {
 
@@ -92,6 +82,18 @@ class Consultas() {
 
             Log.d("Existe fuera!", existe.toString())
             return existe
+        }
+
+        suspend fun sacarMensajesDeGrupo(grupoElegido: Grupo): MutableList<Mensaje> {
+            var listaMensajes = mutableListOf<Mensaje>()
+            mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+                .collection("Mensajes").get().addOnSuccessListener { grupos ->
+                    for (grupo in grupos) {
+                        listaMensajes.add(grupo.toObject(Mensaje::class.java))
+                    }
+                }.await()
+            Log.d("ListaMensajes: ", listaMensajes.toString())
+            return listaMensajes
         }
     }
 

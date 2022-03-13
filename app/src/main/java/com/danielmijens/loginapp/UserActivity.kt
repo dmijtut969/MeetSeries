@@ -161,8 +161,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         cambiarFragment(ElegirCategoriaFragment(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo))
     }
 
-    override fun onElegirGrupoClick(usuarioActual: UsuarioActual) {
-        cambiarFragment(GrupoElegidoFragment(usuarioActual))
+    override fun onElegirGrupoClick(usuarioActual: UsuarioActual, grupoElegido: Grupo) {
+        cambiarFragment(GrupoElegidoFragment(usuarioActual,grupoElegido))
     }
 
     override fun onElegirCategoria() {
