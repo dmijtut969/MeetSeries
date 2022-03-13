@@ -54,10 +54,16 @@ class AdapterElegirCategoria(
             .setMessage(categoriaElegida)
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
-                    Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,categoriaElegida)
-                    elegirCategoriaFragment.binding.recyclerViewCategorias.visibility = View.GONE
-                    elegirCategoriaFragment.binding.animationViewEsperando.visibility = View.VISIBLE
-                    elegirCategoriaFragment.listener.onElegirCategoria()
+                    if (Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,categoriaElegida)) {
+                        elegirCategoriaFragment.binding.recyclerViewCategorias.visibility = View.GONE
+                        elegirCategoriaFragment.binding.animationViewEsperando.visibility = View.VISIBLE
+                        elegirCategoriaFragment.listener.onElegirCategoria()
+                    }else {
+                        AlertDialog.Builder(elegirCategoriaFragment.context)
+                            .setTitle("Ya has creado un grupo con ese nombre")
+                            .setMessage("Cambia el nombre del grupo").setPositiveButton(android.R.string.ok,DialogInterface.OnClickListener { dialog, which ->
+                            }).show()
+                    }
                 })
             .setNegativeButton(android.R.string.cancel,
                 DialogInterface.OnClickListener { dialog, which ->

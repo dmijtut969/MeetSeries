@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
+import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,10 +24,19 @@ private const val ARG_PARAM2 = "param2"
 class GrupoElegidoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var binding : FragmentGrupoElegidoBinding
+    private lateinit var adapter : AdapterGrupoElegido
+    private var listaMensajes = mutableListOf<Mensaje>(Mensaje(usuarioActual.email.toString(),"Me añado siempre", null))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentGrupoElegidoBinding.inflate(layoutInflater)
+        var recyclerView = binding.mensajesRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+
+        adapter = AdapterGrupoElegido(binding,listaMensajes,usuarioActual,this)
+
+        recyclerView.adapter = adapter
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

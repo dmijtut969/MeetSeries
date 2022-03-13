@@ -12,6 +12,10 @@ import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.FragmentCrearGrupoBinding
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.auth.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,23 +46,32 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonCrearGrupo.setOnClickListener {
-            var nuevoNombreGrupo = binding.editTextNombreGrupo.text.toString()
-            var nuevaDescripcionGrupo = binding.editTextDescripcionGrupo.text.toString()
-            if(nuevoNombreGrupo.isNullOrEmpty()) { //La descripcion si puede estar vacia.
-                showAlert()
-            }else {
-                listener.onCrearGrupoClick(nuevoNombreGrupo,nuevaDescripcionGrupo)
-            }
-
-
-
+            comprobarGrupo()
         }
     }
 
-    fun showAlert() {
+    private fun comprobarGrupo() {
+        var nuevoNombreGrupo = binding.editTextNombreGrupo.text.toString()
+        var nuevaDescripcionGrupo = binding.editTextDescripcionGrupo.text.toString()
+        GlobalScope.launch(Dispatchers.IO) {
+            if (nuevoNombreGrupo.isNullOrEmpty()) { //La descripcion si puede estar vacia.
+                withContext(Dispatchers.Main) {
+                showAlert("No puede crear el grupo.", "El campo nombre de grupo esta vacio.")
+                }
+            } else if (Consultas.existeGrupoPorID(nuevoNombreGrupo + " - " + usuarioActual.email.toString())) {
+                withContext(Dispatchers.Main) {
+                    showAlert("Ya has creado un grupo con ese nombre.", "Cambie el nombre del grupo.")
+                }
+            } else {
+                listener.onCrearGrupoClick(nuevoNombreGrupo, nuevaDescripcionGrupo)
+            }
+        }
+    }
+
+    fun showAlert(titulo : String, mensaje : String) {
         AlertDialog.Builder(this.context)
-            .setTitle("No puede crear el grupo.")
-            .setMessage("El campo nombre de grupo esta vacio.")
+            .setTitle(titulo)
+            .setMessage(mensaje)
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
 

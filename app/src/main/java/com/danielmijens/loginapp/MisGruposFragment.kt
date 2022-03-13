@@ -47,6 +47,7 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
     override fun onStart() {
         super.onStart()
+        listaGrupos.clear()
         eventChangeListener()
     }
 
