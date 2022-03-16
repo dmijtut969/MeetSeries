@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/fondo_gradiante_blanca"
+            android:background="@drawable/fondo_login"
             tools:listitem="@layout/item_mensaje" />
 
         <LinearLayout

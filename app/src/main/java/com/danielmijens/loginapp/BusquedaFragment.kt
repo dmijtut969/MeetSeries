@@ -23,7 +23,7 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
     private lateinit var listaGruposBusqueda : ArrayList<Grupo>
     private lateinit var  adapter : AdapterBusqueda
     private lateinit var db : FirebaseFirestore
-    private lateinit var listener : OnFragmentListener
+    lateinit var listener : OnFragmentListener
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentBusquedaBinding.inflate(layoutInflater)

@@ -60,7 +60,7 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
     private fun eventChangeListener() {
         db = FirebaseFirestore.getInstance()
-        db.collection("Grupos").whereEqualTo("creador",usuarioActual.email)
+        db.collection("Grupos").whereArrayContains("listaParticipantes",usuarioActual.email)
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 @SuppressLint("LongLogTag")
                 override fun onEvent(

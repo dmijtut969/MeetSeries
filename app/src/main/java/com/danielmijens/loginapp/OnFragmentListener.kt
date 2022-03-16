@@ -5,5 +5,7 @@ interface OnFragmentListener {
     fun onElegirGrupoClick(usuarioActual: UsuarioActual, grupo: Grupo)
     fun onElegirCategoria()
     fun onBuscarClick(campo : String,valorABuscar : String)
+    fun onVerMisGruposClick()
     fun actualizarRecyclerMisGrupos()
+
 }

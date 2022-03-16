@@ -7,6 +7,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.FragmentBusquedaBinding
 import com.danielmijens.loginapp.databinding.ItemGrupoBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AdapterBusqueda(var binding: FragmentBusquedaBinding
                       , var listaGruposBusqueda : ArrayList<Grupo>
@@ -41,18 +44,21 @@ class AdapterBusqueda(var binding: FragmentBusquedaBinding
     }
 
     fun showDialogAlertSimple(grupo: Grupo) {
-        AlertDialog.Builder(busquedaFragment.context)
-            .setTitle("Ha elegido un grupo para unirse")
-            .setMessage("¿Esta seguro?")
-            .setPositiveButton(android.R.string.ok,
-                DialogInterface.OnClickListener { dialog, which ->
+            AlertDialog.Builder(busquedaFragment.context)
+                .setTitle("Ha elegido el grupo grupo para unirse")
+                .setMessage("¿Esta seguro?")
+                .setPositiveButton(android.R.string.ok,
+                    DialogInterface.OnClickListener { dialog, which ->
+                        GlobalScope.launch(Dispatchers.IO) {
+                            Consultas.unirseAGrupo(usuarioActual, grupo)
+                            busquedaFragment.listener.onVerMisGruposClick()
+                        }
+                    })
+                .setNegativeButton(android.R.string.cancel,
+                    DialogInterface.OnClickListener { dialog, which ->
 
-                })
-            .setNegativeButton(android.R.string.cancel,
-                DialogInterface.OnClickListener { dialog, which ->
-
-                })
-            .show()
+                    })
+                .show()
     }
 
     override fun getItemCount(): Int {

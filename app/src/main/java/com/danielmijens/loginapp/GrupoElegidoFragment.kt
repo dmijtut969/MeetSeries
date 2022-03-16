@@ -1,8 +1,6 @@
 package com.danielmijens.loginapp
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,13 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.w3c.dom.DocumentType
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,26 +37,33 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
         super.onCreate(savedInstanceState)
         binding = FragmentGrupoElegidoBinding.inflate(layoutInflater)
         var recyclerView = binding.mensajesRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.setHasFixedSize(true)
+
+        var linearLayout = LinearLayoutManager(context)
+        linearLayout.orientation = LinearLayoutManager.VERTICAL
+        //linearLayout.stackFromEnd = true
+        recyclerView.layoutManager = linearLayout
+        //recyclerView.setHasFixedSize(true)
 
         adapter = AdapterGrupoElegido(binding,listaMensajes,usuarioActual,this)
 
         recyclerView.adapter = adapter
 
-        leerMensajesListener()
+
+        leerMensajesListener(recyclerView)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageButton.setOnClickListener {
-            AlertDialog.Builder(this.context)
-                .setTitle("Aqui se podran enviar mensajes entre usuarios del grupo")
-                .setMessage("Por implementar...")
-                .setPositiveButton(android.R.string.ok,
-                    DialogInterface.OnClickListener { dialog, which ->
-
-                    }).show()
+            GlobalScope.launch(Dispatchers.IO) {
+                var mensajeNuevo = binding.editTextMensajeNuevo.text.trim().toString()
+                if (mensajeNuevo != "") {
+                    Consultas.enviarMensajeAGrupo(mensajeNuevo,grupoElegido,usuarioActual)
+                }
+                withContext(Dispatchers.Main) {
+                    binding.editTextMensajeNuevo.setText("")
+                }
+            }
         }
     }
 
@@ -77,9 +82,12 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
         return binding.root
     }
 
-    fun leerMensajesListener() {
+
+
+    fun leerMensajesListener(recyclerView: RecyclerView ?= null) {
+        listaMensajes.clear()
         mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-            .collection("Mensajes")//.orderBy("hora",Query.Direction.ASCENDING)
+            .collection("Mensajes").orderBy("hora",Query.Direction.ASCENDING)
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
                     if (error != null ) {
@@ -89,15 +97,14 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
                     for (cambioMensaje in value?.documentChanges!!) {
                         if (cambioMensaje.type == DocumentChange.Type.ADDED) {
                             listaMensajes.add(cambioMensaje.document.toObject(Mensaje::class.java))
-                            adapter.notifyItemInserted(1)
+                            adapter.notifyItemInserted(listaMensajes.size)
                         }
 
                     }
-                    Log.d("Se ha cambiado algo", "Ha habido un cambio")
-
+                    Log.d("Se ha cambiado", "Ha habido un cambio en los mensajes")
                 }
-
             })
+        //recyclerView?.scrollToPosition(0)
     }
 
 }

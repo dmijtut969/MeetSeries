@@ -5,6 +5,8 @@ import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import kotlinx.coroutines.tasks.await
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Consultas() {
 
@@ -28,7 +30,7 @@ class Consultas() {
                     todoCorrecto = false
                 }
             }
-            grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",null)).addOnCompleteListener { task ->
+            grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",Calendar.getInstance().time.toString())).addOnCompleteListener { task ->
                 if (task.isCanceled) {
                     todoCorrecto = false
                 }
@@ -71,6 +73,21 @@ class Consultas() {
             return grupoBuscado
         }
 
+        suspend fun unirseAGrupo(usuarioActual: UsuarioActual,grupoElegido: Grupo) {
+            val docRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            val listaParticipantes = mutableListOf<String>()
+            docRef.get().addOnSuccessListener { grupo ->
+                    var objetoGrupo = grupo.toObject(Grupo::class.java)
+                if (objetoGrupo != null) {
+                        listaParticipantes.addAll(objetoGrupo.listaParticipantes!!)
+                }else {
+                    Log.e("Error: ", "No se encuentra el grupo")
+                }
+            }.await()
+            listaParticipantes.add(usuarioActual.email)
+            docRef.update("listaParticipantes",listaParticipantes).await()
+        }
+
         suspend fun existeGrupoPorID (idGrupo : String) : Boolean {
             var existe : Boolean = false
             val docRef = mFirestore.collection("Grupos").document(idGrupo)
@@ -94,6 +111,16 @@ class Consultas() {
                 }.await()
             Log.d("ListaMensajes: ", listaMensajes.toString())
             return listaMensajes
+        }
+
+
+        suspend fun enviarMensajeAGrupo(mensajeEnviado : String, grupoElegido : Grupo,usuarioEmisor : UsuarioActual) {
+            var formato = SimpleDateFormat("HH:mm:ss")
+            var hora = formato.format(Date())
+            var mensajeAEnviar = Mensaje(usuarioEmisor.email,mensajeEnviado, hora)
+            mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+                .collection("Mensajes").add(mensajeAEnviar).await()
+            Log.d("Enviarmensaje ", "Se ha enviado el mensaje : " + mensajeEnviado)
         }
     }
 
