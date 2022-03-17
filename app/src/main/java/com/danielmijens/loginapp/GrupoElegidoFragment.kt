@@ -2,6 +2,7 @@ package com.danielmijens.loginapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -50,28 +51,28 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
 
 
         leerMensajesListener(recyclerView)
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageButton.setOnClickListener {
-            GlobalScope.launch(Dispatchers.IO) {
                 var mensajeNuevo = binding.editTextMensajeNuevo.text.trim().toString()
-                if (mensajeNuevo != "") {
-                    Consultas.enviarMensajeAGrupo(mensajeNuevo,grupoElegido,usuarioActual)
+                GlobalScope.launch(Dispatchers.IO) {
+                    if (mensajeNuevo != "") {
+                        Consultas.enviarMensajeAGrupo(mensajeNuevo,grupoElegido,usuarioActual)
+                    }
+                    withContext(Dispatchers.Main) {
+                        binding.editTextMensajeNuevo.setText("")
+                    }
                 }
-                withContext(Dispatchers.Main) {
-                    binding.editTextMensajeNuevo.setText("")
-                }
-            }
         }
+
     }
 
     @SuppressLint("LongLogTag")
     override fun onStart() {
         super.onStart()
-
-
     }
 
     override fun onCreateView(
@@ -84,7 +85,8 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
 
 
 
-    fun leerMensajesListener(recyclerView: RecyclerView ?= null) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun leerMensajesListener(recyclerView: RecyclerView) {
         listaMensajes.clear()
         mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             .collection("Mensajes").orderBy("hora",Query.Direction.ASCENDING)
@@ -96,15 +98,17 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
                     }
                     for (cambioMensaje in value?.documentChanges!!) {
                         if (cambioMensaje.type == DocumentChange.Type.ADDED) {
-                            listaMensajes.add(cambioMensaje.document.toObject(Mensaje::class.java))
+                            listaMensajes.add(cambioMensaje.document.toObject(Mensaje::class.java)).await()
                             adapter.notifyItemInserted(listaMensajes.size)
                         }
-
                     }
                     Log.d("Se ha cambiado", "Ha habido un cambio en los mensajes")
-                }
+                        recyclerView.smoothScrollToPosition(listaMensajes.size)
+                    }
             })
-        //recyclerView?.scrollToPosition(0)
+
+            recyclerView.adapter?.notifyDataSetChanged()
+
     }
 
 }
