@@ -98,7 +98,7 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
                     }
                     for (cambioMensaje in value?.documentChanges!!) {
                         if (cambioMensaje.type == DocumentChange.Type.ADDED) {
-                            listaMensajes.add(cambioMensaje.document.toObject(Mensaje::class.java)).await()
+                            listaMensajes.add(cambioMensaje.document.toObject(Mensaje::class.java))
                             adapter.notifyItemInserted(listaMensajes.size)
                         }
                     }
