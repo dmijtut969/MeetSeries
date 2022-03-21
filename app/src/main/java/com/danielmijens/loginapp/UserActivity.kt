@@ -70,7 +70,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_verDatosUsuario -> {
-                    Snackbar.make(binding.root, "Se implementara en un futuro", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(binding.root, "Pruebas", Snackbar.LENGTH_SHORT).show()
+                    cambiarFragment(VerVideoFragment(usuarioActual))
+                    drawer.closeDrawer(GravityCompat.START)
                     false
                 }
                 R.id.nav_cambiarFotoPerfil -> {

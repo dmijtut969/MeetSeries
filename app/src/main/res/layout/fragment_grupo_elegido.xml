@@ -4,22 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/fondo_login"
     tools:context=".GrupoElegidoFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/fondo_login">
+        android:layout_height="match_parent">
+
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/playerViewGrupo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </com.google.android.exoplayer2.ui.PlayerView>
+
+        <ImageButton
+            android:id="@+id/mostrarVideo"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:src="@mipmap/icono_ver_perfil"
+            app:layout_constraintBottom_toTopOf="@+id/mensajesRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/playerViewGrupo"
+            app:layout_constraintVertical_bias="0.89"
+            tools:ignore="MissingConstraints" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mensajesRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@id/relativeLayoutMensajes"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_mensaje" />
+            app:layout_constraintTop_toBottomOf="@+id/mostrarVideo"
+            tools:listitem="@layout/item_mensaje">
+
+        </androidx.recyclerview.widget.RecyclerView>
 
         <RelativeLayout
             android:id="@+id/relativeLayoutMensajes"

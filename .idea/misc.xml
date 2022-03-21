@@ -21,6 +21,9 @@
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.3828125" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/drawable/side_nav_bar.xml" value="0.3828125" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/drawable/splashscreen.xml" value="0.3828125" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout-land/activity_user.xml" value="0.24559082892416226" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout-land/fragment_grupo_elegido.xml" value="0.24559082892416226" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout-land/fragment_ver_video.xml" value="0.24559082892416226" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/activity_auth.xml" value="0.27807971014492755" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/activity_user.xml" value="0.27807971014492755" />
@@ -34,8 +37,11 @@
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_gallery.xml" value="0.27807971014492755" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_grupo_elegido.xml" value="0.29010416666666666" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_home.xml" value="0.27807971014492755" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_item_list_dialog_list_dialog.xml" value="0.23052536231884058" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_item_list_dialog_list_dialog_item.xml" value="0.23052536231884058" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_mis_grupos.xml" value="0.20729166666666668" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_slideshow.xml" value="0.27807971014492755" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_ver_video.xml" value="0.23052536231884058" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/item_grupo.xml" value="0.20729166666666668" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/item_mensaje.xml" value="0.2875905797101449" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/item_serie.xml" value="0.29846014492753625" />
@@ -44,6 +50,7 @@
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/menu/main.xml" value="0.20572916666666666" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.3828125" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.3828125" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/xml/network_security_config.xml" value="0.21603260869565216" />
       </map>
     </option>
   </component>

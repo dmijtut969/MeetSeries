@@ -13,6 +13,7 @@ class Consultas() {
     companion object {
         var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
 
+
         fun  crearGrupo(
             usuarioActual: UsuarioActual,
             nombreGrupo: String,

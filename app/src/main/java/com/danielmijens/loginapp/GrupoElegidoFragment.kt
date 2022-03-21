@@ -1,16 +1,22 @@
 package com.danielmijens.loginapp
 
 import android.annotation.SuppressLint
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
+import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,6 +38,7 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
     private lateinit var binding : FragmentGrupoElegidoBinding
     private lateinit var adapter : AdapterGrupoElegido
     private var listaMensajes = mutableListOf<Mensaje>()
+    private lateinit var player : ExoPlayer
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +59,13 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
 
         leerMensajesListener(recyclerView)
 
+        player = ExoPlayer.Builder(context!!).build()
+        binding.playerViewGrupo?.player = player
+        var videoUri = Uri.parse("https://s-delivery33.mxdcontent.net/v/b7238e6b97aee4bfd3c05bf68579ad6f.mp4?s=pPcePFG6y7CO2lnH0k3Nog&e=1647897243&_t=1647882576")
+        val mediaItem: MediaItem = MediaItem.fromUri(videoUri)
+        player.setMediaItem(mediaItem)
+        player.prepare()
+        //player.play()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,6 +81,17 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
                     }
                 }
         }
+        binding.mostrarVideo?.setOnClickListener {
+            if(binding.playerViewGrupo?.visibility == View.GONE) {
+                binding.playerViewGrupo?.visibility = View.VISIBLE
+            }else {
+                binding.playerViewGrupo?.visibility = View.GONE
+            }
+
+        }
+
+
+
 
     }
 
