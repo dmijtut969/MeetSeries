@@ -29,15 +29,8 @@ class AdapterGrupoElegido(
 
     override fun onBindViewHolder(holder: AdapterGrupoElegidoViewHolder, position: Int) {
         val mensajeRecibido : Mensaje = listaMensajes[position]
-        if (mensajeRecibido.emisor == usuarioActual.email.toString()) {
-            holder.binding.otrosMensajesLayout.visibility = View.GONE
-            holder.binding.miMensajeTextView.text = mensajeRecibido.mensaje
-            holder.binding.fechaMiMensaje.text = mensajeRecibido.hora.toString()
-        }else {
-            holder.binding.misMensajesLayout.visibility = View.GONE
-            holder.binding.otroMensajeTextView.text = mensajeRecibido.mensaje
-            holder.binding.fechaOtroMensaje.text = mensajeRecibido.hora.toString()
-        }
+        holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
+        holder.binding.fechaMensaje.text = mensajeRecibido.hora.toString()
 
     }
 

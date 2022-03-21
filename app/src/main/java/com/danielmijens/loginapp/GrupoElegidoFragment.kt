@@ -48,14 +48,14 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
 
         var linearLayout = LinearLayoutManager(context)
         linearLayout.orientation = LinearLayoutManager.VERTICAL
-        //linearLayout.stackFromEnd = true
+        linearLayout.stackFromEnd = false
+        linearLayout.reverseLayout = false
         recyclerView.layoutManager = linearLayout
         //recyclerView.setHasFixedSize(true)
 
         adapter = AdapterGrupoElegido(binding,listaMensajes,usuarioActual,this)
 
         recyclerView.adapter = adapter
-
 
         leerMensajesListener(recyclerView)
 
