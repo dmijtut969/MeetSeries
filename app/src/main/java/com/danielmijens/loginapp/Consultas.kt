@@ -20,6 +20,8 @@ class Consultas() {
             descripcionGrupo: String,
             categoriaGrupo: String
         ) : Boolean{
+            var formato = SimpleDateFormat("HH:mm:ss")
+            var hora = formato.format(Date())
             var creador = usuarioActual.email.toString()
             var listaParticipantes = arrayListOf<String>(creador)
             var idGrupo = nombreGrupo + " - " + creador
@@ -31,7 +33,7 @@ class Consultas() {
                     todoCorrecto = false
                 }
             }
-            grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",Calendar.getInstance().time.toString())).addOnCompleteListener { task ->
+            grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",hora)).addOnCompleteListener { task ->
                 if (task.isCanceled) {
                     todoCorrecto = false
                 }

@@ -89,6 +89,10 @@ dependencies {
 
     //Exoplayer
     implementation 'com.google.android.exoplayer:exoplayer:2.17.1'
+
+    //Youtube con exoplayer
+    implementation 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
+
 }
 
 apply plugin: 'com.google.gms.google-services'
