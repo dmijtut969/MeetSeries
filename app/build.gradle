@@ -61,10 +61,14 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
 
     // Declare the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-core:20.0.2'
+
+    //Firestore
     implementation 'com.google.firebase:firebase-firestore:24.0.1'
+
+    //Firebase Storage
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
@@ -89,10 +93,6 @@ dependencies {
 
     //Exoplayer
     implementation 'com.google.android.exoplayer:exoplayer:2.17.1'
-
-    //Youtube con exoplayer
-    implementation 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
-
 }
 
 apply plugin: 'com.google.gms.google-services'

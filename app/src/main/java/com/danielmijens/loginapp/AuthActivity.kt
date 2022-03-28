@@ -2,6 +2,7 @@ package com.danielmijens.loginapp
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,6 +14,10 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import android.view.ViewGroup
+
+
+
 
 
 class AuthActivity : AppCompatActivity() {
@@ -29,7 +34,13 @@ class AuthActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.imageView2.setImageResource(R.drawable.splash)
         binding.googleButton.setImageResource(R.drawable.logo_google)
+        val videoView = binding.videoViewBackground
+        videoView.setVideoURI(
+            Uri.parse("android.resource://"
+                + packageName + "/" + R.raw.background_animado))
+        videoView.setOnPreparedListener { it.isLooping = true}
         mAuth = FirebaseAuth.getInstance()
+
 
 
         buttonListeners()
@@ -37,6 +48,7 @@ class AuthActivity : AppCompatActivity() {
 
 
     }
+
 
     private fun buttonListeners() {
 
@@ -127,6 +139,7 @@ class AuthActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.authLayout.visibility = View.VISIBLE
+        binding.videoViewBackground.start()
 
     }
     private fun session() {

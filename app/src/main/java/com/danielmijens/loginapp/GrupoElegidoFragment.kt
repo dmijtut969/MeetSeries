@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
+import com.danielmijens.loginapp.firebase.Storage
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.firebase.firestore.*
@@ -61,11 +62,17 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
 
         player = ExoPlayer.Builder(context!!).build()
         binding.playerViewGrupo?.player = player
-        var videoUri = Uri.parse("https://s-delivery33.mxdcontent.net/v/b7238e6b97aee4bfd3c05bf68579ad6f.mp4?s=pPcePFG6y7CO2lnH0k3Nog&e=1647897243&_t=1647882576")
-        val mediaItem: MediaItem = MediaItem.fromUri(videoUri)
-        player.setMediaItem(mediaItem)
-        player.prepare()
-        //player.play()
+        GlobalScope.launch(Dispatchers.IO) {
+            var videoUri = Uri.parse("https://s-delivery33.mxdcontent.net/v/b7238e6b97aee4bfd3c05bf68579ad6f.mp4?s=5zmIDIn4BZffOoqAKxg9dg&e=1648083986&_t=1648071032")
+            val mediaItem: MediaItem = MediaItem.fromUri(Storage.elegirVideo(usuarioActual))
+            withContext(Dispatchers.Main) {
+                player.setMediaItem(mediaItem)
+                player.prepare()
+                player.play()
+            }
+        }
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -84,8 +91,10 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
         binding.mostrarVideo?.setOnClickListener {
             if(binding.playerViewGrupo?.visibility == View.GONE) {
                 binding.playerViewGrupo?.visibility = View.VISIBLE
+                player.play()
             }else {
                 binding.playerViewGrupo?.visibility = View.GONE
+                player.stop()
             }
 
         }

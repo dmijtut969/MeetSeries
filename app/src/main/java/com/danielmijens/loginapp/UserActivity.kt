@@ -14,10 +14,15 @@ import androidx.fragment.app.Fragment
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.AppBarMainBinding
 import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
+import com.danielmijens.loginapp.firebase.Storage
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,OnFragmentListener {
     lateinit var binding : ActivityUserBinding
@@ -88,21 +93,26 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         }
         //Termino utilidades de navegacion
-
-
         bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
         var email = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
         email.setText(usuarioActual.email.toString())
 
-        var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
-        if (FirebaseAuth.getInstance().currentUser?.photoUrl==null) {
-            Snackbar.make(binding.root, "No tiene foto", Snackbar.LENGTH_SHORT).show()
-            Picasso.get().load(R.drawable.icono_meet).into(foto)
-        }else {
-            Picasso.get().load(FirebaseAuth.getInstance().currentUser?.photoUrl.toString()).into(foto)
+        GlobalScope.launch(Dispatchers.IO) {
+            val navigationView : NavigationView= findViewById(R.id.nav_view)
+            var foto =
+                navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
+            if (FirebaseAuth.getInstance().currentUser?.photoUrl == null) {
+                Snackbar.make(binding.root, "No tiene foto", Snackbar.LENGTH_SHORT).show()
+                withContext(Dispatchers.Main) {
+                    Picasso.get().load(Storage.extraerImagenPerfil(usuarioActual)).into(foto)
+                }
+            } else {
+                withContext(Dispatchers.Main) {
+                    Picasso.get().load(FirebaseAuth.getInstance().currentUser?.photoUrl.toString())
+                        .into(foto)
+                }
+            }
         }
-
-
 
         //Guardado de datos
 
