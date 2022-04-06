@@ -71,7 +71,7 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
             withContext(Dispatchers.Main) {
                 player.setMediaItem(mediaItem)
                 player.prepare()
-                player.play()
+                //player.play()
             }
         }
 
@@ -94,10 +94,10 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
         binding.mostrarVideo?.setOnClickListener {
             if(binding.playerViewGrupo?.visibility == View.GONE) {
                 binding.playerViewGrupo?.visibility = View.VISIBLE
-                player.play()
+                //player.play()
             }else {
                 binding.playerViewGrupo?.visibility = View.GONE
-                player.stop()
+                //player.stop()
             }
 
         }

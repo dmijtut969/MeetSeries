@@ -7,18 +7,73 @@
     android:background="@drawable/fondo_login"
     tools:context=".GrupoElegidoFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
+        android:id="@+id/relativeLayoutVideo"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/mensajesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="50dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/relativeLayoutEnviarMensajes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/item_mensaje">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayoutEnviarMensajes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/side_nav_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0">
+
+
+                <EditText
+                    android:id="@+id/editTextMensajeNuevo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:elevation="2dp"
+                    android:hint="Fire your message"
+                    android:padding="8dp" />
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:elevation="2dp" />
+
+
+            </RelativeLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.exoplayer2.ui.PlayerView
             android:id="@+id/playerViewGrupo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:padding="3dp"
+            android:visibility="gone">
 
         </com.google.android.exoplayer2.ui.PlayerView>
 
@@ -27,60 +82,11 @@
             android:layout_width="100dp"
             android:layout_height="30dp"
             android:src="@mipmap/icono_ver_perfil"
-            app:layout_constraintBottom_toTopOf="@+id/mensajesRecyclerView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/playerViewGrupo"
-            app:layout_constraintVertical_bias="0.89"
-            tools:ignore="MissingConstraints" />
+            app:layout_constraintVertical_bias="0.89" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/mensajesRecyclerView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@id/relativeLayoutMensajes"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mostrarVideo"
-            tools:listitem="@layout/item_mensaje">
+    </RelativeLayout>
 
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <RelativeLayout
-            android:id="@+id/relativeLayoutMensajes"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/side_nav_bar"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0">
-
-
-            <EditText
-                android:id="@+id/editTextMensajeNuevo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:elevation="2dp"
-                android:hint="Fire your message"
-                android:padding="8dp" />
-
-            <ImageButton
-                android:id="@+id/imageButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:elevation="2dp" />
-
-
-        </RelativeLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
