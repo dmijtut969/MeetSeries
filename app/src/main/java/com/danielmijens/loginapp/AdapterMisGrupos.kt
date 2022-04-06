@@ -32,17 +32,10 @@ class AdapterMisGrupos(var binding: FragmentMisGruposBinding
             true
         }
 
-        holder.binding.itemGrupoLinearLayout.setOnLongClickListener() {
+        holder.binding.itemGrupoLinearLayout.setOnLongClickListener {
             showDialogAlertSimple(grupo)
             true
         }
-        //holder.binding.imageButtonEditar.setOnClickListener() {
-        //    var intent = Intent(pedidosActivity,EditarPedidoActivity::class.java)
-        //    intent.putExtra("pedido",pedido)
-        //    intent.putExtra("listapedidos",listaGrupos)
-        //    intent.putExtra("indice",position)
-        //    pedidosActivity.startActivity(intent)
-        //}
     }
 
     fun showDialogAlertSimple(grupo: Grupo) {

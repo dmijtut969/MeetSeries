@@ -76,6 +76,17 @@ class Consultas() {
             return grupoBuscado
         }
 
+        suspend fun comprobarNombreUsuario(usuario: UsuarioActual) : Boolean {
+            var tieneNombreUsuario = false
+            val docRef = mFirestore.collection("Usuarios").document(usuario.email.toString())
+            Log.d("Existe!", tieneNombreUsuario.toString())
+            if (docRef.get().await().exists()) {
+                tieneNombreUsuario = true
+            }
+            Log.d("Existe fuera!", tieneNombreUsuario.toString())
+            return tieneNombreUsuario
+        }
+
         suspend fun unirseAGrupo(usuarioActual: UsuarioActual,grupoElegido: Grupo) {
             val docRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             val listaParticipantes = mutableListOf<String>()
@@ -87,7 +98,7 @@ class Consultas() {
                     Log.e("Error: ", "No se encuentra el grupo")
                 }
             }.await()
-            listaParticipantes.add(usuarioActual.email)
+            listaParticipantes.add(usuarioActual.email.toString())
             docRef.update("listaParticipantes",listaParticipantes).await()
         }
 
@@ -124,6 +135,21 @@ class Consultas() {
             mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
                 .collection("Mensajes").add(mensajeAEnviar).await()
             Log.d("Enviarmensaje ", "Se ha enviado el mensaje : " + mensajeEnviado)
+        }
+
+        suspend fun establecerNombreUsuario(usuarioActual: UsuarioActual) {
+            mFirestore.collection("Usuarios").document(usuarioActual.email.toString()).set(usuarioActual).await()
+        }
+
+        suspend fun sacarNombreUsuario(usuarioActual: UsuarioActual): String? {
+            var nombreUsuario = ""
+            mFirestore.collection("Usuarios").document(usuarioActual.email.toString()).get().addOnSuccessListener { grupo ->
+                var usuario = grupo.toObject(UsuarioActual::class.java)
+                if (usuario != null) {
+                    nombreUsuario = usuario.nombreUsuario.toString()
+                }
+            }.await()
+            return nombreUsuario
         }
     }
 

@@ -26,7 +26,7 @@ class AuthActivity : AppCompatActivity() {
     lateinit var mAuth : FirebaseAuth
     private val GOOGLE_SIGN_IN = 100
     override fun onCreate(savedInstanceState: Bundle?) {
-        Thread.sleep(2000)
+        Thread.sleep(1000)
 
         setTheme(R.style.AppTheme)
         binding = ActivityAuthBinding.inflate(layoutInflater)
@@ -177,7 +177,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun irAUserActivity(email : String) {
-        val usuarioActual = UsuarioActual(email, 0)
+        val usuarioActual = UsuarioActual(email, "","")
         val intent = Intent(this, UserActivity::class.java)
         intent.putExtra("usuario", usuarioActual)
         startActivity(intent)

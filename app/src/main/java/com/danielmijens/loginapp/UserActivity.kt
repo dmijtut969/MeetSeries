@@ -1,9 +1,12 @@
 package com.danielmijens.loginapp
 
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
@@ -23,6 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Error
+import java.lang.Exception
 
 class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,OnFragmentListener {
     lateinit var binding : ActivityUserBinding
@@ -38,6 +43,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         super.onCreate(savedInstanceState)
 
         usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
+
         supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(usuarioActual)).commit()
 
         setContentView(binding.root)
@@ -75,8 +81,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_verDatosUsuario -> {
-                    Snackbar.make(binding.root, "Pruebas", Snackbar.LENGTH_SHORT).show()
-                    cambiarFragment(VerVideoFragment(usuarioActual))
+                    cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual))
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
@@ -94,23 +99,34 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
         //Termino utilidades de navegacion
         bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
-        var email = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
-        email.setText(usuarioActual.email.toString())
 
         GlobalScope.launch(Dispatchers.IO) {
             val navigationView : NavigationView= findViewById(R.id.nav_view)
-            var foto =
-                navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
+            var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
+            usuarioActual.nombreUsuario = Consultas.sacarNombreUsuario(usuarioActual).toString()
+            var nombreUsu = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
+            nombreUsu.setText(usuarioActual.nombreUsuario.toString())
+
             if (FirebaseAuth.getInstance().currentUser?.photoUrl == null) {
-                Snackbar.make(binding.root, "No tiene foto", Snackbar.LENGTH_SHORT).show()
+                var nuevaFoto = Storage.extraerImagenPerfil(usuarioActual).toString()
+                if (!nuevaFoto.isNullOrEmpty()) {
+                    usuarioActual.fotoPerfil = nuevaFoto
+                }else {
+                    usuarioActual.fotoPerfil = R.drawable.auth_logo_xml.toString()
+                }
                 withContext(Dispatchers.Main) {
-                    Picasso.get().load(Storage.extraerImagenPerfil(usuarioActual)).into(foto)
+                    Picasso.get().load(usuarioActual.fotoPerfil).into(foto)
                 }
             } else {
                 withContext(Dispatchers.Main) {
-                    Picasso.get().load(FirebaseAuth.getInstance().currentUser?.photoUrl.toString())
+                    var fotoUrl = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
+                    Picasso.get().load(fotoUrl)
                         .into(foto)
+                    usuarioActual.fotoPerfil = fotoUrl
                 }
+            }
+            if (!Consultas.comprobarNombreUsuario(usuarioActual)){
+                cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual))
             }
         }
 
@@ -152,7 +168,11 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         toggle.syncState()
-        //bindingNavHeader.emailUsuarioNav.text = "patata"
+
+    }
+
+    override fun onStart() {
+        super.onStart()
 
     }
 
@@ -193,5 +213,23 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         cambiarFragment(MisGruposFragment(usuarioActual))
     }
 
+    fun showDialogAlert(usuarioActual: UsuarioActual) {
+        AlertDialog.Builder(application)
+            .setTitle("Tiene que elegir un nombre de usuario : ")
+            .setMessage("¿Esta seguro?")
+            .setPositiveButton(android.R.string.ok,
+                DialogInterface.OnClickListener { dialog, which ->
 
+                })
+            .setNegativeButton(android.R.string.cancel,
+                DialogInterface.OnClickListener { dialog, which ->
+
+                })
+            .show()
+    }
+    suspend fun actualizarNavView(usuarioActual: UsuarioActual) {
+        val navigationView : NavigationView= findViewById(R.id.nav_view)
+        var nombreUsu = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
+        nombreUsu.setText(usuarioActual.nombreUsuario.toString())
+    }
 }

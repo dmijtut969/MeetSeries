@@ -63,8 +63,11 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
         player = ExoPlayer.Builder(context!!).build()
         binding.playerViewGrupo?.player = player
         GlobalScope.launch(Dispatchers.IO) {
-            var videoUri = Uri.parse("https://s-delivery33.mxdcontent.net/v/b7238e6b97aee4bfd3c05bf68579ad6f.mp4?s=5zmIDIn4BZffOoqAKxg9dg&e=1648083986&_t=1648071032")
+            //var videoUri = Uri.parse("https://00f74ba44b59be5011d6b18e30943d13514c6957ef-apidata.googleusercontent.com/download/storage/v1/b/tamarindos/o/onupiesitosqa-1013.mp4?jk=AFshE3WGhu5JCzZ-Z9dnz6lurUI10lbyyf7ZjfzvlQNnYhq9kqaZxY40FrNAUmDvhWm4NGNIjUQSyJfTc3LTsFKHihOg71JDa5IV3yDQ6flAEmiJwaAAwvwTCN_-EAqY6I_G2pQM3FBlX_gLzpZAj0GAgS2sR1PZX_ZG8GdJ994SmASVndYRwLH8iOa4QgAVLz2kozq4lvfEScsiS_h_ApZz9MMUUhaCU2Zak3ma9OSFORxZ3c3nAYpoJFuZW-YTWsXQ_6TzyD-HBp1H-e7IpbHmrH0ja7TR193MZ1PZ6CwifUI5gAU--1bQEoouko4I-e3HNtj8EH0xmR1Z0X17ZiOL91HAF_YXsNjUnfTw1DS375rMT0Gsiy6dj62E1uWdROD94SHje25kavDhzFS-64wDcTCFoKntl18D7rTkZ2D1wTKwGR-ghbLDQx33WM0Z_EQZh-f7Yxn9fnKRYTgdOfRCSnI5B4IZeGjvy63wP1zlXdxSPi-SOdvPQBscHVDQcBApnG5RyiMXBb_rVNUiw9z7VDbox2NzeFfwD9_wqayKftusXOIXBccOeAvmm7DBnyUkstKJYagdtqs4oAkyzAQ7PcdFBL6bvpRFgA8wscSLSyaVLOHYAIqd99ThXW7W-Nq-vE1CxapJfsE7AGlEvxTNpsAK3vYEBIpiQmV9jvNmRCq-QWBVVnvdmhv4Y91dTEcNZkUqFcxe-x9jym233THf4G1JBQZdPGq7HufX6wEkHHXXHvWgwxMNmQ_UPYoQnstfCQVuqSxfNJ0Lj3xMwm486DtXAlihwx4imi2XtBIXJ2Seb7Z-0NdV6CTYz1CRmFrg37RmN1gSSUvZ4RXSCdKp1yXCFJXL-DJdbtQzqK0oJgO9ehLr-whYUEuzMpWLJjtyD7SylJMq9xS88rESTasTKFt3E8IcSZEyCs6jN1SDKSNMKc0eod8HBav2EJ5UxXVsYvA9ayM_qWjawtKqobAb6MkSsalfAzwTB48ifem1b94wQ0DY1R66mCPTIW06OZE1UXK1icxM-WYm1_p0pE5_m4tJ4ePm&isca=1")
+            //Funciona
             val mediaItem: MediaItem = MediaItem.fromUri(Storage.elegirVideo(usuarioActual))
+            //val mediaItem: MediaItem = MediaItem.fromUri(videoUri)
+
             withContext(Dispatchers.Main) {
                 player.setMediaItem(mediaItem)
                 player.prepare()
