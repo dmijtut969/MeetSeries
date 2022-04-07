@@ -1,23 +1,27 @@
 package com.danielmijens.loginapp
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
+import android.widget.RelativeLayout
+import android.widget.Toast
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
 import com.danielmijens.loginapp.firebase.Storage
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.ui.PlayerView
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -40,7 +44,12 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
     private lateinit var adapter : AdapterGrupoElegido
     private var listaMensajes = mutableListOf<Mensaje>()
     private lateinit var player : ExoPlayer
+    private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
+
+    // default position of image
+    private var xDelta = 0
+    private var yDelta = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +84,10 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
             }
         }
 
+        shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
+        //Para mover el videoview
+        //binding.constraintLayoutVideo?.setOnTouchListener(onTouchListener())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,18 +105,26 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
         }
         binding.mostrarVideo?.setOnClickListener {
             if(binding.playerViewGrupo?.visibility == View.GONE) {
-                binding.playerViewGrupo?.visibility = View.VISIBLE
-                //player.play()
+                ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",-550f).apply {
+                    this.duration = 0
+                    start()
+                }.doOnEnd {
+                    binding.playerViewGrupo?.visibility  = View.VISIBLE
+                    ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",90f).apply {
+                        this.duration = 500
+                        start()
+                    }
+                }
             }else {
-                binding.playerViewGrupo?.visibility = View.GONE
-                //player.stop()
+                ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",-550f).apply {
+                    this.duration = 500
+                    start()
+                }.doOnEnd {
+                    binding.playerViewGrupo?.visibility  = View.GONE
+                }
             }
 
         }
-
-
-
-
     }
 
     @SuppressLint("LongLogTag")
@@ -145,7 +165,84 @@ class GrupoElegidoFragment(var usuarioActual: UsuarioActual,val grupoElegido : G
             })
 
             recyclerView.adapter?.notifyDataSetChanged()
+    }
 
+    private fun hacerVisible(playerViewGrupo: View) {
+        playerViewGrupo?.apply {
+            // Set the content view to 0% opacity but visible, so that it is visible
+            // (but fully transparent) during the animation.
+            this.alpha = 0f
+            this.visibility = View.VISIBLE
+
+            // Animate the content view to 100% opacity, and clear any animation
+            // listener set on the view.
+            animate()
+                .alpha(1f)
+                .setDuration(shortAnimationDuration.toLong())
+                .setListener(null)
+        }
+    }
+
+    private fun hacerNoVisible(playerViewGrupo: View) {
+        playerViewGrupo?.apply {
+            // Set the content view to 0% opacity but visible, so that it is visible
+            // (but fully transparent) during the animation.
+            this.alpha = 1f
+
+            // Animate the content view to 100% opacity, and clear any animation
+            // listener set on the view.
+            animate()
+                .alpha(0f)
+                .setDuration(shortAnimationDuration.toLong())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        playerViewGrupo.visibility = View.GONE
+                    }
+                })
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun onTouchListener(): View.OnTouchListener {
+        return View.OnTouchListener { view, event ->
+            // position information
+            // about the event by the user
+            val x = event.rawX.toInt()
+            val y = event.rawY.toInt()
+            // detecting user actions on moving
+            when (event.action and MotionEvent.ACTION_MASK) {
+                MotionEvent.ACTION_BUTTON_PRESS -> {
+                    Toast.makeText(
+                        context,
+                        "Presionas", Toast.LENGTH_SHORT
+                    )
+                        .show()
+                }
+                MotionEvent.ACTION_DOWN -> {
+                    val lParams = view.layoutParams as RelativeLayout.LayoutParams
+                    //xDelta = x - lParams.leftMargin
+                    yDelta = y - lParams.topMargin
+                }
+                /*MotionEvent.ACTION_UP -> Toast.makeText(
+                    context,
+                    "new location!", Toast.LENGTH_SHORT
+                )
+                    .show()*/
+                MotionEvent.ACTION_MOVE -> {
+                    // based on x and y coordinates (when moving image)
+                    // and image is placed with it.
+                    val layoutParams = view.layoutParams as RelativeLayout.LayoutParams
+                    //layoutParams.leftMargin = x - xDelta
+                    layoutParams.topMargin = y - yDelta
+                    layoutParams.rightMargin = 0
+                    layoutParams.bottomMargin = 0
+                    view.layoutParams = layoutParams
+                }
+            }
+            // reflect the changes on screen
+            //R.id.relativeLayoutVideo.invalidate()
+            true
+        }
     }
 
 }

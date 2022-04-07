@@ -72,20 +72,25 @@
             android:id="@+id/playerViewGrupo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="3dp"
+            android:paddingBottom="10dp"
             android:visibility="gone">
 
         </com.google.android.exoplayer2.ui.PlayerView>
 
-        <ImageButton
-            android:id="@+id/mostrarVideo"
-            android:layout_width="100dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:src="@mipmap/icono_ver_perfil"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/playerViewGrupo"
-            app:layout_constraintVertical_bias="0.89" />
+            android:background="#041B03"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/mostrarVideo"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:src="@mipmap/icono_ver_perfil" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
