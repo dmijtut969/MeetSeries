@@ -1,7 +1,6 @@
 package com.danielmijens.loginapp
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -23,7 +22,10 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MisGruposFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
+class MisGruposFragment(
+    var usuarioActual: UsuarioActual,
+    var toolbar: androidx.appcompat.widget.Toolbar
+) : Fragment() {
 
     private lateinit var binding : FragmentMisGruposBinding
     private lateinit var listaGrupos : ArrayList<Grupo>
@@ -39,7 +41,7 @@ class MisGruposFragment(var usuarioActual: UsuarioActual) : Fragment() {
         recyclerView.setHasFixedSize(true)
 
         listaGrupos = arrayListOf()
-        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this)
+        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this,toolbar)
 
         recyclerView.adapter = adapter
 

@@ -56,7 +56,6 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual) : Fragment() {
                 if (!usuarioActual.fotoPerfil.isNullOrEmpty()) {
                     Picasso.get().load(usuarioActual.fotoPerfil).into(binding.imageViewFotoPerfil)
                 }else {
-
                     Picasso.get().load(R.drawable.icono_meet).into(binding.imageViewFotoPerfil)
                 }
             }
@@ -102,7 +101,7 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual) : Fragment() {
                     .setTitle("Va a cambiar la foto de perfil")
                     .setMessage("¿Esta seguro?")
                     .setPositiveButton(android.R.string.ok) { dialog, which ->
-                        openFile(Uri.parse("Hola"))
+                        openFile(Uri.parse(""))
                     }
 
                     .setNegativeButton(android.R.string.cancel,  {dialog, which ->

@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
@@ -26,8 +25,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.lang.Error
-import java.lang.Exception
 
 class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,OnFragmentListener {
     lateinit var binding : ActivityUserBinding
@@ -36,6 +33,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawer : DrawerLayout
     private lateinit var toggle : ActionBarDrawerToggle
     lateinit var usuarioActual : UsuarioActual
+    lateinit var toolbar : androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityUserBinding.inflate(layoutInflater)
         bindingToolbar = AppBarMainBinding.inflate(layoutInflater)
@@ -44,13 +42,13 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
 
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(usuarioActual)).commit()
-
         setContentView(binding.root)
-
+        toolbar = findViewById(R.id.toolbar_main)
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(usuarioActual,toolbar)).commit()
         //Utilidades de navegacion
 
-        var toolbar : androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar_main)
+
+        toolbar.setTitle("Mis Grupos")
         setSupportActionBar(toolbar)
         drawer = findViewById(R.id.drawer_layout)
         toggle = ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close)
@@ -65,23 +63,27 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_mis_grupos -> {
-                    cambiarFragment(MisGruposFragment(usuarioActual))
+                    cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+                    toolbar.setTitle("Mis Grupos")
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
                 R.id.nav_buscar_grupos -> {
                     Snackbar.make(binding.root, "Aqui se podran buscar grupos", Snackbar.LENGTH_SHORT).show()
+                    toolbar.setTitle("Busqueda de Grupos")
                     cambiarFragment(BuscarGrupoFragment(usuarioActual))
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
                 R.id.nav_crear_grupo -> {
                     cambiarFragment(CrearGrupoFragment(usuarioActual))
+                    toolbar.setTitle("Crear Grupos")
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
                 R.id.nav_verDatosUsuario -> {
                     cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual))
+                    toolbar.setTitle("Ver Mis Datos")
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
@@ -193,16 +195,19 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         cambiarFragment(ElegirCategoriaFragment(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo))
     }
 
-    override fun onElegirGrupoClick(usuarioActual: UsuarioActual, grupoElegido: Grupo) {
-        cambiarFragment(GrupoElegidoFragment(usuarioActual,grupoElegido))
+    override fun onElegirGrupoClick(
+        usuarioActual: UsuarioActual, grupoElegido: Grupo,
+        toolbar: androidx.appcompat.widget.Toolbar
+    ) {
+        cambiarFragment(GrupoElegidoFragment(usuarioActual, grupoElegido,toolbar))
     }
 
     override fun onElegirCategoria() {
-        cambiarFragment(MisGruposFragment(usuarioActual))
+        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
     }
 
     override fun onVerMisGruposClick() {
-        cambiarFragment(MisGruposFragment(usuarioActual))
+        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
     }
 
     override fun onBuscarClick(campo: String, valorABuscar: String) {
@@ -210,7 +215,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun actualizarRecyclerMisGrupos() {
-        cambiarFragment(MisGruposFragment(usuarioActual))
+        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
     }
 
     fun showDialogAlert(usuarioActual: UsuarioActual) {

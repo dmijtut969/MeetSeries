@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.databinding.ItemGrupoBinding
 
-class AdapterMisGrupos(var binding: FragmentMisGruposBinding
-, var listaGrupos : ArrayList<Grupo>
-,var usuarioActual: UsuarioActual
-,var misGruposFragment: MisGruposFragment) : RecyclerView.Adapter<AdapterMisGrupos.AdapterMisGruposViewHolder>() {
+class AdapterMisGrupos(
+    var binding: FragmentMisGruposBinding
+    , var listaGrupos: ArrayList<Grupo>
+    , var usuarioActual: UsuarioActual
+    , var misGruposFragment: MisGruposFragment
+    , var toolbar: androidx.appcompat.widget.Toolbar
+) : RecyclerView.Adapter<AdapterMisGrupos.AdapterMisGruposViewHolder>() {
     class AdapterMisGruposViewHolder (val binding: ItemGrupoBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }
@@ -28,7 +31,7 @@ class AdapterMisGrupos(var binding: FragmentMisGruposBinding
         holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
 
         holder.binding.itemGrupoLinearLayout.setOnClickListener() {
-            misGruposFragment.listener.onElegirGrupoClick(usuarioActual,grupo)
+            misGruposFragment.listener.onElegirGrupoClick(usuarioActual,grupo,toolbar)
             true
         }
 

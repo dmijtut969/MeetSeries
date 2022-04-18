@@ -2,6 +2,7 @@ package com.danielmijens.loginapp
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.net.Uri
 import android.opengl.Visibility
 import android.view.LayoutInflater
 import android.view.View
@@ -29,8 +30,10 @@ class AdapterGrupoElegido(
 
     override fun onBindViewHolder(holder: AdapterGrupoElegidoViewHolder, position: Int) {
         val mensajeRecibido : Mensaje = listaMensajes[position]
+        holder.binding.textViewNombreUsuario.text = usuarioActual.nombreUsuario
         holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
         holder.binding.fechaMensaje.text = mensajeRecibido.hora.toString()
+        holder.binding.imageViewFotoUsuario.setImageURI(Uri.parse(usuarioActual.fotoPerfil))
 
     }
 
