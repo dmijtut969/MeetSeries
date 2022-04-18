@@ -14,12 +14,11 @@
         <LinearLayout
             android:id="@+id/linearLayoutMiMensaje"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_margin="15dp"
-            android:background="@android:color/holo_green_dark"
             android:gravity="end"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="1dp"
             android:text="TextView"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -27,50 +26,67 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textViewNombreUsuario"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:textSize="20sp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal">
 
-                <ImageView
+                <com.mikhaellopez.circularimageview.CircularImageView
                     android:id="@+id/imageViewFotoUsuario"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="3dp"
                     android:layout_weight="1"
-                    tools:srcCompat="@tools:sample/avatars" />
+                    android:background="#00FFFFFF"
+                    app:civ_border_color="#FF000000"
+                    app:civ_border_width="0dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_weight="5"
+                    android:background="#000000"
+                    android:orientation="vertical"
+                    android:padding="1dp">
 
                     <TextView
                         android:id="@+id/mensajeTextView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="@android:color/holo_green_dark"
-                        android:gravity="end"
+                        android:background="#21A151"
+                        android:gravity="center"
                         android:text="TextView"
                         android:textColor="@android:color/white" />
 
-                    <TextView
-                        android:id="@+id/fechaMensaje"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="bottom|right"
-                        android:text="33:33"
-                        android:textColor="#FFFFFF" />
+                        android:layout_weight="2"
+                        android:background="#115E1E"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textViewNombreUsuario"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_weight="1"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/fechaMensaje"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="3"
+                            android:gravity="bottom|right"
+                            android:text="33:33"
+                            android:textColor="#FFFFFF" />
+                    </LinearLayout>
+
                 </LinearLayout>
             </LinearLayout>
 

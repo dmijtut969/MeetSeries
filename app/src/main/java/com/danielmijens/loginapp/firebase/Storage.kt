@@ -15,10 +15,10 @@ abstract class Storage {
     companion object {
         val storage : FirebaseStorage = Firebase.storage
 
-        suspend fun extraerImagenPerfil(usuarioActual: UsuarioActual) : Uri {
+        suspend fun extraerImagenPerfil(email: String) : Uri {
             var uri : Uri = Uri.EMPTY
             try {
-                uri = storage.reference.child("fotoPerfil/" + usuarioActual.email).downloadUrl.await()
+                uri = storage.reference.child("fotoPerfil/" + email).downloadUrl.await()
             }catch (e : StorageException) {
                 Log.d("Ha saltado excepcion","No tiene foto de perfil")
             }

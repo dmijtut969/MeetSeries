@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
@@ -108,6 +109,10 @@ class GrupoElegidoFragment(
                 }
         }
 
+        var botonInfoGrupo = toolbar.rootView.findViewById<Button>(R.id.botonAuxiliar)
+        botonInfoGrupo.setOnClickListener {
+            Toast.makeText(context,"Holaaaa",Toast.LENGTH_SHORT).show()
+        }
         binding.mostrarVideo?.setOnClickListener {
             if(binding.playerViewGrupo?.visibility == View.GONE) {
                 ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",-550f).apply {

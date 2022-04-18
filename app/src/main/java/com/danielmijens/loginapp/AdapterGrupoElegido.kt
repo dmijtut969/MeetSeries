@@ -1,5 +1,6 @@
 package com.danielmijens.loginapp
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.net.Uri
@@ -12,6 +13,12 @@ import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.databinding.ItemGrupoBinding
 import com.danielmijens.loginapp.databinding.ItemMensajeBinding
+import com.danielmijens.loginapp.firebase.Storage
+import com.squareup.picasso.Picasso
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AdapterGrupoElegido(
     var binding: FragmentGrupoElegidoBinding
@@ -28,12 +35,28 @@ class AdapterGrupoElegido(
         return AdapterGrupoElegidoViewHolder(binding)
     }
 
+
     override fun onBindViewHolder(holder: AdapterGrupoElegidoViewHolder, position: Int) {
         val mensajeRecibido : Mensaje = listaMensajes[position]
-        holder.binding.textViewNombreUsuario.text = usuarioActual.nombreUsuario
+        if (mensajeRecibido.nombreUsuarioEmisor.isNullOrEmpty()) {
+            holder.binding.textViewNombreUsuario.text = mensajeRecibido.emisor
+        }else {
+            holder.binding.textViewNombreUsuario.text = mensajeRecibido.nombreUsuarioEmisor
+        }
+
         holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
         holder.binding.fechaMensaje.text = mensajeRecibido.hora.toString()
-        holder.binding.imageViewFotoUsuario.setImageURI(Uri.parse(usuarioActual.fotoPerfil))
+        GlobalScope.launch (Dispatchers.IO){
+            withContext(Dispatchers.Main) {
+                var fotoAMostrar = Storage.extraerImagenPerfil(mensajeRecibido.emisor.toString())
+                if (fotoAMostrar.toString().isNullOrEmpty()) {
+                    holder.binding.imageViewFotoUsuario.setImageResource(R.drawable.icono_meet)
+                }else {
+                    Picasso.get().load(fotoAMostrar).into(holder.binding.imageViewFotoUsuario)
+                }
+
+            }
+        }
 
     }
 

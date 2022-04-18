@@ -131,7 +131,7 @@ class Consultas() {
         suspend fun enviarMensajeAGrupo(mensajeEnviado : String, grupoElegido : Grupo,usuarioEmisor : UsuarioActual) {
             var formato = SimpleDateFormat("HH:mm:ss")
             var hora = formato.format(Date())
-            var mensajeAEnviar = Mensaje(usuarioEmisor.email,mensajeEnviado, hora)
+            var mensajeAEnviar = Mensaje(usuarioEmisor.email,mensajeEnviado, hora,usuarioEmisor.nombreUsuario)
             mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
                 .collection("Mensajes").add(mensajeAEnviar).await()
             Log.d("Enviarmensaje ", "Se ha enviado el mensaje : " + mensajeEnviado)

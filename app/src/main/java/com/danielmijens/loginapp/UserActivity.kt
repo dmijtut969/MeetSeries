@@ -110,7 +110,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             nombreUsu.setText(usuarioActual.nombreUsuario.toString())
 
             if (FirebaseAuth.getInstance().currentUser?.photoUrl == null) {
-                var nuevaFoto = Storage.extraerImagenPerfil(usuarioActual).toString()
+                var nuevaFoto = Storage.extraerImagenPerfil(usuarioActual?.email.toString()).toString()
                 if (!nuevaFoto.isNullOrEmpty()) {
                     usuarioActual.fotoPerfil = nuevaFoto
                 }else {
