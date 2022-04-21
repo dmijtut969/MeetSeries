@@ -1,4 +1,4 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.danielmijens.loginapp.OnFragmentListener
+import com.danielmijens.loginapp.adapters.AdapterBusqueda
 import com.danielmijens.loginapp.databinding.FragmentBusquedaBinding
+import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
 
 // TODO: Rename parameter arguments, choose names that match

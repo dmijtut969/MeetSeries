@@ -1,4 +1,4 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.fragments
 
 import android.app.AlertDialog
 import android.content.Context
@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.danielmijens.loginapp.OnFragmentListener
+import com.danielmijens.loginapp.UserActivity
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.FragmentCrearGrupoBinding
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.firestore.auth.User
+import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

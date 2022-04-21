@@ -1,4 +1,4 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.fragments
 
 import android.net.Uri
 import android.os.Bundle
@@ -6,20 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
 import com.danielmijens.loginapp.databinding.FragmentVerVideoBinding
-import android.webkit.WebChromeClient
 
-import android.webkit.WebSettings.PluginState
-import android.R
-import android.media.AudioManager
-import android.media.MediaPlayer
-import android.widget.MediaController
-
-import android.widget.VideoView
+import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Timeline
 
 
 // TODO: Rename parameter arguments, choose names that match

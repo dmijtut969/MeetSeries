@@ -4,9 +4,12 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -16,7 +19,11 @@ import androidx.fragment.app.Fragment
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.AppBarMainBinding
 import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
+import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
+import com.danielmijens.loginapp.fragments.*
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +39,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var bindingNavHeader : NavHeaderMainBinding
     private lateinit var drawer : DrawerLayout
     private lateinit var toggle : ActionBarDrawerToggle
+    private lateinit var botonAuxiliar : Button
     lateinit var usuarioActual : UsuarioActual
     lateinit var toolbar : androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,30 +68,35 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val navigationView : NavigationView= findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
         navigationView.bringToFront()
+
+        botonAuxiliar = toolbar.rootView.findViewById<Button>(R.id.botonAuxiliar)
         navigationView.setNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.nav_mis_grupos -> {
                     cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+                    botonAuxiliar.visibility = View.VISIBLE
                     toolbar.setTitle("Mis Grupos")
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
                 R.id.nav_buscar_grupos -> {
-                    Snackbar.make(binding.root, "Aqui se podran buscar grupos", Snackbar.LENGTH_SHORT).show()
-                    toolbar.setTitle("Busqueda de Grupos")
                     cambiarFragment(BuscarGrupoFragment(usuarioActual))
+                    toolbar.setTitle("Busqueda de Grupos")
+                    botonAuxiliar.visibility = View.GONE
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
                 R.id.nav_crear_grupo -> {
                     cambiarFragment(CrearGrupoFragment(usuarioActual))
                     toolbar.setTitle("Crear Grupos")
+                    botonAuxiliar.visibility = View.GONE
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
                 R.id.nav_verDatosUsuario -> {
                     cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual))
                     toolbar.setTitle("Ver Mis Datos")
+                    botonAuxiliar.visibility = View.GONE
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }

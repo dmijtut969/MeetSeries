@@ -1,4 +1,4 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.fragments
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,7 +12,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.danielmijens.loginapp.R
+import com.danielmijens.loginapp.UserActivity
 import com.danielmijens.loginapp.databinding.FragmentVerDatosDeUsuarioBinding
+import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers

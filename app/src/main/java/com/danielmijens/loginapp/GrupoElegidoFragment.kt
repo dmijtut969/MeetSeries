@@ -17,7 +17,12 @@ import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.danielmijens.loginapp.adapters.AdapterGrupoElegido
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
+import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.Mensaje
+import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem

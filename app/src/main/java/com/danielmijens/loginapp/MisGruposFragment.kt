@@ -11,7 +11,11 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.danielmijens.loginapp.OnFragmentListener
+import com.danielmijens.loginapp.adapters.AdapterMisGrupos
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
+import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -59,7 +63,10 @@ class MisGruposFragment(
         super.onViewCreated(view, savedInstanceState)
         var botonInfoGrupo = toolbar.rootView.findViewById<Button>(R.id.botonAuxiliar)
         botonInfoGrupo.setOnClickListener {
-            Toast.makeText(context,"Adios", Toast.LENGTH_SHORT).show()
+            if (context != null) {
+                Toast.makeText(context,"Adios", Toast.LENGTH_SHORT).show()
+            }
+
         }
     }
     override fun onCreateView(

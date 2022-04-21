@@ -1,12 +1,17 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.adapters
 
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.danielmijens.loginapp.MisGruposFragment
+import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.databinding.ItemGrupoBinding
+import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas
 
 class AdapterMisGrupos(
     var binding: FragmentMisGruposBinding

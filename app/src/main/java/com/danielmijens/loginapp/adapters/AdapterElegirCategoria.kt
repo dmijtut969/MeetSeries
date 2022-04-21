@@ -1,4 +1,4 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.adapters
 
 import android.app.AlertDialog
 import android.content.DialogInterface
@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.databinding.ItemSerieBinding
+import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas
+import com.danielmijens.loginapp.fragments.ElegirCategoriaFragment
 import com.squareup.picasso.Picasso
 
 class AdapterElegirCategoria(
@@ -17,7 +20,7 @@ class AdapterElegirCategoria(
     var nuevaDescripcionGrupo: String,
     var usuarioActual: UsuarioActual,
 
-) :
+    ) :
     RecyclerView.Adapter<AdapterElegirCategoria.AdapterElegirCategoriaViewHolder>() {
     lateinit var categoriaElegida : String
     class AdapterElegirCategoriaViewHolder (val binding: ItemSerieBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -29,7 +32,7 @@ class AdapterElegirCategoria(
         viewType: Int
     ): AdapterElegirCategoriaViewHolder {
         val binding = ItemSerieBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return AdapterElegirCategoria.AdapterElegirCategoriaViewHolder(binding)
+        return AdapterElegirCategoriaViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AdapterElegirCategoriaViewHolder, position: Int) {

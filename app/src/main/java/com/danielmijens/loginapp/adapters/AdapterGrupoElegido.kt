@@ -1,18 +1,19 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.adapters
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.net.Uri
-import android.opengl.Visibility
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.danielmijens.loginapp.GrupoElegidoFragment
+import com.danielmijens.loginapp.OnFragmentListener
+import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
-import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
-import com.danielmijens.loginapp.databinding.ItemGrupoBinding
 import com.danielmijens.loginapp.databinding.ItemMensajeBinding
+import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.Mensaje
+import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +25,8 @@ class AdapterGrupoElegido(
     var binding: FragmentGrupoElegidoBinding
     , var listaMensajes: MutableList<Mensaje>
     , var usuarioActual: UsuarioActual
-    , var misGruposFragment: GrupoElegidoFragment) : RecyclerView.Adapter<AdapterGrupoElegido.AdapterGrupoElegidoViewHolder>() {
+    , var misGruposFragment: GrupoElegidoFragment
+) : RecyclerView.Adapter<AdapterGrupoElegido.AdapterGrupoElegidoViewHolder>() {
     class AdapterGrupoElegidoViewHolder (val binding: ItemMensajeBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }

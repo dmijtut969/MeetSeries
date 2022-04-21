@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.animation.Animation
 import com.danielmijens.loginapp.databinding.ActivityAuthBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -14,10 +13,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
-import android.view.ViewGroup
-
-
-
+import com.danielmijens.loginapp.entidades.UsuarioActual
 
 
 class AuthActivity : AppCompatActivity() {

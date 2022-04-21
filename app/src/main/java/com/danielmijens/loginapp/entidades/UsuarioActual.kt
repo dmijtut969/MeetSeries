@@ -1,4 +1,4 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.entidades
 
 import android.media.Image
 import android.widget.ImageView

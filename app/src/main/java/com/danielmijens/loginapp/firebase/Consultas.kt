@@ -1,7 +1,10 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.firebase
 
 import android.annotation.SuppressLint
 import android.util.Log
+import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.Mensaje
+import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import kotlinx.coroutines.tasks.await
@@ -27,7 +30,7 @@ class Consultas() {
             var idGrupo = nombreGrupo + " - " + creador
             var nuevoGrupo = Grupo(nombreGrupo,categoriaGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo)
             var todoCorrecto = true
-            var grupoNuevoRef  =mFirestore.collection("Grupos").document(idGrupo)
+            var grupoNuevoRef  = mFirestore.collection("Grupos").document(idGrupo)
             grupoNuevoRef.set(nuevoGrupo).addOnCompleteListener { task ->
                 if (task.isCanceled) {
                     todoCorrecto = false
@@ -87,7 +90,7 @@ class Consultas() {
             return tieneNombreUsuario
         }
 
-        suspend fun unirseAGrupo(usuarioActual: UsuarioActual,grupoElegido: Grupo) {
+        suspend fun unirseAGrupo(usuarioActual: UsuarioActual, grupoElegido: Grupo) {
             val docRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             val listaParticipantes = mutableListOf<String>()
             docRef.get().addOnSuccessListener { grupo ->
@@ -128,7 +131,7 @@ class Consultas() {
         }
 
 
-        suspend fun enviarMensajeAGrupo(mensajeEnviado : String, grupoElegido : Grupo,usuarioEmisor : UsuarioActual) {
+        suspend fun enviarMensajeAGrupo(mensajeEnviado : String, grupoElegido : Grupo, usuarioEmisor : UsuarioActual) {
             var formato = SimpleDateFormat("HH:mm:ss")
             var hora = formato.format(Date())
             var mensajeAEnviar = Mensaje(usuarioEmisor.email,mensajeEnviado, hora,usuarioEmisor.nombreUsuario)
