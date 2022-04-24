@@ -13,7 +13,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        app:srcCompat="@drawable/icono_meet"></com.mikhaellopez.circularimageview.CircularImageView>
+        app:srcCompat="@drawable/icono_meet"
+        app:civ_border_width="0dp" ></com.mikhaellopez.circularimageview.CircularImageView>
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -1,6 +1,7 @@
 package com.danielmijens.loginapp.firebase
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.util.Log
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.Mensaje
@@ -17,7 +18,7 @@ class Consultas() {
         var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
 
 
-        fun  crearGrupo(
+        suspend fun  crearGrupo(
             usuarioActual: UsuarioActual,
             nombreGrupo: String,
             descripcionGrupo: String,
@@ -34,7 +35,7 @@ class Consultas() {
                 if (task.isCanceled) {
                     todoCorrecto = false
                 }
-            }
+            }.await()
             /*grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",hora)).addOnCompleteListener { task ->
                 if (task.isCanceled) {
                     todoCorrecto = false

@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.ApiService
 import com.danielmijens.loginapp.CategoriaResponse
 import com.danielmijens.loginapp.OnFragmentListener
-import com.danielmijens.loginapp.adapters.AdapterElegirCategoria
+import com.danielmijens.loginapp.adapters.AdapterCrearGrupo
 import com.danielmijens.loginapp.databinding.FragmentElegirCategoriaBinding
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import kotlinx.coroutines.CoroutineScope
@@ -38,7 +38,7 @@ private const val ARG_PARAM2 = "param2"
 class ElegirCategoriaFragment(var usuarioActual: UsuarioActual, var nuevoNombreGrupo: String, var nuevaDescripcionGrupo: String) : Fragment(),SearchView.OnQueryTextListener {
     // TODO: Rename and change types of parameters
     lateinit var binding : FragmentElegirCategoriaBinding
-    private lateinit var adapter : AdapterElegirCategoria
+    private lateinit var adapter : AdapterCrearGrupo
     private val categoriasImages = mutableListOf<String>()
     private val categoriasTitulos = mutableListOf<String>()
     lateinit var listener : OnFragmentListener
@@ -51,7 +51,7 @@ class ElegirCategoriaFragment(var usuarioActual: UsuarioActual, var nuevoNombreG
     }
 
     private fun initRecyclerView() {
-        adapter = AdapterElegirCategoria(categoriasImages,categoriasTitulos,this,nuevoNombreGrupo,nuevaDescripcionGrupo,usuarioActual)
+        adapter = AdapterCrearGrupo(categoriasImages,categoriasTitulos,this,nuevoNombreGrupo,nuevaDescripcionGrupo,usuarioActual)
         binding.recyclerViewCategorias.layoutManager = LinearLayoutManager(context)
         binding.recyclerViewCategorias.adapter = adapter
 

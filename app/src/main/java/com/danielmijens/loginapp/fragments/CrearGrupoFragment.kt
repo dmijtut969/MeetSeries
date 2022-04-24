@@ -1,9 +1,14 @@
 package com.danielmijens.loginapp.fragments
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.DocumentsContract
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +17,11 @@ import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.UserActivity
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.FragmentCrearGrupoBinding
+import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.danielmijens.loginapp.firebase.Consultas
+import com.danielmijens.loginapp.firebase.Storage
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -34,6 +42,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
     private lateinit var binding : FragmentCrearGrupoBinding
     private lateinit var bindingActivity : ActivityUserBinding
     private lateinit var listener : OnFragmentListener
+    private lateinit var uriFotoGrupo : Uri
     private var userActivity = UserActivity()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,6 +59,19 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
         binding.buttonCrearGrupo.setOnClickListener {
             comprobarGrupo()
         }
+        binding.crearFotoGrupoImageView.setOnClickListener {
+            AlertDialog.Builder(context)
+                .setTitle("Va a subir una foto de perfil")
+                .setMessage("¿Esta seguro?")
+                .setPositiveButton(android.R.string.ok) { dialog, which ->
+                    openFile(Uri.parse(""))
+                }
+
+                .setNegativeButton(android.R.string.cancel,  {dialog, which ->
+
+                })
+                .show()
+        }
     }
 
     private fun comprobarGrupo() {
@@ -64,8 +86,15 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
                 withContext(Dispatchers.Main) {
                     showAlert("Ya has creado un grupo con ese nombre.", "Cambie el nombre del grupo.")
                 }
+            } else if (binding.crearFotoGrupoImageView.drawable.toString().contains("BitmapDrawable")){
+                withContext(Dispatchers.Main) {
+                    showAlert("No has seleccionado foto de perfil.","Seleccione una.")
+                }
             } else {
-
+                Log.d("Fotogrupo drawable: ", binding.crearFotoGrupoImageView.drawable.toString())
+                var  idGrupoNuevo = nuevoNombreGrupo + " - " + usuarioActual.email
+                subirImagen(idGrupoNuevo)
+                Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,"Pruebas","fotoGrupo/" + idGrupoNuevo)
                 listener.onCrearGrupoClick(nuevoNombreGrupo, nuevaDescripcionGrupo)
             }
         }
@@ -80,6 +109,44 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
                 }).show()
     }
+
+    fun openFile(pickerInitialUri: Uri) {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "image/*"
+
+            // Optionally, specify a URI for the file that should appear in the
+            // system file picker when it loads.
+            putExtra(DocumentsContract.EXTRA_INITIAL_URI, pickerInitialUri)
+        }
+
+        startActivityForResult(intent, 2)
+    }
+
+    override fun onActivityResult(
+        requestCode: Int, resultCode: Int, resultData: Intent?) {
+        Log.d("onActivityResult  ",  "He entrado con " + requestCode +" y "+ resultCode)
+        if (requestCode == 2
+            && resultCode == Activity.RESULT_OK) {
+            // The result data contains a URI for the document or directory that
+            // the user selected.
+            resultData?.data?.also { uri ->
+                Log.d("La uri elegida es: ", uri.path.toString())
+                Picasso.get().load(uri).into(binding.crearFotoGrupoImageView)
+                uriFotoGrupo = uri
+            }
+        }
+    }
+
+    fun subirImagen(idGrupo : String) {
+        GlobalScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.Main) {
+                Storage.subirImagenGrupo(idGrupo,uriFotoGrupo)
+            }
+
+        }
+    }
+
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

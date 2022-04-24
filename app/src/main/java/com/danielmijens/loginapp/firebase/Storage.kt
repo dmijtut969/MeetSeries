@@ -35,10 +35,12 @@ abstract class Storage {
             }.await()
         }
 
-        suspend fun extraerImagenGrupo(idGrupo: String) : Uri {
+        suspend fun extraerImagenGrupo(idGrupo: String?) : Uri {
             var uri : Uri = Uri.EMPTY
             try {
-                uri = storage.reference.child("fotoGrupo/" + idGrupo).downloadUrl.await()
+                if (idGrupo != null) {
+                    uri = storage.reference.child("fotoGrupo/" + idGrupo).downloadUrl.await()
+                }
             }catch (e : StorageException) {
                 Log.d("Ha saltado excepcion","No tiene foto de grupo")
 
@@ -46,9 +48,9 @@ abstract class Storage {
             return uri
         }
 
-        suspend fun subirImagenGrupo(grupoASubir: Grupo, imagen: Uri)  {
-
-            val uploadTask = storage.reference.child("fotoPerfil/" + grupoASubir.idGrupo).putFile(imagen)
+        suspend fun subirImagenGrupo(idGrupo: String, imagen: Uri)  {
+            Log.d("idGrupo: ",idGrupo)
+            val uploadTask = storage.reference.child("fotoGrupo/" + idGrupo).putFile(imagen)
             uploadTask.addOnFailureListener {
                 Log.d("Ha ocurrido un error: "," Ha fallado la subida de imagen de grupo")
             }.addOnSuccessListener { taskSnapshot ->

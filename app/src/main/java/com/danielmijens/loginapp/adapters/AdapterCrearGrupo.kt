@@ -12,7 +12,7 @@ import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.fragments.ElegirCategoriaFragment
 import com.squareup.picasso.Picasso
 
-class AdapterElegirCategoria(
+class AdapterCrearGrupo(
     val categoriasImagenes: MutableList<String>,
     val categoriasTitulos: MutableList<String>,
     var elegirCategoriaFragment: ElegirCategoriaFragment,
@@ -21,21 +21,21 @@ class AdapterElegirCategoria(
     var usuarioActual: UsuarioActual,
 
     ) :
-    RecyclerView.Adapter<AdapterElegirCategoria.AdapterElegirCategoriaViewHolder>() {
+    RecyclerView.Adapter<AdapterCrearGrupo.AdapterCrearGrupoViewHolder>() {
     lateinit var categoriaElegida : String
-    class AdapterElegirCategoriaViewHolder (val binding: ItemSerieBinding) : RecyclerView.ViewHolder(binding.root) {
+    class AdapterCrearGrupoViewHolder (val binding: ItemSerieBinding) : RecyclerView.ViewHolder(binding.root) {
 
 }
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): AdapterElegirCategoriaViewHolder {
+    ): AdapterCrearGrupoViewHolder {
         val binding = ItemSerieBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return AdapterElegirCategoriaViewHolder(binding)
+        return AdapterCrearGrupoViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: AdapterElegirCategoriaViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AdapterCrearGrupoViewHolder, position: Int) {
         val categoriaImagen : String = categoriasImagenes[position]
         val categoriaTitulo : String = categoriasTitulos[position]
         Picasso.get().load(categoriaImagen).into(holder.binding.imageViewSerie)
@@ -57,7 +57,7 @@ class AdapterElegirCategoria(
             .setMessage(categoriaElegida)
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
-                    if (Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,categoriaElegida,"")) {
+                    /*if (Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,categoriaElegida,"")) {
                         elegirCategoriaFragment.binding.recyclerViewCategorias.visibility = View.GONE
                         elegirCategoriaFragment.binding.animationViewEsperando.visibility = View.VISIBLE
                         elegirCategoriaFragment.listener.onElegirCategoria()
@@ -66,7 +66,7 @@ class AdapterElegirCategoria(
                             .setTitle("Ya has creado un grupo con ese nombre")
                             .setMessage("Cambia el nombre del grupo").setPositiveButton(android.R.string.ok,DialogInterface.OnClickListener { dialog, which ->
                             }).show()
-                    }
+                    }*/
                 })
             .setNegativeButton(android.R.string.cancel,
                 DialogInterface.OnClickListener { dialog, which ->

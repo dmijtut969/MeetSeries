@@ -12,7 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/crearFotoGrupoImageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/add_image"
+            app:civ_border_width="0dp"></com.mikhaellopez.circularimageview.CircularImageView>
+
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="#81000923"
