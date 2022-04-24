@@ -65,6 +65,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
                     showAlert("Ya has creado un grupo con ese nombre.", "Cambie el nombre del grupo.")
                 }
             } else {
+
                 listener.onCrearGrupoClick(nuevoNombreGrupo, nuevaDescripcionGrupo)
             }
         }

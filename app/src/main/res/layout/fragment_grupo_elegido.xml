@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fondo_login"
+    android:background="@drawable/background_grupo_elegido"
     tools:context=".GrupoElegidoFragment">
 
     <RelativeLayout
@@ -21,7 +21,8 @@
                 android:id="@+id/mensajesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="50dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="76dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@+id/relativeLayoutEnviarMensajes"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -35,7 +36,7 @@
                 android:id="@+id/relativeLayoutEnviarMensajes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/side_nav_bar"
+                android:paddingBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -48,20 +49,23 @@
                     android:id="@+id/editTextMensajeNuevo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:elevation="2dp"
-                    android:hint="Fire your message"
-                    android:padding="8dp" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="60dp"
+                    android:background="@color/white"
+                    android:backgroundTint="#FFFFFF"
+                    android:padding="10dp"
+                    android:textSize="20sp" />
 
                 <ImageButton
                     android:id="@+id/imageButton"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="10dp"
-                    android:elevation="2dp" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp" />
 
 
             </RelativeLayout>
@@ -80,7 +84,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:background="#041B03"
+            android:background="#173e85"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 

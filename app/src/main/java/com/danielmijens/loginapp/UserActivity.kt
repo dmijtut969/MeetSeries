@@ -205,7 +205,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onCrearGrupoClick(nuevoNombreGrupo : String,nuevaDescripcionGrupo : String) {
-        cambiarFragment(ElegirCategoriaFragment(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo))
+        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
     }
 
     override fun onElegirGrupoClick(

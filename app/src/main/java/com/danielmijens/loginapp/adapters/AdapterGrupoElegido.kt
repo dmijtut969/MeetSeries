@@ -48,7 +48,7 @@ class AdapterGrupoElegido(
 
         holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
         holder.binding.fechaMensaje.text = mensajeRecibido.hora.toString()
-        GlobalScope.launch (Dispatchers.IO){
+        /*GlobalScope.launch (Dispatchers.IO){
             withContext(Dispatchers.Main) {
                 var fotoAMostrar = Storage.extraerImagenPerfil(mensajeRecibido.emisor.toString())
                 if (fotoAMostrar.toString().isNullOrEmpty()) {
@@ -58,7 +58,7 @@ class AdapterGrupoElegido(
                 }
 
             }
-        }
+        }*/
 
     }
 

@@ -40,6 +40,7 @@
                     android:layout_marginRight="3dp"
                     android:layout_weight="1"
                     android:background="#00FFFFFF"
+                    android:visibility="gone"
                     app:civ_border_color="#FF000000"
                     app:civ_border_width="0dp" />
 

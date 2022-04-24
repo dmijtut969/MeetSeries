@@ -43,7 +43,7 @@ class AdapterElegirCategoria(
 
         holder.binding.itemSerieLinearLayout.setOnClickListener {
             categoriaElegida = categoriaTitulo
-            showAlert(holder.binding)
+            showAlert()
         }
     }
 
@@ -51,13 +51,13 @@ class AdapterElegirCategoria(
        return categoriasImagenes.size
     }
 
-    fun showAlert(binding: ItemSerieBinding) {
+    fun showAlert() {
         AlertDialog.Builder(elegirCategoriaFragment.context)
             .setTitle("Va a crear un grupo con la categoria :")
             .setMessage(categoriaElegida)
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
-                    if (Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,categoriaElegida)) {
+                    if (Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,categoriaElegida,"")) {
                         elegirCategoriaFragment.binding.recyclerViewCategorias.visibility = View.GONE
                         elegirCategoriaFragment.binding.animationViewEsperando.visibility = View.VISIBLE
                         elegirCategoriaFragment.listener.onElegirCategoria()

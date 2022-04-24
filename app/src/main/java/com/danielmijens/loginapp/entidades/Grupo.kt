@@ -7,4 +7,5 @@ data class Grupo(val nombreGrupo : String ?= null,
                  val descripcionGrupo : String ?= null,
                  val listaParticipantes : List<String> ?= null,
                  val creador : String ?= null,
-                 val idGrupo : String ?= null) : Serializable
+                 val idGrupo : String ?= null,
+                 val fotoGrupo : String?= null) : Serializable

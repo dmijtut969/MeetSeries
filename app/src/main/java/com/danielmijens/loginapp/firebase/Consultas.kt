@@ -21,14 +21,13 @@ class Consultas() {
             usuarioActual: UsuarioActual,
             nombreGrupo: String,
             descripcionGrupo: String,
-            categoriaGrupo: String
+            categoriaGrupo: String,
+            fotoGrupo : String
         ) : Boolean{
-            var formato = SimpleDateFormat("HH:mm:ss")
-            var hora = formato.format(Date())
             var creador = usuarioActual.email.toString()
             var listaParticipantes = arrayListOf<String>(creador)
             var idGrupo = nombreGrupo + " - " + creador
-            var nuevoGrupo = Grupo(nombreGrupo,categoriaGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo)
+            var nuevoGrupo = Grupo(nombreGrupo,categoriaGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo,fotoGrupo)
             var todoCorrecto = true
             var grupoNuevoRef  = mFirestore.collection("Grupos").document(idGrupo)
             grupoNuevoRef.set(nuevoGrupo).addOnCompleteListener { task ->
@@ -36,11 +35,11 @@ class Consultas() {
                     todoCorrecto = false
                 }
             }
-            grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",hora)).addOnCompleteListener { task ->
+            /*grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",hora)).addOnCompleteListener { task ->
                 if (task.isCanceled) {
                     todoCorrecto = false
                 }
-            }
+            }*/
 
             return todoCorrecto
         }

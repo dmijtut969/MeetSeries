@@ -182,41 +182,6 @@ class GrupoElegidoFragment(
             recyclerView.adapter?.notifyDataSetChanged()
     }
 
-    private fun hacerVisible(playerViewGrupo: View) {
-        playerViewGrupo?.apply {
-            // Set the content view to 0% opacity but visible, so that it is visible
-            // (but fully transparent) during the animation.
-            this.alpha = 0f
-            this.visibility = View.VISIBLE
-
-            // Animate the content view to 100% opacity, and clear any animation
-            // listener set on the view.
-            animate()
-                .alpha(1f)
-                .setDuration(shortAnimationDuration.toLong())
-                .setListener(null)
-        }
-    }
-
-    private fun hacerNoVisible(playerViewGrupo: View) {
-        playerViewGrupo?.apply {
-            // Set the content view to 0% opacity but visible, so that it is visible
-            // (but fully transparent) during the animation.
-            this.alpha = 1f
-
-            // Animate the content view to 100% opacity, and clear any animation
-            // listener set on the view.
-            animate()
-                .alpha(0f)
-                .setDuration(shortAnimationDuration.toLong())
-                .setListener(object : AnimatorListenerAdapter() {
-                    override fun onAnimationEnd(animation: Animator) {
-                        playerViewGrupo.visibility = View.GONE
-                    }
-                })
-        }
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     private fun onTouchListener(): View.OnTouchListener {
         return View.OnTouchListener { view, event ->

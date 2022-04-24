@@ -4,8 +4,16 @@
     android:id="@+id/itemGrupoLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="100dp"
-    android:layout_margin="5dp"
-    android:background="@drawable/fondo_gradiante_blanca">
+    android:layout_marginTop="1dp"
+    android:background="#007769">
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/fotoGrupoImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        app:srcCompat="@drawable/icono_meet"></com.mikhaellopez.circularimageview.CircularImageView>
 
     <LinearLayout
         android:layout_width="match_parent"
