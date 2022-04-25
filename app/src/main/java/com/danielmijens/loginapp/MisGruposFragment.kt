@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.OnFragmentListener
@@ -61,7 +62,7 @@ class MisGruposFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        var botonInfoGrupo = toolbar.rootView.findViewById<Button>(R.id.botonAuxiliar)
+        var botonInfoGrupo = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         botonInfoGrupo.setOnClickListener {
             if (context != null) {
                 Toast.makeText(context,"Adios", Toast.LENGTH_SHORT).show()

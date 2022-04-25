@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -20,6 +21,7 @@ import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.AppBarMainBinding
 import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
 import com.danielmijens.loginapp.entidades.Grupo
+import com.danielmijens.loginapp.entidades.Usuario
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
@@ -39,7 +41,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var bindingNavHeader : NavHeaderMainBinding
     private lateinit var drawer : DrawerLayout
     private lateinit var toggle : ActionBarDrawerToggle
-    private lateinit var botonAuxiliar : Button
+    private lateinit var botonAuxiliar : ImageButton
     lateinit var usuarioActual : UsuarioActual
     lateinit var toolbar : androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,9 +71,13 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.setNavigationItemSelectedListener(this)
         navigationView.bringToFront()
 
-        botonAuxiliar = toolbar.rootView.findViewById<Button>(R.id.botonAuxiliar)
+        botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         navigationView.setNavigationItemSelectedListener {
-            when (it.itemId) {
+            var permitirMovimiento = 0
+            if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut) {
+                permitirMovimiento = it.itemId
+            }
+            when (permitirMovimiento) {
                 R.id.nav_mis_grupos -> {
                     cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
                     botonAuxiliar.visibility = View.VISIBLE
@@ -94,9 +100,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_verDatosUsuario -> {
-                    cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual))
+                    cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual,toolbar))
                     toolbar.setTitle("Ver Mis Datos")
-                    botonAuxiliar.visibility = View.GONE
+                    botonAuxiliar.visibility = View.VISIBLE
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
@@ -108,9 +114,13 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     logOut()
                     false
                 }
+                0 -> {
+                    drawer.closeDrawer(GravityCompat.START)
+                    makeAlert("No tiene permisos para moverse por la app","Debe ingresar un nombre de usuario y una foto de perfil")
+                    false
+                }
                 else -> false
             }
-
         }
         //Termino utilidades de navegacion
         bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
@@ -118,7 +128,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         GlobalScope.launch(Dispatchers.IO) {
             val navigationView : NavigationView= findViewById(R.id.nav_view)
             var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
-            usuarioActual.nombreUsuario = Consultas.sacarNombreUsuario(usuarioActual).toString()
+            usuarioActual.nombreUsuario = Consultas.sacarNombreUsuario(Usuario(usuarioActual.email)).toString()
             var nombreUsu = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
             nombreUsu.setText(usuarioActual.nombreUsuario.toString())
 
@@ -141,7 +151,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             if (!Consultas.comprobarNombreUsuario(usuarioActual)){
-                cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual))
+                cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual,toolbar))
             }
         }
 
@@ -204,8 +214,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onCrearGrupoClick(nuevoNombreGrupo : String,nuevaDescripcionGrupo : String) {
-        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+    override fun onCrearGrupoClick(grupoElegido: Grupo) {
+        cambiarFragment(GrupoElegidoFragment(usuarioActual, grupoElegido,toolbar))
     }
 
     override fun onElegirGrupoClick(
@@ -242,6 +252,16 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .setNegativeButton(android.R.string.cancel,
                 DialogInterface.OnClickListener { dialog, which ->
 
+                })
+            .show()
+    }
+
+    fun makeAlert(titulo : String, mensaje : String) {
+        AlertDialog.Builder(binding.root.context)
+            .setTitle(titulo)
+            .setMessage(mensaje)
+            .setPositiveButton(android.R.string.ok,
+                DialogInterface.OnClickListener { dialog, which ->
                 })
             .show()
     }

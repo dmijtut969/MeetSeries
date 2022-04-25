@@ -5,6 +5,7 @@ import android.net.Uri
 import android.util.Log
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.Mensaje
+import com.danielmijens.loginapp.entidades.Usuario
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
@@ -140,11 +141,11 @@ class Consultas() {
             Log.d("Enviarmensaje ", "Se ha enviado el mensaje : " + mensajeEnviado)
         }
 
-        suspend fun establecerNombreUsuario(usuarioActual: UsuarioActual) {
-            mFirestore.collection("Usuarios").document(usuarioActual.email.toString()).set(usuarioActual).await()
+        suspend fun establecerUsuario(usuario: Usuario) {
+            mFirestore.collection("Usuarios").document(usuario.email.toString()).set(usuario).await()
         }
 
-        suspend fun sacarNombreUsuario(usuarioActual: UsuarioActual): String? {
+        suspend fun sacarNombreUsuario(usuarioActual: Usuario): String? {
             var nombreUsuario = ""
             mFirestore.collection("Usuarios").document(usuarioActual.email.toString()).get().addOnSuccessListener { grupo ->
                 var usuario = grupo.toObject(UsuarioActual::class.java)
@@ -153,6 +154,17 @@ class Consultas() {
                 }
             }.await()
             return nombreUsuario
+        }
+
+        suspend fun sacarUsuario(usuarioActual: Usuario): Usuario? {
+            var usuarioEncontrado = Usuario()
+            mFirestore.collection("Usuarios").document(usuarioActual.email.toString()).get().addOnSuccessListener { grupo ->
+                var usuario = grupo.toObject(Usuario::class.java)
+                if (usuario != null) {
+                    usuarioEncontrado = usuario
+                }
+            }.await()
+            return usuarioEncontrado
         }
     }
 

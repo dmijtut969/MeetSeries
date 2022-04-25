@@ -19,7 +19,7 @@
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/fondo_gradiante">
 
-            <Button
+            <ImageButton
                 android:id="@+id/botonAuxiliar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"

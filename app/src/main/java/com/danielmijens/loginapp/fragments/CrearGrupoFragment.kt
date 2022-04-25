@@ -95,7 +95,9 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
                 var  idGrupoNuevo = nuevoNombreGrupo + " - " + usuarioActual.email
                 subirImagen(idGrupoNuevo)
                 Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,"Pruebas","fotoGrupo/" + idGrupoNuevo)
-                listener.onCrearGrupoClick(nuevoNombreGrupo, nuevaDescripcionGrupo)
+                var creadorGrupo = usuarioActual.email.toString()
+                var nuevoGrupoElegido = Grupo(nuevoNombreGrupo,"Pruebas",nuevaDescripcionGrupo,arrayListOf<String>(creadorGrupo),creadorGrupo,idGrupoNuevo,Storage.extraerImagenGrupo(idGrupoNuevo).toString())
+                listener.onCrearGrupoClick(nuevoGrupoElegido)
             }
         }
     }

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
@@ -12,12 +14,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.UserActivity
 import com.danielmijens.loginapp.databinding.FragmentVerDatosDeUsuarioBinding
+import com.danielmijens.loginapp.entidades.Usuario
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -35,25 +43,36 @@ private const val ARG_PARAM2 = "param2"
  * Use the [VerDatosDeUsuarioFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual) : Fragment() {
+class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
+                                var toolbar: androidx.appcompat.widget.Toolbar) : Fragment() {
     // TODO: Rename and change types of parameters
     lateinit var binding : FragmentVerDatosDeUsuarioBinding
-
+    private lateinit var botonAuxiliar : ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentVerDatosDeUsuarioBinding.inflate(layoutInflater)
         Log.d("Foto perfil " , usuarioActual.fotoPerfil.toString())
-
+        botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         binding.editTextEmail.setText(usuarioActual.email.toString())
         if (usuarioActual.nombreUsuario.isNullOrEmpty()) {
             binding.editTextNombreUsuario.isEnabled = true
+            botonAuxiliar.isEnabled = false
+            botonAuxiliar.visibility = View.INVISIBLE
+            binding.buttonModificar.visibility = View.VISIBLE
+            binding.editTextEdad.isEnabled = true
+            binding.editTextEdad.setHintTextColor(Color.LTGRAY)
+            binding.editTextSerieFavorita.isEnabled = true
+            binding.editTextSerieFavorita.setHintTextColor(Color.LTGRAY)
         }else {
             binding.editTextNombreUsuario.setText(usuarioActual.nombreUsuario)
         }
+
     }
 
     override fun onStart() {
         super.onStart()
+        var prefs = traerPrefs()
+        botonAuxiliar.setBackgroundResource(R.mipmap.icono_cambiar_perfil)
         GlobalScope.launch (Dispatchers.IO){
             withContext(Dispatchers.Main) {
                 Log.d("UsuarioActual ",usuarioActual.toString())
@@ -64,6 +83,15 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual) : Fragment() {
                 }
             }
         }
+        if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
+            var jsonUsuario = prefs?.getString("usuario","")
+            if (!jsonUsuario.isNullOrEmpty()) {
+                var usuario : Usuario = Gson().fromJson(jsonUsuario,Usuario::class.java)
+                binding.editTextEdad.setText(usuario.edad)
+                binding.editTextSerieFavorita.setText(usuario.serieFav)
+            }
+        }
+
     }
 
     override fun onCreateView(
@@ -76,30 +104,63 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
+        botonAuxiliar.setOnClickListener {
+            var botonMod = binding.buttonModificar
+            if (botonMod.visibility == View.VISIBLE) {
+                botonMod.visibility = View.INVISIBLE
+                botonAuxiliar.setBackgroundResource(R.mipmap.icono_cambiar_perfil)
+                binding.editTextEdad.isEnabled = false
+                binding.editTextEdad.setTextColor(Color.LTGRAY)
+                binding.editTextSerieFavorita.isEnabled = false
+                binding.editTextSerieFavorita.setTextColor(Color.LTGRAY)
+            }else {
+                botonMod.visibility = View.VISIBLE
+                botonAuxiliar.setBackgroundResource(R.mipmap.icono_cambiar_perfil_cancelar)
+                binding.editTextEdad.isEnabled = true
+                binding.editTextEdad.setTextColor(Color.WHITE)
+                binding.editTextSerieFavorita.isEnabled = true
+                binding.editTextSerieFavorita.setTextColor(Color.WHITE)
+            }
+
+        }
+
         binding.buttonModificar.setOnClickListener {
             var nombreUsuarioNuevo = binding.editTextNombreUsuario.text.toString().trim()
 
             if (nombreUsuarioNuevo.contains(" ")||nombreUsuarioNuevo.isBlank()) {
                 showAlert(
-                    "El nombre de usuario no puede contener espacios o estar en blanco",
+                    "El nombre de usuario no puede contener espacios o vacio",
                     "Cambie el nombre de de usuario ",
                 )
             }else {
-                usuarioActual.nombreUsuario = nombreUsuarioNuevo
+                var edadUsuario = binding.editTextEdad.text.toString()
+                var serieFav = binding.editTextSerieFavorita.text.toString()
+                var nuevoUsuario = Usuario(usuarioActual.email,usuarioActual.fotoPerfil,nombreUsuarioNuevo,edadUsuario,serieFav)
                 GlobalScope.launch(Dispatchers.IO) {
+                    //if (Consultas.sacarNombreUsuario(nuevoUsuario) != "") {
+                    Consultas.establecerUsuario(nuevoUsuario)
+                    var prefs = traerPrefs()
+                    var gson = Gson().toJson(nuevoUsuario)
+                    prefs?.edit()?.putString("usuario",gson)?.commit()
+                    var intent =  Intent(context, UserActivity::class.java)
+                    startActivity(intent)
+                    activity?.finish()
+                }
+                usuarioActual.nombreUsuario = nombreUsuarioNuevo
+                /*GlobalScope.launch(Dispatchers.IO) {
                     Consultas.establecerNombreUsuario(usuarioActual)
                     withContext(Dispatchers.Main) {
                         binding.editTextNombreUsuario.isEnabled = false
                     }
-                    var intent =  Intent(context, UserActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
+
                     //UserActivity().actualizarNavView(usuarioActual)
-                }
+                }*/
             }
         }
 
-        binding.imageViewFotoPerfil.setOnLongClickListener {
+        binding.imageViewFotoPerfil.setOnClickListener {
             if (!usuarioActual.fotoPerfil?.contains("googleusercontent")!!) {
                 AlertDialog.Builder(context)
                     .setTitle("Va a cambiar la foto de perfil")
@@ -170,6 +231,14 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual) : Fragment() {
                 }
             }
         }
+    }
+
+    fun traerPrefs(): SharedPreferences?{
+        val prefs = activity?.getSharedPreferences(
+            getString(R.string.prefs_file),
+            AppCompatActivity.MODE_PRIVATE
+        )
+        return prefs
     }
 
 }
