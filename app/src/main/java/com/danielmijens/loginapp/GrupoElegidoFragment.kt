@@ -55,6 +55,7 @@ class GrupoElegidoFragment(
     private lateinit var player : ExoPlayer
     private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
+    private lateinit var botonAuxiliar : ImageButton
 
     // default position of image
     private var xDelta = 0
@@ -97,6 +98,10 @@ class GrupoElegidoFragment(
 
         shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
+        botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
+        botonAuxiliar.setBackgroundResource(R.drawable.info_grupo)
+        botonAuxiliar.visibility = View.VISIBLE
+
         //Para mover el videoview
         //binding.constraintLayoutVideo?.setOnTouchListener(onTouchListener())
     }
@@ -115,12 +120,13 @@ class GrupoElegidoFragment(
                 }
         }
 
-        var botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
+
         botonAuxiliar.setOnClickListener {
             Toast.makeText(context,"Holaaaa",Toast.LENGTH_SHORT).show()
         }
         binding.mostrarVideo?.setOnClickListener {
             if(binding.playerViewGrupo?.visibility == View.GONE) {
+                binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_arriba)
                 ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",-550f).apply {
                     this.duration = 0
                     start()
@@ -132,6 +138,7 @@ class GrupoElegidoFragment(
                     }
                 }
             }else {
+                binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_abajo)
                 ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",-550f).apply {
                     this.duration = 500
                     start()

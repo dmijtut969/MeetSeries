@@ -72,6 +72,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.bringToFront()
 
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
+        botonAuxiliar.visibility = View.GONE
         navigationView.setNavigationItemSelectedListener {
             var permitirMovimiento = 0
             if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut) {
@@ -80,7 +81,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             when (permitirMovimiento) {
                 R.id.nav_mis_grupos -> {
                     cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
-                    botonAuxiliar.visibility = View.VISIBLE
+                    botonAuxiliar.visibility = View.GONE
                     toolbar.setTitle("Mis Grupos")
                     drawer.closeDrawer(GravityCompat.START)
                     false

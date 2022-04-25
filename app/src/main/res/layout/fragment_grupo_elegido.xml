@@ -92,7 +92,7 @@
                 android:id="@+id/mostrarVideo"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
-                android:src="@mipmap/icono_ver_perfil" />
+                android:src="@mipmap/deslizar_abajo" />
 
         </LinearLayout>
 
