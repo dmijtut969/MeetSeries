@@ -7,10 +7,34 @@
     android:background="#11573B"
     tools:context=".MisGruposFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/misGruposRecyclerView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/item_grupo" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/misGruposRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            tools:listitem="@layout/item_grupo">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <SearchView
+            android:id="@+id/searchViewMisGrupos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/search_view_background"
+            android:iconifiedByDefault="false"
+            android:queryBackground="@android:color/transparent"
+            android:queryHint="Buscar en tus grupos..."
+            android:weightSum="1" />
+    </LinearLayout>
+
 
 </FrameLayout>

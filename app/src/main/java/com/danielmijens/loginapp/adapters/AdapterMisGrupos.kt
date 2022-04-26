@@ -43,13 +43,15 @@ class AdapterMisGrupos(
         holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
         GlobalScope.launch(Dispatchers.IO) {
             var uriFotoElegido = Storage.extraerImagenGrupo(grupo.idGrupo)
-            withContext(Dispatchers.Main) {
-                if (uriFotoElegido.toString().isNullOrEmpty()) {
-                    holder.binding.fotoGrupoImageView.setImageResource(R.drawable.icono_meet)
-                }else {
-                    Picasso.get().load(uriFotoElegido).into(holder.binding.fotoGrupoImageView)
+
+                withContext(Dispatchers.Main) {
+                    if (uriFotoElegido.toString().isNullOrEmpty()) {
+                        holder.binding.fotoGrupoImageView.setImageResource(R.drawable.icono_meet)
+                    }else {
+                        Picasso.get().load(uriFotoElegido).into(holder.binding.fotoGrupoImageView)
+                    }
                 }
-            }
+
         }
 
         holder.binding.itemGrupoLinearLayout.setOnClickListener() {
@@ -82,6 +84,11 @@ class AdapterMisGrupos(
 
     override fun getItemCount(): Int {
         return listaGrupos.size
+    }
+
+    fun setFilter(filterString: ArrayList<Grupo>) {
+        listaGrupos = filterString
+        notifyDataSetChanged()
     }
 
 

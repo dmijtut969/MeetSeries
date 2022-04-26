@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.OnFragmentListener
@@ -52,8 +53,36 @@ class MisGruposFragment(
 
         recyclerView.adapter = adapter
 
+        binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String): Boolean {
+                binding.searchViewMisGrupos.clearFocus()
+                if (listaGrupos.contains(Grupo(query))){
+                    Log.d("searchView Contiene", "Lo contengo")
+                }else {
+                    if (query != null) {
+                        Log.d("searchView No Contiene",query)
+                    }
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                var filterString = filter(listaGrupos,newText)
+                adapter.setFilter(filterString)
+
+                Log.d("searchView Cambia", "Estoy cambiando")
+                return true
+            }
+        })
     }
 
+    private fun filter(strings: ArrayList<Grupo>, text: String): ArrayList<Grupo> {
+        var filterString = ArrayList<Grupo>()
+        for (word in strings) {
+            if (word.nombreGrupo?.contains(text) == true) filterString.add(word)
+        }
+        return filterString
+    }
     override fun onStart() {
         super.onStart()
         listaGrupos.clear()
