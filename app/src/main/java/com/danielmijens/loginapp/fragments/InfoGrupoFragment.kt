@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,6 +66,28 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
                 Picasso.get().load(uriFotoElegido).into(binding.infoImagenGrupo)
             }
         }
+
+        binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String): Boolean {
+                binding.searchViewMisGrupos.clearFocus()
+                if (listaUsuarios.contains(Usuario(query))){
+                    Log.d("searchView Contiene", "Lo contengo")
+                }else {
+                    if (query != null) {
+                        Log.d("searchView No Contiene",query)
+                    }
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                var filtrarUsuarios = filter(listaUsuarios,newText)
+                adapter.setFilter(filtrarUsuarios)
+
+                Log.d("searchView Cambia", "Estoy cambiando")
+                return true
+            }
+        })
         binding.textViewInfoNombreGrupo.setText(grupoElegido.nombreGrupo)
 
         toolbar.setTitle("")
@@ -94,10 +117,16 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
                 }
             }
         }
-
-
-
     }
+
+    private fun filter(usuarios: MutableList<Usuario>, text: String): ArrayList<Usuario> {
+        var filterString = ArrayList<Usuario>()
+        for (usuario in usuarios) {
+            if (usuario.nombreUsuario?.contains(text) == true) filterString.add(usuario)
+        }
+        return filterString
+    }
+
     override fun onStart() {
         super.onStart()
         listaUsuarios.clear()

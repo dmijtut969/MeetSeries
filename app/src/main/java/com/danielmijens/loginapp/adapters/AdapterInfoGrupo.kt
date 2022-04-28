@@ -66,5 +66,10 @@ class AdapterInfoGrupo(
         return listaUsuarios.size
     }
 
+    fun setFilter(filtrarUsuarios: ArrayList<Usuario>) {
+        listaUsuarios = filtrarUsuarios
+        notifyDataSetChanged()
+    }
+
 
 }

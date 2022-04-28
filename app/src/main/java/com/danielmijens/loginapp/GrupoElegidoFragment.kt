@@ -165,8 +165,6 @@ class GrupoElegidoFragment(
         return binding.root
     }
 
-
-
     @SuppressLint("NotifyDataSetChanged")
     fun leerMensajesListener(recyclerView: RecyclerView) {
         listaMensajes.clear()

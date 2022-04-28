@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-
         >
 
         <androidx.appcompat.widget.Toolbar
@@ -20,16 +19,12 @@
             android:background="@drawable/fondo_gradiante"
             app:title=" ">
 
-
-
                 <ImageButton
                     android:id="@+id/botonAuxiliar"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="right|center_vertical"
                     android:layout_margin="5dp" />
-
-
 
         </androidx.appcompat.widget.Toolbar>
 

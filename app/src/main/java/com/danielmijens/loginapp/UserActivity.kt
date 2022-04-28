@@ -56,7 +56,6 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(usuarioActual,toolbar)).commit()
         //Utilidades de navegacion
 
-
         toolbar.setTitle("Mis Grupos")
         setSupportActionBar(toolbar)
         drawer = findViewById(R.id.drawer_layout)
@@ -125,6 +124,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //Termino utilidades de navegacion
         bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
 
+
         GlobalScope.launch(Dispatchers.IO) {
             val navigationView : NavigationView= findViewById(R.id.nav_view)
             var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
@@ -179,7 +179,6 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         prefs.apply()
 
         FirebaseAuth.getInstance().signOut()
-        onBackPressed()
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -187,7 +186,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     fun cambiarFragment(fragmentNuevo : Fragment) = supportFragmentManager.beginTransaction().apply {
-        replace(R.id.fragmentContainerView,fragmentNuevo).commit()
+        replace(R.id.fragmentContainerView,fragmentNuevo).addToBackStack(fragmentNuevo.tag).commit()
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -196,6 +195,24 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
+    override fun onBackPressed() {
+        if (supportFragmentManager.backStackEntryCount > 0) {
+                supportFragmentManager.popBackStack()
+        } else {
+            AlertDialog.Builder(binding.root.context)
+                .setTitle("Va a cerrar sesion")
+                .setMessage("¿Esta seguro?")
+                .setPositiveButton(android.R.string.ok,
+                    DialogInterface.OnClickListener { dialog, which ->
+                        logOut()
+                        super.onBackPressed()
+                    })
+                .setNegativeButton(android.R.string.cancel,
+                    DialogInterface.OnClickListener { dialog, which ->
+                    })
+                .show()
+        }
+    }
     override fun onStart() {
         super.onStart()
 
@@ -268,6 +285,10 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 DialogInterface.OnClickListener { dialog, which ->
                 })
             .show()
+    }
+
+    fun cerrarSesionAtrasAlert(titulo : String, mensaje : String) {
+
     }
     suspend fun actualizarNavView(usuarioActual: UsuarioActual) {
         val navigationView : NavigationView= findViewById(R.id.nav_view)
