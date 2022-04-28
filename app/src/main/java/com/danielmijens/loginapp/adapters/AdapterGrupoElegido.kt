@@ -16,10 +16,7 @@ import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 class AdapterGrupoElegido(
     var binding: FragmentGrupoElegidoBinding
@@ -45,7 +42,6 @@ class AdapterGrupoElegido(
         }else {
             holder.binding.textViewNombreUsuario.text = mensajeRecibido.nombreUsuarioEmisor
         }
-
         holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
         holder.binding.fechaMensaje.text = mensajeRecibido.hora.toString()
         /*GlobalScope.launch (Dispatchers.IO){
@@ -59,24 +55,6 @@ class AdapterGrupoElegido(
 
             }
         }*/
-
-    }
-
-    fun showDialogAlertSimple(grupo: Grupo) {
-        AlertDialog.Builder(misGruposFragment.context)
-            .setTitle("Va a borrar un grupo")
-            .setMessage("¿Esta seguro?")
-            .setPositiveButton(android.R.string.ok,
-                DialogInterface.OnClickListener { dialog, which ->
-                    Consultas.borrarGrupo(usuarioActual,grupo.nombreGrupo.toString())
-                    Thread.sleep(1000)
-                    //misGruposFragment.refrescarRecycler()
-                })
-            .setNegativeButton(android.R.string.cancel,
-                DialogInterface.OnClickListener { dialog, which ->
-
-                })
-            .show()
     }
 
     override fun getItemCount(): Int {

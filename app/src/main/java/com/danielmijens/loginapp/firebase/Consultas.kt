@@ -156,10 +156,10 @@ class Consultas() {
             return nombreUsuario
         }
 
-        suspend fun sacarUsuario(usuarioActual: Usuario): Usuario? {
+        suspend fun sacarUsuario(emailUsuario: String): Usuario? {
             var usuarioEncontrado = Usuario()
-            mFirestore.collection("Usuarios").document(usuarioActual.email.toString()).get().addOnSuccessListener { grupo ->
-                var usuario = grupo.toObject(Usuario::class.java)
+            mFirestore.collection("Usuarios").document(emailUsuario).get().addOnSuccessListener { user ->
+                var usuario = user.toObject(Usuario::class.java)
                 if (usuario != null) {
                     usuarioEncontrado = usuario
                 }

@@ -1,9 +1,8 @@
 package com.danielmijens.loginapp
 
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -56,6 +54,7 @@ class GrupoElegidoFragment(
     private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var botonAuxiliar : ImageButton
+    lateinit var listener : OnFragmentListener
 
     // default position of image
     private var xDelta = 0
@@ -72,7 +71,7 @@ class GrupoElegidoFragment(
         linearLayout.reverseLayout = false
         recyclerView.layoutManager = linearLayout
         //recyclerView.setHasFixedSize(true)
-        toolbar.setTitle(grupoElegido.nombreGrupo)
+
         adapter = AdapterGrupoElegido(binding,listaMensajes,usuarioActual,this)
 
         recyclerView.adapter = adapter
@@ -106,6 +105,8 @@ class GrupoElegidoFragment(
         //binding.constraintLayoutVideo?.setOnTouchListener(onTouchListener())
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageButton.setOnClickListener {
@@ -119,10 +120,11 @@ class GrupoElegidoFragment(
                     }
                 }
         }
-
+        toolbar.setTitle(grupoElegido.nombreGrupo)
 
         botonAuxiliar.setOnClickListener {
             Toast.makeText(context,"Holaaaa",Toast.LENGTH_SHORT).show()
+            listener.onVerInfoGrupo(grupoElegido,toolbar)
         }
         binding.mostrarVideo?.setOnClickListener {
             if(binding.playerViewGrupo?.visibility == View.GONE) {
@@ -230,6 +232,13 @@ class GrupoElegidoFragment(
             // reflect the changes on screen
             //R.id.relativeLayoutVideo.invalidate()
             true
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnFragmentListener) {
+            listener = context
         }
     }
 

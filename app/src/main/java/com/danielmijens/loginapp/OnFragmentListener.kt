@@ -1,5 +1,6 @@
 package com.danielmijens.loginapp
 
+import androidx.appcompat.widget.Toolbar
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
 
@@ -10,5 +11,5 @@ interface OnFragmentListener {
     fun onBuscarClick(campo : String,valorABuscar : String)
     fun onVerMisGruposClick()
     fun actualizarRecyclerMisGrupos()
-
+    fun onVerInfoGrupo(grupoElegido: Grupo, toolbar: Toolbar)
 }

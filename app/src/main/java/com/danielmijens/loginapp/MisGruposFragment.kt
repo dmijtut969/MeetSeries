@@ -85,6 +85,7 @@ class MisGruposFragment(
     }
     override fun onStart() {
         super.onStart()
+        toolbar.setTitle("Mis Grupos")
         listaGrupos.clear()
         eventChangeListener()
     }

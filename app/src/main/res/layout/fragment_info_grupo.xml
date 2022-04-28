@@ -1,15 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#11573B"
     tools:context=".fragments.InfoGrupoFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="#1B4C31"
+        android:gravity="center"
+        android:orientation="vertical">
 
+        <com.mikhaellopez.circularimageview.CircularImageView
+            android:id="@+id/infoImagenGrupo"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:src="@drawable/icono_meet">
+
+        </com.mikhaellopez.circularimageview.CircularImageView>
+
+        <TextView
+            android:id="@+id/textViewInfoNombreGrupo"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:maxHeight="400dp"
+            android:paddingBottom="10dp"
+            android:text="Nombre de grupo bastante largoadadadadNombre de grupo bastante largoadadadad"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="50"
+            android:background="#81000923"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewInfoParticipantes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="50"
+                android:minHeight="300dp"
+                android:paddingBottom="5dp"
+                tools:listitem="@layout/item_usuario">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <SearchView
+                android:id="@+id/searchViewMisGrupos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:background="@drawable/search_view_background"
+                android:backgroundTint="#FFFFFF"
+                android:iconifiedByDefault="false"
+                android:queryBackground="@android:color/transparent"
+                android:queryHint="Buscar participantes..."
+                android:weightSum="1" />
+        </LinearLayout>
+
+    </LinearLayout>
 </FrameLayout>

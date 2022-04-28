@@ -38,7 +38,7 @@
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_gallery.xml" value="0.27807971014492755" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_grupo_elegido.xml" value="0.5" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_home.xml" value="0.27807971014492755" />
-        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_info_grupo.xml" value="0.2717391304347826" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_info_grupo.xml" value="0.25" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_item_list_dialog_list_dialog.xml" value="0.23052536231884058" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_item_list_dialog_list_dialog_item.xml" value="0.23052536231884058" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/fragment_mis_grupos.xml" value="0.20729166666666668" />
@@ -49,6 +49,7 @@
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/item_mensaje.xml" value="0.33" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/item_mensaje_recibido.xml" value="0.21603260869565216" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/item_serie.xml" value="0.29846014492753625" />
+        <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/item_usuario.xml" value="0.264945652173913" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/layout/nav_header_main.xml" value="0.27807971014492755" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/menu/activity_main_drawer.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/danim/Desktop/2DAM SOBREMESA/LoginApp/app/src/main/res/menu/main.xml" value="0.20572916666666666" />

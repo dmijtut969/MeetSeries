@@ -4,16 +4,15 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -240,6 +239,10 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun actualizarRecyclerMisGrupos() {
         cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+    }
+
+    override fun onVerInfoGrupo(grupoElegido: Grupo, toolbar: Toolbar) {
+        cambiarFragment(InfoGrupoFragment(grupoElegido,toolbar))
     }
 
     fun showDialogAlert(usuarioActual: UsuarioActual) {
