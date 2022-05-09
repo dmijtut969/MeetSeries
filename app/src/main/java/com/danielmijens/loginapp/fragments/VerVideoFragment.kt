@@ -11,6 +11,17 @@ import com.danielmijens.loginapp.databinding.FragmentVerVideoBinding
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
+import android.R
+import android.webkit.WebViewClient
+import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.recyclerview.widget.LinearLayoutManager
+
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -26,34 +37,46 @@ private const val ARG_PARAM2 = "param2"
 class VerVideoFragment(val usuarioActual: UsuarioActual) : Fragment() {
     // TODO: Rename and change types of parameters
     private lateinit var binding : FragmentVerVideoBinding
-    private lateinit var player : ExoPlayer
+    private lateinit var youTubePlayerView: YouTubePlayerView
+    private lateinit var youtubePlayerTracker : YouTubePlayerTracker
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentVerVideoBinding.inflate(layoutInflater)
+        binding.listaVideosYoutube?.webViewClient = WebViewClient()
+        binding.listaVideosYoutube?.loadUrl("https://www.youtube.com/watch?v=ha0-qytMD9k")
+        youTubePlayerView = binding.youtubePlayerView!!
+        youtubePlayerTracker = YouTubePlayerTracker()
+        binding.recyclerVideosYT?.layoutManager = LinearLayoutManager(context)
 
-        player = ExoPlayer.Builder(context!!).build()
-        binding.playerViewGrupo?.player = player
-        var videoUri = Uri.parse("https://s-delivery33.mxdcontent.net/v/b7238e6b97aee4bfd3c05bf68579ad6f.mp4?s=pPcePFG6y7CO2lnH0k3Nog&e=1647897243&_t=1647882576")
-        val mediaItem: MediaItem = MediaItem.fromUri(videoUri)
-// Set the media item to be played.
-// Set the media item to be played.
-        player.setMediaItem(mediaItem)
-// Prepare the player.
-// Prepare the player.
-        player.prepare()
-// Start the playback.
-// Start the playback.
-        player.play()
+        if (youTubePlayerView != null) {
+            lifecycle.addObserver(youTubePlayerView)
+        }
+
+        YoutubeCon
 
 
-
+        youTubePlayerView!!.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                //if your url is something like this -> https://www.youtube.com/watch?v=EzyXVfyx7CU
+                val urlToLoad = "https://www.youtube.com/watch?v=ha0-qytMD9k"
+                val url = urlToLoad.split("watch?v=").toTypedArray()
+                youTubePlayer.loadVideo(url[1], 0f)
+                //if your url is something like this -> EzyXVfyx7CU
+                val videoId = "ha0-qytMD9k"
+                youTubePlayer.loadVideo(videoId, 0f)
+            }
+        })
+        youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.button?.setOnClickListener {
-            player.seekTo(240000)
+            if (youtubePlayerTracker.currentSecond<=60) {
+                Toast.makeText(context,youtubePlayerTracker.currentSecond.toString(),Toast.LENGTH_SHORT).show()
+            }else {
 
+            }
         }
     }
 

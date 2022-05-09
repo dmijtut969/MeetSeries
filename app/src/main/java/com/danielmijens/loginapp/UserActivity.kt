@@ -107,6 +107,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 R.id.nav_cambiarFotoPerfil -> {
                     Snackbar.make(binding.root, "Se implementara en un futuro ", Snackbar.LENGTH_SHORT).show()
+                    cambiarFragment(VerVideoFragment(usuarioActual))
                     false
                 }
                 R.id.nav_logOut -> {
