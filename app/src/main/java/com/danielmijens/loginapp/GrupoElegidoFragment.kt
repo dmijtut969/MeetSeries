@@ -31,7 +31,14 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.util.SparseArray
+import android.widget.SearchView
+import androidx.annotation.NonNull
 import androidx.loader.content.AsyncTaskLoader
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -74,30 +81,16 @@ class GrupoElegidoFragment(
         linearLayout.reverseLayout = false
         recyclerView.layoutManager = linearLayout
         //recyclerView.setHasFixedSize(true)
-
+        Log.d("grupoElegido test ", grupoElegido.toString())
         adapter = AdapterGrupoElegido(binding,listaMensajes,usuarioActual,this)
 
         recyclerView.adapter = adapter
         leerMensajesListener(recyclerView)
 
-        player = ExoPlayer.Builder(context!!).build()
-        binding.playerViewGrupo?.player = player
+        videoYT()
 
         GlobalScope.launch(Dispatchers.IO) {
-            //var videoUri = Uri.parse("https://00f74ba44b59be5011d6b18e30943d13514c6957ef-apidata.googleusercontent.com/download/storage/v1/b/tamarindos/o/onupiesitosqa-1013.mp4?jk=AFshE3WGhu5JCzZ-Z9dnz6lurUI10lbyyf7ZjfzvlQNnYhq9kqaZxY40FrNAUmDvhWm4NGNIjUQSyJfTc3LTsFKHihOg71JDa5IV3yDQ6flAEmiJwaAAwvwTCN_-EAqY6I_G2pQM3FBlX_gLzpZAj0GAgS2sR1PZX_ZG8GdJ994SmASVndYRwLH8iOa4QgAVLz2kozq4lvfEScsiS_h_ApZz9MMUUhaCU2Zak3ma9OSFORxZ3c3nAYpoJFuZW-YTWsXQ_6TzyD-HBp1H-e7IpbHmrH0ja7TR193MZ1PZ6CwifUI5gAU--1bQEoouko4I-e3HNtj8EH0xmR1Z0X17ZiOL91HAF_YXsNjUnfTw1DS375rMT0Gsiy6dj62E1uWdROD94SHje25kavDhzFS-64wDcTCFoKntl18D7rTkZ2D1wTKwGR-ghbLDQx33WM0Z_EQZh-f7Yxn9fnKRYTgdOfRCSnI5B4IZeGjvy63wP1zlXdxSPi-SOdvPQBscHVDQcBApnG5RyiMXBb_rVNUiw9z7VDbox2NzeFfwD9_wqayKftusXOIXBccOeAvmm7DBnyUkstKJYagdtqs4oAkyzAQ7PcdFBL6bvpRFgA8wscSLSyaVLOHYAIqd99ThXW7W-Nq-vE1CxapJfsE7AGlEvxTNpsAK3vYEBIpiQmV9jvNmRCq-QWBVVnvdmhv4Y91dTEcNZkUqFcxe-x9jym233THf4G1JBQZdPGq7HufX6wEkHHXXHvWgwxMNmQ_UPYoQnstfCQVuqSxfNJ0Lj3xMwm486DtXAlihwx4imi2XtBIXJ2Seb7Z-0NdV6CTYz1CRmFrg37RmN1gSSUvZ4RXSCdKp1yXCFJXL-DJdbtQzqK0oJgO9ehLr-whYUEuzMpWLJjtyD7SylJMq9xS88rESTasTKFt3E8IcSZEyCs6jN1SDKSNMKc0eod8HBav2EJ5UxXVsYvA9ayM_qWjawtKqobAb6MkSsalfAzwTB48ifem1b94wQ0DY1R66mCPTIW06OZE1UXK1icxM-WYm1_p0pE5_m4tJ4ePm&isca=1")
-
-            //val mediaItem: MediaItem = MediaItem.fromUri(videoUri)
-            val youtubeLink = "http://youtube.com/watch?v=xxxx"
-
-
-
             withContext(Dispatchers.Main) {
-                binding.mostrarVideo?.isEnabled = false
-                //Funciona
-                //val mediaItem: MediaItem = MediaItem.fromUri(Storage.elegirVideo(usuarioActual))
-                val mediaItemYT: MediaItem = MediaItem.fromUri(Storage.elegirVideo(usuarioActual))
-                player.setMediaItem(mediaItemYT)
-                player.prepare()
                 binding.mostrarVideo?.isEnabled = true
                 //player.play()
             }
@@ -117,6 +110,11 @@ class GrupoElegidoFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        if (grupoElegido.creador.equals(usuarioActual.email)) {
+            binding.buscarYtLink?.visibility  = View.VISIBLE
+        }else {
+            binding.buscarYtLink?.visibility  = View.GONE
+        }
         binding.imageButton.setOnClickListener {
                 var mensajeNuevo = binding.editTextMensajeNuevo.text.trim().toString()
                 GlobalScope.launch(Dispatchers.IO) {
@@ -135,34 +133,76 @@ class GrupoElegidoFragment(
             listener.onVerInfoGrupo(grupoElegido,toolbar)
         }
         binding.mostrarVideo?.setOnClickListener {
-            if(binding.playerViewGrupo?.visibility == View.GONE) {
-                binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_arriba)
-                ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",-550f).apply {
-                    this.duration = 0
-                    start()
-                }.doOnEnd {
-                    binding.playerViewGrupo?.visibility  = View.VISIBLE
-                    ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",90f).apply {
+            if (binding.buscarYtLink?.query != null) {
+                if (binding.playerViewGrupo?.visibility == View.GONE) {
+                    binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_arriba)
+                    ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -550f).apply {
+                        this.duration = 0
+                        start()
+                    }.doOnEnd {
+                        binding.playerViewGrupo?.visibility = View.VISIBLE
+                        ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 90f).apply {
+                            this.duration = 500
+                            start()
+                        }
+                    }
+                } else {
+                    binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_abajo)
+                    ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -550f).apply {
                         this.duration = 500
                         start()
+                    }.doOnEnd {
+                        binding.playerViewGrupo?.visibility = View.GONE
                     }
                 }
-            }else {
-                binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_abajo)
-                ObjectAnimator.ofFloat(binding.playerViewGrupo,"translationY",-550f).apply {
-                    this.duration = 500
-                    start()
-                }.doOnEnd {
-                    binding.playerViewGrupo?.visibility  = View.GONE
-                }
+            }
+        }
+
+        binding.buscarYtLink?.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String): Boolean {
+                binding.buscarYtLink?.clearFocus()
+                //if (binding.buscarYtLink?.query.toString().contains("youtube")){
+                    Log.d("searchView Contiene", "Es youtube")
+                    if (grupoElegido.videoElegido != null) {
+                        var youTubePlayerView = binding.playerViewGrupo!!
+                        var youtubePlayerTracker = YouTubePlayerTracker()
+                        //binding.recyclerVideosYT?.layoutManager = LinearLayoutManager(context)
+
+                        if (youTubePlayerView != null) {
+                            lifecycle.addObserver(youTubePlayerView)
+                        }
+
+                        youTubePlayerView!!.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                                //if your url is something like this -> https://www.youtube.com/watch?v=EzyXVfyx7CU
+                                val urlToLoad = query
+                                val url = urlToLoad.split("watch?v=").toTypedArray()
+                                youTubePlayer.loadVideo(url[1], 0f)
+                                //if your url is something like this -> EzyXVfyx7CU
+                                val videoId = "ha0-qytMD9k"
+                                youTubePlayer.loadVideo(videoId, 0f)
+                            }
+                        })
+                        youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
+                    }
+                //}else {
+                    if (query != null) {
+                        Log.d("searchView No Contiene",query)
+                    }
+               // }
+                return true
             }
 
-        }
+            override fun onQueryTextChange(newText: String): Boolean {
+                return true
+            }
+        })
     }
 
     @SuppressLint("LongLogTag")
     override fun onStart() {
         super.onStart()
+        videoYT()
     }
 
     override fun onCreateView(
@@ -198,54 +238,61 @@ class GrupoElegidoFragment(
             recyclerView.adapter?.notifyDataSetChanged()
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun onTouchListener(): View.OnTouchListener {
-        return View.OnTouchListener { view, event ->
-            // position information
-            // about the event by the user
-            val x = event.rawX.toInt()
-            val y = event.rawY.toInt()
-            // detecting user actions on moving
-            when (event.action and MotionEvent.ACTION_MASK) {
-                MotionEvent.ACTION_BUTTON_PRESS -> {
-                    Toast.makeText(
-                        context,
-                        "Presionas", Toast.LENGTH_SHORT
-                    )
-                        .show()
-                }
-                MotionEvent.ACTION_DOWN -> {
-                    val lParams = view.layoutParams as RelativeLayout.LayoutParams
-                    //xDelta = x - lParams.leftMargin
-                    yDelta = y - lParams.topMargin
-                }
-                /*MotionEvent.ACTION_UP -> Toast.makeText(
-                    context,
-                    "new location!", Toast.LENGTH_SHORT
-                )
-                    .show()*/
-                MotionEvent.ACTION_MOVE -> {
-                    // based on x and y coordinates (when moving image)
-                    // and image is placed with it.
-                    val layoutParams = view.layoutParams as RelativeLayout.LayoutParams
-                    //layoutParams.leftMargin = x - xDelta
-                    layoutParams.topMargin = y - yDelta
-                    layoutParams.rightMargin = 0
-                    layoutParams.bottomMargin = 0
-                    view.layoutParams = layoutParams
-                }
-            }
-            // reflect the changes on screen
-            //R.id.relativeLayoutVideo.invalidate()
-            true
-        }
-    }
-
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentListener) {
             listener = context
         }
+    }
+
+     fun videoYT() {
+         if (grupoElegido.videoElegido != null) {
+             var youTubePlayerView = binding.playerViewGrupo!!
+             var youtubePlayerTracker = YouTubePlayerTracker()
+             //binding.recyclerVideosYT?.layoutManager = LinearLayoutManager(context)
+
+             if (youTubePlayerView != null) {
+                 lifecycle.addObserver(youTubePlayerView)
+             }
+
+             youTubePlayerView!!.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                 override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                     //if your url is something like this -> https://www.youtube.com/watch?v=EzyXVfyx7CU
+                     val urlToLoad = grupoElegido.videoElegido
+                     val url = urlToLoad.split("watch?v=").toTypedArray()
+                     var segundos = grupoElegido.videoSegundos
+                     if (grupoElegido.videoIniciado != true || segundos == null || segundos == 0f) {
+                         youTubePlayer.cueVideo(url[1], 0f)
+                     }else {
+                         youTubePlayer.loadVideo(url[1], segundos)
+                     }
+                     if (grupoElegido.creador!=usuarioActual.email) {
+                         youTubePlayerView.getPlayerUiController().showPlayPauseButton(false)
+                     }else {
+                         youTubePlayerView.getPlayerUiController().showPlayPauseButton(true)
+                     }
+
+                     //youTubePlayer.pause()
+                     //if your url is something like this -> EzyXVfyx7CU
+                     //val videoId = "ha0-qytMD9k"
+                     //youTubePlayer.loadVideo(videoId, 0f)
+                 }
+
+                 override fun onStateChange(
+                     youTubePlayer: YouTubePlayer,
+                     state: PlayerConstants.PlayerState
+                 ) {
+                     if (state.equals(PlayerConstants.PlayerState.PAUSED)) {
+                         Log.d("Se ha pausado Dani"," Pausadoooo")
+                     }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
+                         Log.d("Esta playing Dani"," Playiiiing")
+                     }
+                     super.onStateChange(youTubePlayer, state)
+                 }
+             })
+             youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
+         }
+
     }
 
 }

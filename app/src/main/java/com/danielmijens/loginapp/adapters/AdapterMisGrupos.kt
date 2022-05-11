@@ -3,6 +3,7 @@ package com.danielmijens.loginapp.adapters
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.MisGruposFragment
@@ -53,16 +54,20 @@ class AdapterMisGrupos(
                 }
 
         }
-
         holder.binding.itemGrupoLinearLayout.setOnClickListener() {
             misGruposFragment.listener.onElegirGrupoClick(usuarioActual,grupo,toolbar)
             true
         }
-
         holder.binding.itemGrupoLinearLayout.setOnLongClickListener {
             showDialogAlertSimple(grupo)
             true
         }
+        if (grupo.videoIniciado == null || grupo.videoIniciado == false) {
+            holder.binding.videoPlaying.visibility = View.INVISIBLE
+        }else {
+            holder.binding.videoPlaying.visibility = View.VISIBLE
+        }
+
     }
 
     fun showDialogAlertSimple(grupo: Grupo) {

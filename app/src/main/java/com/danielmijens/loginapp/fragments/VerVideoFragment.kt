@@ -42,8 +42,6 @@ class VerVideoFragment(val usuarioActual: UsuarioActual) : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentVerVideoBinding.inflate(layoutInflater)
-        binding.listaVideosYoutube?.webViewClient = WebViewClient()
-        binding.listaVideosYoutube?.loadUrl("https://www.youtube.com/watch?v=ha0-qytMD9k")
         youTubePlayerView = binding.youtubePlayerView!!
         youtubePlayerTracker = YouTubePlayerTracker()
         binding.recyclerVideosYT?.layoutManager = LinearLayoutManager(context)
@@ -51,9 +49,6 @@ class VerVideoFragment(val usuarioActual: UsuarioActual) : Fragment() {
         if (youTubePlayerView != null) {
             lifecycle.addObserver(youTubePlayerView)
         }
-
-        YoutubeCon
-
 
         youTubePlayerView!!.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
             override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {

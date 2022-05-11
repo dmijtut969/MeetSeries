@@ -25,12 +25,19 @@
                 android:layout_marginBottom="76dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@+id/relativeLayoutEnviarMensajes"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/playerViewGrupo"
                 tools:listitem="@layout/item_mensaje">
 
             </androidx.recyclerview.widget.RecyclerView>
+
+            <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                android:id="@+id/playerViewGrupo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:visibility="gone"
+                app:autoPlay="false"
+                tools:ignore="MissingConstraints" />
 
             <RelativeLayout
                 android:id="@+id/relativeLayoutEnviarMensajes"
@@ -72,14 +79,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:id="@+id/playerViewGrupo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:visibility="gone">
-
-        </com.google.android.exoplayer2.ui.PlayerView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,8 +93,18 @@
                 android:layout_height="30dp"
                 android:src="@mipmap/deslizar_abajo" />
 
-        </LinearLayout>
+            <SearchView
+                android:id="@+id/buscarYtLink"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/search_view_background"
+                android:queryHint="Introduce link de yt..."
+                android:visibility="gone" />
 
+        </LinearLayout>
+ºº
     </RelativeLayout>
 
 </FrameLayout>

@@ -44,7 +44,7 @@
     </LinearLayout>
 
     <com.airbnb.lottie.LottieAnimationView
-        android:id="@+id/logoDelGrupoImageView"
+        android:id="@+id/videoPlaying"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"

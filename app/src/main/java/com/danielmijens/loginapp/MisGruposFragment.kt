@@ -97,8 +97,8 @@ class MisGruposFragment(
             if (context != null) {
                 Toast.makeText(context,"Adios", Toast.LENGTH_SHORT).show()
             }
-
         }
+
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

@@ -112,6 +112,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 R.id.nav_logOut -> {
                     logOut()
+                    onBackPressed()
                     false
                 }
                 0 -> {
