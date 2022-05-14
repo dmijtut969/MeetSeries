@@ -323,12 +323,9 @@ class GrupoElegidoFragment(
                     }
                     for (cambioVideo in value?.documentChanges!!) {
                         if (cambioVideo.type == DocumentChange.Type.MODIFIED) {
-                            if (grupoElegido.creador != usuarioActual.email) {
+                            if (grupoElegido.creador == usuarioActual.email) {
                                 Toast.makeText(context,"Se esta cambiando a los demas",Toast.LENGTH_SHORT).show()
                                 var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
-                                Log.d("test grupoCambioVideo videoElegido",grupoCambioVideo.videoElegido.toString())
-                                Log.d("test grupoCambioVideo videoIniciado",grupoCambioVideo.videoIniciado.toString())
-                                Log.d("test grupoCambioVideo videoSegundos",grupoCambioVideo.videoSegundos.toString())
                             }else {
                                 var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
                                 Log.d("test grupoCambioVideo",grupoCambioVideo.toString())
