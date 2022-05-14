@@ -166,6 +166,15 @@ class Consultas() {
             }.await()
             return usuarioEncontrado
         }
+
+        suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String) {
+            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+
+            modificarRef.update("videoElegido",nuevoVideoElegido).await()
+            modificarRef.update("videoIniciado",grupoElegido.videoIniciado).await()
+            modificarRef.update("videoSegundos",grupoElegido.videoSegundos).await()
+        }
+
     }
 
 

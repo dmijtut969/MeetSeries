@@ -15,12 +15,14 @@ import android.R
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 
 
@@ -66,12 +68,15 @@ class VerVideoFragment(val usuarioActual: UsuarioActual) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.button?.setOnClickListener {
-            if (youtubePlayerTracker.currentSecond<=60) {
-                Toast.makeText(context,youtubePlayerTracker.currentSecond.toString(),Toast.LENGTH_SHORT).show()
-            }else {
+        binding.buttonNext?.setOnClickListener {
+            youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+                override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                    val urlToLoad = "https://www.youtube.com/watch?v=c2kyGNI3el8"
+                    val url = urlToLoad.split("watch?v=").toTypedArray()
+                    youTubePlayer.loadVideo(url[1], 0f)
+                }
 
-            }
+            })
         }
     }
 

@@ -3,6 +3,7 @@ package com.danielmijens.loginapp
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -37,8 +38,10 @@ import androidx.loader.content.AsyncTaskLoader
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -60,7 +63,7 @@ class GrupoElegidoFragment(
     private lateinit var binding : FragmentGrupoElegidoBinding
     private lateinit var adapter : AdapterGrupoElegido
     private var listaMensajes = mutableListOf<Mensaje>()
-    private lateinit var player : ExoPlayer
+    private lateinit var youTubePlayerView : YouTubePlayerView
     private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var botonAuxiliar : ImageButton
@@ -161,29 +164,11 @@ class GrupoElegidoFragment(
         binding.buscarYtLink?.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.buscarYtLink?.clearFocus()
-                //if (binding.buscarYtLink?.query.toString().contains("youtube")){
+                var videoSearch = binding.buscarYtLink?.query.toString()
+                //if (videoSearch.contains("youtube")){
                     Log.d("searchView Contiene", "Es youtube")
                     if (grupoElegido.videoElegido != null) {
-                        var youTubePlayerView = binding.playerViewGrupo!!
-                        var youtubePlayerTracker = YouTubePlayerTracker()
-                        //binding.recyclerVideosYT?.layoutManager = LinearLayoutManager(context)
-
-                        if (youTubePlayerView != null) {
-                            lifecycle.addObserver(youTubePlayerView)
-                        }
-
-                        youTubePlayerView!!.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
-                            override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
-                                //if your url is something like this -> https://www.youtube.com/watch?v=EzyXVfyx7CU
-                                val urlToLoad = query
-                                val url = urlToLoad.split("watch?v=").toTypedArray()
-                                youTubePlayer.loadVideo(url[1], 0f)
-                                //if your url is something like this -> EzyXVfyx7CU
-                                val videoId = "ha0-qytMD9k"
-                                youTubePlayer.loadVideo(videoId, 0f)
-                            }
-                        })
-                        youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
+                        cambiarVideoYT(grupoElegido,videoSearch,0f,false)
                     }
                 //}else {
                     if (query != null) {
@@ -192,7 +177,6 @@ class GrupoElegidoFragment(
                // }
                 return true
             }
-
             override fun onQueryTextChange(newText: String): Boolean {
                 return true
             }
@@ -203,6 +187,7 @@ class GrupoElegidoFragment(
     override fun onStart() {
         super.onStart()
         videoYT()
+        notificarAlModificarVideo()
     }
 
     override fun onCreateView(
@@ -247,7 +232,7 @@ class GrupoElegidoFragment(
 
      fun videoYT() {
          if (grupoElegido.videoElegido != null) {
-             var youTubePlayerView = binding.playerViewGrupo!!
+             youTubePlayerView = binding.playerViewGrupo!!
              var youtubePlayerTracker = YouTubePlayerTracker()
              //binding.recyclerVideosYT?.layoutManager = LinearLayoutManager(context)
 
@@ -259,7 +244,7 @@ class GrupoElegidoFragment(
                  override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                      //if your url is something like this -> https://www.youtube.com/watch?v=EzyXVfyx7CU
                      val urlToLoad = grupoElegido.videoElegido
-                     val url = urlToLoad.split("watch?v=").toTypedArray()
+                     val url = sacarUrlYT(urlToLoad)
                      var segundos = grupoElegido.videoSegundos
                      if (grupoElegido.videoIniciado != true || segundos == null || segundos == 0f) {
                          youTubePlayer.cueVideo(url[1], 0f)
@@ -271,11 +256,6 @@ class GrupoElegidoFragment(
                      }else {
                          youTubePlayerView.getPlayerUiController().showPlayPauseButton(true)
                      }
-
-                     //youTubePlayer.pause()
-                     //if your url is something like this -> EzyXVfyx7CU
-                     //val videoId = "ha0-qytMD9k"
-                     //youTubePlayer.loadVideo(videoId, 0f)
                  }
 
                  override fun onStateChange(
@@ -292,6 +272,76 @@ class GrupoElegidoFragment(
              })
              youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
          }
+    }
+
+    fun cambiarVideoYT (grupoACambiar : Grupo,urlVideoYT : String, segundos : Float?,iniciado : Boolean?) {
+        youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                val url = sacarUrlYT(urlVideoYT)
+                var todoBien = false
+                if (url.isNullOrEmpty()||url.size<=0) {
+                    Toast.makeText(context,"Enlace no valido", Toast.LENGTH_SHORT).show()
+                }else if (iniciado == true) {
+                    if (segundos==null) {
+                       youTubePlayer.loadVideo(url[1], 0f)
+                    }else {
+                        youTubePlayer.loadVideo(url[1], segundos)
+                    }
+                    todoBien = true
+                }else {
+                    youTubePlayer.cueVideo(url[1], 0f)
+                    todoBien = true
+                }
+                if (todoBien) {
+                    GlobalScope.launch(Dispatchers.IO) {
+                        Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT)
+                    }
+                }
+            }
+        })
+    }
+
+    fun sacarUrlYT (url : String): Array<String> {
+        var urlReturn = emptyArray<String>()
+        if (url.contains("youtube.com/watch?v=")) {
+            urlReturn = url.split("youtube.com/watch?v=").toTypedArray()
+        }else if (url.contains("be/")) {
+            urlReturn = url.split("be/").toTypedArray()
+        }
+        return urlReturn
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun notificarAlModificarVideo() {
+        mFirestore.collection("Grupos").whereEqualTo("idGrupo",grupoElegido.idGrupo)
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                @SuppressLint("LongLogTag")
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    if (error != null ) {
+                        Log.e("Firestore error video", error.message.toString())
+                        return
+                    }
+                    for (cambioVideo in value?.documentChanges!!) {
+                        if (cambioVideo.type == DocumentChange.Type.MODIFIED) {
+                            if (grupoElegido.creador != usuarioActual.email) {
+                                Toast.makeText(context,"Se esta cambiando a los demas",Toast.LENGTH_SHORT).show()
+                                var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
+                                Log.d("test grupoCambioVideo videoElegido",grupoCambioVideo.videoElegido.toString())
+                                Log.d("test grupoCambioVideo videoIniciado",grupoCambioVideo.videoIniciado.toString())
+                                Log.d("test grupoCambioVideo videoSegundos",grupoCambioVideo.videoSegundos.toString())
+                            }else {
+                                var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
+                                Log.d("test grupoCambioVideo",grupoCambioVideo.toString())
+                                cambiarVideoYT(grupoCambioVideo
+                                    ,grupoCambioVideo.videoElegido.toString()
+                                    ,grupoCambioVideo.videoSegundos,
+                                    grupoCambioVideo.videoIniciado)
+                            }
+
+                        }
+                    }
+                }
+            })
 
     }
 
