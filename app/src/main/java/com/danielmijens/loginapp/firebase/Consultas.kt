@@ -1,7 +1,6 @@
 package com.danielmijens.loginapp.firebase
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.util.Log
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.Mensaje
@@ -167,12 +166,34 @@ class Consultas() {
             return usuarioEncontrado
         }
 
-        suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String) {
+        suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String,segundos : Float) {
             var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-
             modificarRef.update("videoElegido",nuevoVideoElegido).await()
             modificarRef.update("videoIniciado",grupoElegido.videoIniciado).await()
-            modificarRef.update("videoSegundos",grupoElegido.videoSegundos).await()
+            modificarRef.update("videoSegundos",segundos).await()
+
+
+        }
+
+        suspend fun actualizarVideoIniciado(grupoElegido: Grupo,
+                                            videoIniciado: Boolean,
+                                            currentSecond: Float) {
+            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            if (videoIniciado) {
+                modificarRef.update("videoIniciado",videoIniciado).await()
+            }else {
+                modificarRef.update("videoIniciado",videoIniciado).await()
+                modificarRef.update("videoSegundos",currentSecond).await()
+            }
+
+        }
+
+        suspend fun usuarioOnline(grupoElegido: Grupo,
+                                            usuario : UsuarioActual,
+                                            online: Boolean) {
+            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            modificarRef.update("videoIniciado",online).await()
+
         }
 
     }

@@ -3,16 +3,13 @@ package com.danielmijens.loginapp
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.TypedArray
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,23 +20,17 @@ import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.Mensaje
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.danielmijens.loginapp.firebase.Consultas
-import com.danielmijens.loginapp.firebase.Storage
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
 import com.google.firebase.firestore.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import android.util.SparseArray
 import android.widget.SearchView
 import androidx.annotation.NonNull
-import androidx.loader.content.AsyncTaskLoader
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
@@ -187,7 +178,20 @@ class GrupoElegidoFragment(
     override fun onStart() {
         super.onStart()
         videoYT()
-        notificarAlModificarVideo()
+        if(grupoElegido.creador!=usuarioActual.email) notificarAlModificarVideo()
+    }
+
+    override fun onStop() {
+        GlobalScope.launch (Dispatchers.IO) {
+            Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
+        }
+        Log.d("Salgo","Salgo del fragment")
+        super.onStop()
+    }
+
+    override fun onDestroy() {
+        Log.d("Salgo","Salgo del grupo")
+        super.onDestroy()
     }
 
     override fun onCreateView(
@@ -251,10 +255,13 @@ class GrupoElegidoFragment(
                      }else {
                          youTubePlayer.loadVideo(url[1], segundos)
                      }
+                     youTubePlayerView.getPlayerUiController().showYouTubeButton(false)
                      if (grupoElegido.creador!=usuarioActual.email) {
                          youTubePlayerView.getPlayerUiController().showPlayPauseButton(false)
+                         youTubePlayerView.getPlayerUiController().showSeekBar(false)
                      }else {
                          youTubePlayerView.getPlayerUiController().showPlayPauseButton(true)
+                         youTubePlayerView.getPlayerUiController().showSeekBar(true)
                      }
                  }
 
@@ -262,11 +269,19 @@ class GrupoElegidoFragment(
                      youTubePlayer: YouTubePlayer,
                      state: PlayerConstants.PlayerState
                  ) {
-                     if (state.equals(PlayerConstants.PlayerState.PAUSED)) {
-                         Log.d("Se ha pausado Dani"," Pausadoooo")
-                     }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
-                         Log.d("Esta playing Dani"," Playiiiing")
+                     if (grupoElegido.creador==usuarioActual.email) {
+                         var segundos = youtubePlayerTracker.currentSecond
+                         GlobalScope.launch(Dispatchers.IO) {
+                             if (state.equals(PlayerConstants.PlayerState.PAUSED)) {
+                                 Log.d("Se ha pausado Dani"," Pausadoooo")
+                                 Consultas.actualizarVideoIniciado(grupoElegido,false,segundos)
+                             }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
+                                 Log.d("Esta playing Dani"," Playiiiing")
+                                 Consultas.actualizarVideoIniciado(grupoElegido,true,segundos)
+                             }
+                         }
                      }
+
                      super.onStateChange(youTubePlayer, state)
                  }
              })
@@ -292,9 +307,14 @@ class GrupoElegidoFragment(
                     youTubePlayer.cueVideo(url[1], 0f)
                     todoBien = true
                 }
-                if (todoBien) {
+                if (todoBien && usuarioActual.email==grupoElegido.creador) {
                     GlobalScope.launch(Dispatchers.IO) {
-                        Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT)
+                        if (segundos==null) {
+                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT,0f)
+                            }else {
+                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT,segundos)
+                        }
+
                     }
                 }
             }
