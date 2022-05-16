@@ -18,7 +18,11 @@ import com.danielmijens.loginapp.adapters.AdapterMisGrupos
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.firebase.Consultas.Companion.usuarioOnline
 import com.google.firebase.firestore.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -86,7 +90,7 @@ class MisGruposFragment(
     override fun onStart() {
         super.onStart()
         toolbar.setTitle("Mis Grupos")
-        listaGrupos.clear()
+        //listaGrupos.clear()
         eventChangeListener()
     }
 

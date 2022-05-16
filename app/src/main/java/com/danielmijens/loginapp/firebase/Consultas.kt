@@ -62,7 +62,6 @@ class Consultas() {
                         for (dc : DocumentChange in value?.documentChanges!!) {
                             if (dc.type == DocumentChange.Type.ADDED) {
                                 mFirestore.collection("Grupos").document(dc.document.id).delete()
-
                                 Log.d("Se ha borrado", dc.document.id.toString())
                             }
                         }
@@ -166,26 +165,24 @@ class Consultas() {
             return usuarioEncontrado
         }
 
-        suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String,segundos : Float) {
+        suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String) {
             var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             modificarRef.update("videoElegido",nuevoVideoElegido).await()
-            modificarRef.update("videoIniciado",grupoElegido.videoIniciado).await()
-            modificarRef.update("videoSegundos",segundos).await()
-
-
         }
 
         suspend fun actualizarVideoIniciado(grupoElegido: Grupo,
-                                            videoIniciado: Boolean,
-                                            currentSecond: Float) {
+                                            videoIniciado: Boolean) {
             var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             if (videoIniciado) {
                 modificarRef.update("videoIniciado",videoIniciado).await()
             }else {
                 modificarRef.update("videoIniciado",videoIniciado).await()
-                modificarRef.update("videoSegundos",currentSecond).await()
             }
+        }
 
+        suspend fun actualizarSegundos(grupoElegido: Grupo, seg: Float) {
+            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            modificarRef.update("videoSegundos",seg).await()
         }
 
         suspend fun usuarioOnline(grupoElegido: Grupo,
@@ -194,7 +191,26 @@ class Consultas() {
             var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             modificarRef.update("videoIniciado",online).await()
 
+            val docRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            val listaOn = mutableSetOf<String>()
+            docRef.get().addOnSuccessListener { grupo ->
+                var objetoGrupo = grupo.toObject(Grupo::class.java)
+                if (objetoGrupo != null) {
+                    listaOn.addAll(objetoGrupo.listaOnline!!)
+                }else {
+                    Log.e("Error: ", "No se encuentra el grupo")
+                }
+            }.await()
+            if (online) {
+                listaOn.add(usuario.email.toString())
+            }else {
+                listaOn.remove(usuario.email.toString())
+            }
+            var arrayOnline = arrayListOf<String>()
+            arrayOnline.addAll(listaOn)
+            docRef.update("listaOnline",arrayOnline).await()
         }
+
 
     }
 

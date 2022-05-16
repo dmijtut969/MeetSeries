@@ -55,6 +55,7 @@ class GrupoElegidoFragment(
     private lateinit var adapter : AdapterGrupoElegido
     private var listaMensajes = mutableListOf<Mensaje>()
     private lateinit var youTubePlayerView : YouTubePlayerView
+    private lateinit var youtubePlayerTracker : YouTubePlayerTracker
     private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var botonAuxiliar : ImageButton
@@ -67,6 +68,7 @@ class GrupoElegidoFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentGrupoElegidoBinding.inflate(layoutInflater)
+        youTubePlayerView = binding.playerViewGrupo!!
         var recyclerView = binding.mensajesRecyclerView
 
         var linearLayout = LinearLayoutManager(context)
@@ -158,14 +160,10 @@ class GrupoElegidoFragment(
                 var videoSearch = binding.buscarYtLink?.query.toString()
                 //if (videoSearch.contains("youtube")){
                     Log.d("searchView Contiene", "Es youtube")
-                    if (grupoElegido.videoElegido != null) {
+                    if (videoSearch != null) {
                         cambiarVideoYT(grupoElegido,videoSearch,0f,false)
                     }
-                //}else {
-                    if (query != null) {
-                        Log.d("searchView No Contiene",query)
-                    }
-               // }
+
                 return true
             }
             override fun onQueryTextChange(newText: String): Boolean {
@@ -177,8 +175,15 @@ class GrupoElegidoFragment(
     @SuppressLint("LongLogTag")
     override fun onStart() {
         super.onStart()
+        GlobalScope.launch(Dispatchers.IO) {
+            Consultas.usuarioOnline(grupoElegido, usuarioActual, true)
+        }
         videoYT()
-        if(grupoElegido.creador!=usuarioActual.email) notificarAlModificarVideo()
+        if(grupoElegido.creador!=usuarioActual.email) {
+            notificarAlModificarVideo()
+        }else {
+            notificarAlEntrar()
+        }
     }
 
     override fun onStop() {
@@ -191,6 +196,9 @@ class GrupoElegidoFragment(
 
     override fun onDestroy() {
         Log.d("Salgo","Salgo del grupo")
+        GlobalScope.launch (Dispatchers.IO) {
+            Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
+        }
         super.onDestroy()
     }
 
@@ -236,9 +244,7 @@ class GrupoElegidoFragment(
 
      fun videoYT() {
          if (grupoElegido.videoElegido != null) {
-             youTubePlayerView = binding.playerViewGrupo!!
-             var youtubePlayerTracker = YouTubePlayerTracker()
-             //binding.recyclerVideosYT?.layoutManager = LinearLayoutManager(context)
+             youtubePlayerTracker = YouTubePlayerTracker()
 
              if (youTubePlayerView != null) {
                  lifecycle.addObserver(youTubePlayerView)
@@ -274,10 +280,12 @@ class GrupoElegidoFragment(
                          GlobalScope.launch(Dispatchers.IO) {
                              if (state.equals(PlayerConstants.PlayerState.PAUSED)) {
                                  Log.d("Se ha pausado Dani"," Pausadoooo")
-                                 Consultas.actualizarVideoIniciado(grupoElegido,false,segundos)
+                                 Consultas.actualizarSegundos(grupoElegido,segundos)
+                                 Consultas.actualizarVideoIniciado(grupoElegido,false)
                              }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
                                  Log.d("Esta playing Dani"," Playiiiing")
-                                 Consultas.actualizarVideoIniciado(grupoElegido,true,segundos)
+                                 Consultas.actualizarSegundos(grupoElegido,segundos)
+                                 Consultas.actualizarVideoIniciado(grupoElegido,true)
                              }
                          }
                      }
@@ -310,9 +318,11 @@ class GrupoElegidoFragment(
                 if (todoBien && usuarioActual.email==grupoElegido.creador) {
                     GlobalScope.launch(Dispatchers.IO) {
                         if (segundos==null) {
-                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT,0f)
+                            Consultas.actualizarSegundos(grupoACambiar,0f)
+                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT)
                             }else {
-                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT,segundos)
+                            Consultas.actualizarSegundos(grupoACambiar,segundos)
+                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT)
                         }
 
                     }
@@ -359,7 +369,32 @@ class GrupoElegidoFragment(
                     }
                 }
             })
+    }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun notificarAlEntrar() {
+        mFirestore.collection("Grupos").whereEqualTo("idGrupo",grupoElegido.idGrupo)
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                @SuppressLint("LongLogTag")
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
+                    if (error != null ) {
+                        Log.e("Firestore error video", error.message.toString())
+                        return
+                    }
+                    for (interaccionUsuario in value?.documentChanges!!) {
+                        if (interaccionUsuario.type == DocumentChange.Type.MODIFIED) {
+                            Toast.makeText(context,"Ha entrado modificado un usuario",Toast.LENGTH_SHORT).show()
+                            var interaccionVideo = interaccionUsuario.document.toObject(Grupo::class.java)
+                            Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
+                            Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())
+                            var seg = youtubePlayerTracker.currentSecond
+                            GlobalScope.launch (Dispatchers.IO){
+                                Consultas.actualizarSegundos(grupoElegido,interaccionVideo.videoSegundos!!)
+                            }
+                        }
+                    }
+                }
+            })
     }
 
 }
