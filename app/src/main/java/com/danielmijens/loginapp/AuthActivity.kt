@@ -23,11 +23,11 @@ class AuthActivity : AppCompatActivity() {
     private val GOOGLE_SIGN_IN = 100
     override fun onCreate(savedInstanceState: Bundle?) {
         Thread.sleep(1000)
-
         setTheme(R.style.AppTheme)
         binding = ActivityAuthBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        supportActionBar?.hide()
         binding.imageView2.setImageResource(R.drawable.splash)
         binding.googleButton.setImageResource(R.drawable.logo_google)
         val videoView = binding.videoViewBackground
@@ -134,7 +134,7 @@ class AuthActivity : AppCompatActivity() {
     }
     override fun onStart() {
         super.onStart()
-        binding.authLayout.visibility = View.VISIBLE
+        binding.constraintLayoutAuth?.visibility = View.VISIBLE
         binding.videoViewBackground.start()
 
     }
@@ -143,7 +143,7 @@ class AuthActivity : AppCompatActivity() {
             Context.MODE_PRIVATE)
         val email = prefs.getString("emailUsuarioActual",null)
         if (email!=null) {
-            binding.authLayout.visibility = View.INVISIBLE
+            binding.constraintLayoutAuth?.visibility = View.INVISIBLE
             irAUserActivity(email)
         }
     }
