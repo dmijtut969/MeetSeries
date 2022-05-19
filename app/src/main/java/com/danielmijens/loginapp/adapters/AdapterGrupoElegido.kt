@@ -3,7 +3,9 @@ package com.danielmijens.loginapp.adapters
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.GrupoElegidoFragment
 import com.danielmijens.loginapp.OnFragmentListener
@@ -44,6 +46,16 @@ class AdapterGrupoElegido(
         }
         holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
         holder.binding.fechaMensaje.text = mensajeRecibido.hora.toString()
+        holder.binding.linearLayoutMiMensaje.setOnClickListener {
+            if (holder.binding.fechaMensaje.visibility == View.INVISIBLE) {
+                holder.binding.fechaMensaje.visibility = View.VISIBLE
+
+            }else {
+                holder.binding.fechaMensaje.visibility = View.INVISIBLE
+
+            }
+
+        }
         /*GlobalScope.launch (Dispatchers.IO){
             withContext(Dispatchers.Main) {
                 var fotoAMostrar = Storage.extraerImagenPerfil(mensajeRecibido.emisor.toString())

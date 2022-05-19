@@ -284,7 +284,7 @@ class GrupoElegidoFragment(
                                  Consultas.actualizarVideoIniciado(grupoElegido,false)
                              }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
                                  Log.d("Esta playing Dani"," Playiiiing")
-                                 Consultas.actualizarSegundos(grupoElegido,segundos)
+                                 //Consultas.actualizarSegundos(grupoElegido,segundos)
                                  Consultas.actualizarVideoIniciado(grupoElegido,true)
                              }
                          }
@@ -353,8 +353,9 @@ class GrupoElegidoFragment(
                     }
                     for (cambioVideo in value?.documentChanges!!) {
                         if (cambioVideo.type == DocumentChange.Type.MODIFIED) {
+
                             if (grupoElegido.creador == usuarioActual.email) {
-                                Toast.makeText(context,"Se esta cambiando a los demas",Toast.LENGTH_SHORT).show()
+                                //Toast.makeText(context,"Se esta cambiando a los demas",Toast.LENGTH_SHORT).show()
                                 var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
                             }else {
                                 var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
@@ -383,13 +384,14 @@ class GrupoElegidoFragment(
                     }
                     for (interaccionUsuario in value?.documentChanges!!) {
                         if (interaccionUsuario.type == DocumentChange.Type.MODIFIED) {
-                            Toast.makeText(context,"Ha entrado modificado un usuario",Toast.LENGTH_SHORT).show()
+                            //Toast.makeText(view?.context,"Ha entrado modificado un usuario",Toast.LENGTH_SHORT).show()
                             var interaccionVideo = interaccionUsuario.document.toObject(Grupo::class.java)
                             Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
                             Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())
                             var seg = youtubePlayerTracker.currentSecond
                             GlobalScope.launch (Dispatchers.IO){
-                                Consultas.actualizarSegundos(grupoElegido,interaccionVideo.videoSegundos!!)
+                                Log.d("interaccionUsuario youtubePlayerTracker.currentSecond",youtubePlayerTracker.currentSecond.toString())
+                                //Consultas.actualizarSegundos(grupoElegido,seg)
                             }
                         }
                     }

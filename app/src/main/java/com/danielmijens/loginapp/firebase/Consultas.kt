@@ -10,6 +10,8 @@ import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class Consultas() {
@@ -133,7 +135,9 @@ class Consultas() {
         suspend fun enviarMensajeAGrupo(mensajeEnviado : String, grupoElegido : Grupo, usuarioEmisor : UsuarioActual) {
             var formato = SimpleDateFormat("HH:mm:ss")
             var hora = formato.format(Date())
-            var mensajeAEnviar = Mensaje(usuarioEmisor.email,mensajeEnviado, hora,usuarioEmisor.nombreUsuario)
+            var horaField = Date()
+
+            var mensajeAEnviar = Mensaje(usuarioEmisor.email,mensajeEnviado, horaField,usuarioEmisor.nombreUsuario)
             mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
                 .collection("Mensajes").add(mensajeAEnviar).await()
             Log.d("Enviarmensaje ", "Se ha enviado el mensaje : " + mensajeEnviado)
@@ -166,31 +170,28 @@ class Consultas() {
         }
 
         suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String) {
-            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-            modificarRef.update("videoElegido",nuevoVideoElegido).await()
+            //var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            //modificarRef.update("videoElegido",nuevoVideoElegido).await()
         }
 
         suspend fun actualizarVideoIniciado(grupoElegido: Grupo,
                                             videoIniciado: Boolean) {
-            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            //var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             if (videoIniciado) {
-                modificarRef.update("videoIniciado",videoIniciado).await()
+                //modificarRef.update("videoIniciado",videoIniciado).await()
             }else {
-                modificarRef.update("videoIniciado",videoIniciado).await()
+                //modificarRef.update("videoIniciado",videoIniciado).await()
             }
         }
 
         suspend fun actualizarSegundos(grupoElegido: Grupo, seg: Float) {
-            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-            modificarRef.update("videoSegundos",seg).await()
+            //var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            //modificarRef.update("videoSegundos",seg).await()
         }
 
         suspend fun usuarioOnline(grupoElegido: Grupo,
                                             usuario : UsuarioActual,
                                             online: Boolean) {
-            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-            modificarRef.update("videoIniciado",online).await()
-
             val docRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             val listaOn = mutableSetOf<String>()
             docRef.get().addOnSuccessListener { grupo ->
