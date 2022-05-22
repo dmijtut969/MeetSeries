@@ -34,7 +34,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MisGruposFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MisGruposFragment(
+public class MisGruposFragment(
     var usuarioActual: UsuarioActual,
     var toolbar: androidx.appcompat.widget.Toolbar
 ) : Fragment() {
@@ -90,7 +90,6 @@ class MisGruposFragment(
     override fun onStart() {
         super.onStart()
         toolbar.setTitle("Mis Grupos")
-        //listaGrupos.clear()
         eventChangeListener()
     }
 
@@ -126,9 +125,11 @@ class MisGruposFragment(
                     }
                     Log.d("Value del document ", value!!.documents.toString())
                     for (dc : DocumentChange in value?.documentChanges!!) {
-                        Log.d("Contadorrrr", dc.document.toString())
+                        var grupoNuevo = dc.document.toObject(Grupo::class.java)
+                        Log.d("grupoNuevo", grupoNuevo.toString())
                         if (dc.type == DocumentChange.Type.ADDED) {
-                            listaGrupos.add(dc.document.toObject(Grupo::class.java))
+
+                            listaGrupos.add(grupoNuevo)
                             Log.d("Eventchangelistener documento : ", dc.document.toString())
                         }
                     }
