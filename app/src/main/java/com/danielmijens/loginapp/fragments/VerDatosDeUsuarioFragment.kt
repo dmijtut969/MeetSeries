@@ -50,6 +50,7 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
     private lateinit var botonAuxiliar : ImageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        toolbar.setTitle("Datos de usuario")
         binding = FragmentVerDatosDeUsuarioBinding.inflate(layoutInflater)
         Log.d("Foto perfil " , usuarioActual.fotoPerfil.toString())
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
@@ -73,15 +74,13 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
         super.onStart()
         var prefs = traerPrefs()
         botonAuxiliar.setBackgroundResource(R.mipmap.icono_cambiar_perfil)
-        GlobalScope.launch (Dispatchers.IO){
-            withContext(Dispatchers.Main) {
+
                 Log.d("UsuarioActual ",usuarioActual.toString())
-                if (!usuarioActual.fotoPerfil.isNullOrEmpty()) {
+                if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
                     Picasso.get().load(usuarioActual.fotoPerfil).into(binding.imageViewFotoPerfil)
                 }else {
-                    Picasso.get().load(R.drawable.icono_meet).into(binding.imageViewFotoPerfil)
-                }
-            }
+                    Picasso.get().load(R.drawable.add_image).into(binding.imageViewFotoPerfil)
+
         }
         if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
             var jsonUsuario = prefs?.getString("usuario","")

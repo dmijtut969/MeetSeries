@@ -343,6 +343,7 @@ class GrupoElegidoFragment(
 
     @SuppressLint("NotifyDataSetChanged")
     fun notificarAlModificarVideo() {
+        youtubePlayerTracker = YouTubePlayerTracker()
         mFirestore.collection("Grupos").whereEqualTo("idGrupo",grupoElegido.idGrupo)
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 @SuppressLint("LongLogTag")
@@ -374,6 +375,7 @@ class GrupoElegidoFragment(
 
     @SuppressLint("NotifyDataSetChanged")
     fun notificarAlEntrar() {
+        youtubePlayerTracker = YouTubePlayerTracker()
         mFirestore.collection("Grupos").whereEqualTo("idGrupo",grupoElegido.idGrupo)
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 @SuppressLint("LongLogTag")

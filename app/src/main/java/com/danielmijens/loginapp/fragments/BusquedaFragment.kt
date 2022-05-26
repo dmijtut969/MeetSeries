@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.adapters.AdapterBusqueda
@@ -21,7 +22,7 @@ import com.google.firebase.firestore.*
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
 
-class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var valorABuscar: String) : Fragment() {
+class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var valorABuscar: String ?= null) : Fragment() {
 
     private lateinit var binding : FragmentBusquedaBinding
     private lateinit var listaGruposBusqueda : ArrayList<Grupo>
@@ -40,10 +41,34 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
 
         recyclerView.adapter = adapter
         if (!valorABuscar.isNullOrEmpty()) { //Con esto permitimos que si no se busca nada, se traigan todos los grupos existentes.
-            eventChangeListener(campo,valorABuscar)
+            eventChangeListener(campo, valorABuscar!!)
         }else {
             eventChangeListenerTodos()
         }
+
+        binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String): Boolean {
+                binding.searchViewMisGrupos.clearFocus()
+                if (listaGruposBusqueda.contains(Grupo(query))){
+                    Log.d("searchView Contiene", "Lo contengo")
+                }else {
+                    if (query != null) {
+                        Log.d("searchView No Contiene",query)
+                    }
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String): Boolean {
+                var nuevaBusqueda = arrayListOf<Grupo>()
+                nuevaBusqueda.addAll(listaGruposBusqueda)
+                var filterString = filter(nuevaBusqueda,newText)
+                adapter.setFilter(filterString)
+
+                Log.d("searchView Cambia", "Estoy cambiando")
+                return true
+            }
+        })
 
     }
 
@@ -59,6 +84,25 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
 
 
         return binding.root
+    }
+
+    private fun filter(strings: ArrayList<Grupo>, text: String): ArrayList<Grupo> {
+        var filterString = ArrayList<Grupo>()
+
+        for (grupo in strings) {
+            if (!filterString.toString().contains(grupo.idGrupo.toString())) {
+                if (binding.radioButtonNombre.isChecked) {
+                    if (grupo.nombreGrupo?.contains(text) == true) filterString.add(grupo)
+                }else if (grupo.listaParticipantes != null && binding.radioButtonParticipantes.isChecked) {
+                    for (participante in grupo.listaParticipantes) {
+                        if (participante.contains(text)) filterString.add(grupo)
+                    }
+                }else if (grupo.categoriaGrupo != null && binding.radioButtonCategoria.isChecked) {
+                    if (grupo.categoriaGrupo.contains(text))  filterString.add(grupo)
+                }
+            }
+        }
+        return filterString
     }
 
     private fun eventChangeListener(campo : String,valorABuscar: String) {
@@ -91,6 +135,7 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
             })
     }
     private fun eventChangeListenerTodos() {
+        listaGruposBusqueda.clear()
         db = FirebaseFirestore.getInstance()
         db.collection("Grupos")
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
@@ -107,11 +152,11 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
                     for (dc : DocumentChange in value?.documentChanges!!) {
                         Log.d("Contadorrrr", dc.document.toString())
                         if (dc.type == DocumentChange.Type.ADDED) {
-                            listaGruposBusqueda.add(dc.document.toObject(Grupo::class.java))
                             Log.d("Eventchangelistener documento : ", dc.document.toString())
+                            listaGruposBusqueda.add(dc.document.toObject(Grupo::class.java))
                         }
                     }
-                    Log.d("Valor a buscar : ", valorABuscar?.toString())
+                    Log.d("Valor a buscar : ", valorABuscar.toString())
                     Log.d("Eventchangelistener lista : ", listaGruposBusqueda.toString())
 
                     adapter.notifyDataSetChanged()

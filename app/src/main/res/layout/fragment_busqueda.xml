@@ -14,8 +14,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/busquedaRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toTopOf="@+id/radioGroup"
             app:layout_constraintTop_toTopOf="parent"
             tools:listitem="@layout/item_grupo">
@@ -26,7 +25,11 @@
             android:id="@+id/searchViewMisGrupos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/search_view_background"
+            android:backgroundTint="#FFFFFF"
             android:iconifiedByDefault="false"
             android:padding="10dp"
             android:queryBackground="@android:color/transparent"
@@ -35,34 +38,32 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.473"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintVertical_bias="1.0"
-            tools:layout_editor_absoluteX="10dp" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <RadioGroup
             android:id="@+id/radioGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checkedButton="@+id/radioButton"
+            android:checkedButton="@+id/radioButtonNombre"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/searchViewMisGrupos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/radioButtonNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nombre" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/radioButtonParticipantes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Participantes" />
 
             <RadioButton
-                android:id="@+id/radioButton3"
+                android:id="@+id/radioButtonCategoria"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Categoria" />

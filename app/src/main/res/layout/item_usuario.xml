@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:layout_marginTop="1dp"
-    android:background="#007769">
+    android:background="@drawable/item_usuario_fondo">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/fotoUsuariomageView"

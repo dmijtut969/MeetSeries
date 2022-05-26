@@ -153,22 +153,22 @@
             app:layout_constraintBottom_toTopOf="@+id/searchViewMisGrupos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:checkedButton="@+id/radioButton">
+            android:checkedButton="@+id/radioButtonNombre">
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/radioButtonNombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Nombre" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/radioButtonParticipantes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Participantes" />
 
             <RadioButton
-                android:id="@+id/radioButton3"
+                android:id="@+id/radioButtonCategoria"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Categoria" />

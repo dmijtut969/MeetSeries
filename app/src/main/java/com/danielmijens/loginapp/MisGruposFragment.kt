@@ -8,21 +8,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.adapters.AdapterMisGrupos
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
-import com.danielmijens.loginapp.firebase.Consultas.Companion.usuarioOnline
 import com.google.firebase.firestore.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -57,6 +51,8 @@ public class MisGruposFragment(
 
         recyclerView.adapter = adapter
 
+        eventChangeListener()
+
         binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchViewMisGrupos.clearFocus()
@@ -90,7 +86,7 @@ public class MisGruposFragment(
     override fun onStart() {
         super.onStart()
         toolbar.setTitle("Mis Grupos")
-        eventChangeListener()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

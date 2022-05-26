@@ -74,7 +74,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         botonAuxiliar.visibility = View.GONE
         navigationView.setNavigationItemSelectedListener {
             var permitirMovimiento = 0
-            if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut) {
+            if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut || it.itemId == R.id.nav_verDatosUsuario) {
                 permitirMovimiento = it.itemId
             }
             when (permitirMovimiento) {
@@ -86,7 +86,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_buscar_grupos -> {
-                    cambiarFragment(BuscarGrupoFragment(usuarioActual))
+                    cambiarFragment(BusquedaFragment(usuarioActual,"Nombre"))
                     toolbar.setTitle("Busqueda de Grupos")
                     botonAuxiliar.visibility = View.GONE
                     drawer.closeDrawer(GravityCompat.START)
@@ -112,8 +112,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_logOut -> {
-                    logOut()
-                    super.onBackPressed()
+                    onBackPressed()
                     false
                 }
                 0 -> {
