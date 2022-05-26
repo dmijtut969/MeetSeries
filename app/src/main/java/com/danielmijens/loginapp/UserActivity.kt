@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.AppBarMainBinding
 import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
@@ -42,6 +43,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drawer : DrawerLayout
     private lateinit var toggle : ActionBarDrawerToggle
     private lateinit var botonAuxiliar : ImageButton
+    private lateinit var botonAtras : ImageButton
     lateinit var usuarioActual : UsuarioActual
     lateinit var toolbar : androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +73,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navigationView.bringToFront()
 
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
-        botonAuxiliar.visibility = View.GONE
+        botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
+        //botonAuxiliar.visibility = View.GONE
         navigationView.setNavigationItemSelectedListener {
             var permitirMovimiento = 0
             if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut || it.itemId == R.id.nav_verDatosUsuario) {
@@ -80,7 +83,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             when (permitirMovimiento) {
                 R.id.nav_mis_grupos -> {
                     cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
-                    botonAuxiliar.visibility = View.GONE
+                    botonAuxiliar.visibility = View.VISIBLE
+                    botonAtras.visibility = View.GONE
                     toolbar.setTitle("Mis Grupos")
                     drawer.closeDrawer(GravityCompat.START)
                     false
@@ -89,6 +93,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     cambiarFragment(BusquedaFragment(usuarioActual,"Nombre"))
                     toolbar.setTitle("Busqueda de Grupos")
                     botonAuxiliar.visibility = View.GONE
+                    botonAtras.visibility = View.GONE
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
@@ -96,6 +101,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     cambiarFragment(CrearGrupoFragment(usuarioActual))
                     toolbar.setTitle("Crear Grupos")
                     botonAuxiliar.visibility = View.GONE
+                    botonAtras.visibility = View.GONE
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
@@ -103,6 +109,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual,toolbar))
                     toolbar.setTitle("Ver Mis Datos")
                     botonAuxiliar.visibility = View.VISIBLE
+                    botonAtras.visibility = View.GONE
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
@@ -112,7 +119,8 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_logOut -> {
-                    onBackPressed()
+                    logOut()
+                    super.onBackPressed()
                     false
                 }
                 0 -> {

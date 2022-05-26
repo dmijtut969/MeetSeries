@@ -25,6 +25,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,7 +48,7 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
         super.onCreate(savedInstanceState)
         binding = FragmentInfoGrupoBinding.inflate(layoutInflater)
         var recyclerView = binding.recyclerViewInfoParticipantes
-
+        toolbar.setTitle("Informacion de Grupo")
         var linearLayout = LinearLayoutManager(context)
         linearLayout.orientation = LinearLayoutManager.VERTICAL
         linearLayout.stackFromEnd = false
@@ -121,8 +123,9 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
 
     private fun filter(usuarios: MutableList<Usuario>, text: String): ArrayList<Usuario> {
         var filterString = ArrayList<Usuario>()
+        var buscado = text.uppercase(Locale.getDefault())
         for (usuario in usuarios) {
-            if (usuario.nombreUsuario?.contains(text) == true) filterString.add(usuario)
+            if (usuario.nombreUsuario?.uppercase(Locale.getDefault())?.contains(buscado) == true) filterString.add(usuario)
         }
         return filterString
     }

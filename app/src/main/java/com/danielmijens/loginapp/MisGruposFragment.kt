@@ -17,6 +17,9 @@ import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
+import java.util.*
+import kotlin.collections.ArrayList
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,6 +45,7 @@ public class MisGruposFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentMisGruposBinding.inflate(layoutInflater)
+
         var recyclerView = binding.misGruposRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
@@ -78,8 +82,9 @@ public class MisGruposFragment(
 
     private fun filter(strings: ArrayList<Grupo>, text: String): ArrayList<Grupo> {
         var filterString = ArrayList<Grupo>()
+        var buscado = text.uppercase(Locale.getDefault())
         for (word in strings) {
-            if (word.nombreGrupo?.contains(text) == true) filterString.add(word)
+            if (word.nombreGrupo?.uppercase(Locale.getDefault())?.contains(buscado) == true) filterString.add(word)
         }
         return filterString
     }
@@ -92,6 +97,7 @@ public class MisGruposFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var botonInfoGrupo = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
+        botonInfoGrupo.setBackgroundResource(R.drawable.icono_meet)
         botonInfoGrupo.setOnClickListener {
             if (context != null) {
                 Toast.makeText(context,"Adios", Toast.LENGTH_SHORT).show()

@@ -169,6 +169,15 @@ class Consultas() {
             return usuarioEncontrado
         }
 
+        suspend fun extraerFotoGoogle (emailUsuario: String) : String {
+            var urlFotoGoogle = ""
+            mFirestore.collection("Usuarios").document(emailUsuario).get().addOnSuccessListener { user ->
+                var usuario = user.toObject(Usuario::class.java)
+                urlFotoGoogle = usuario?.fotoPerfil.toString()
+            }
+            return urlFotoGoogle
+        }
+
         suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String) {
             //var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             //modificarRef.update("videoElegido",nuevoVideoElegido).await()

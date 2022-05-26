@@ -41,7 +41,6 @@ class AdapterInfoGrupo(
         holder.binding.nombreItemUsuarioTextView.text = usuario.nombreUsuario
         GlobalScope.launch(Dispatchers.IO) {
             var uriFotoElegido = Storage.extraerImagenPerfil(usuario.email.toString())
-
                 withContext(Dispatchers.Main) {
                     if (uriFotoElegido.toString().isNullOrEmpty()) {
                         holder.binding.fotoUsuariomageView.visibility = View.GONE

@@ -59,6 +59,8 @@ class GrupoElegidoFragment(
     private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var botonAuxiliar : ImageButton
+    private lateinit var botonAtras : ImageButton
+
     lateinit var listener : OnFragmentListener
 
     // default position of image
@@ -95,8 +97,7 @@ class GrupoElegidoFragment(
         shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
-        botonAuxiliar.setBackgroundResource(R.drawable.info_grupo)
-        botonAuxiliar.visibility = View.VISIBLE
+        botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
 
         //Para mover el videoview
         //binding.constraintLayoutVideo?.setOnTouchListener(onTouchListener())
@@ -125,8 +126,11 @@ class GrupoElegidoFragment(
         toolbar.setTitle(grupoElegido.nombreGrupo)
 
         botonAuxiliar.setOnClickListener {
-            Toast.makeText(context,"Holaaaa",Toast.LENGTH_SHORT).show()
             listener.onVerInfoGrupo(grupoElegido,toolbar)
+        }
+
+        botonAtras.setOnClickListener {
+            parentFragmentManager.popBackStack()
         }
         binding.mostrarVideo?.setOnClickListener {
             if (binding.buscarYtLink?.query != null) {
@@ -184,12 +188,19 @@ class GrupoElegidoFragment(
         }else {
             notificarAlEntrar()
         }
+
+        botonAuxiliar.setBackgroundResource(R.drawable.info_grupo)
+        botonAuxiliar.visibility = View.VISIBLE
+
+        botonAtras.setBackgroundResource(R.mipmap.boton_atras)
+        botonAtras.visibility = View.VISIBLE
     }
 
     override fun onStop() {
         GlobalScope.launch (Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
         }
+
         Log.d("Salgo","Salgo del fragment")
         super.onStop()
     }
@@ -199,6 +210,7 @@ class GrupoElegidoFragment(
         GlobalScope.launch (Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
         }
+        botonAtras.visibility = View.GONE
         super.onDestroy()
     }
 
@@ -303,7 +315,7 @@ class GrupoElegidoFragment(
                 val url = sacarUrlYT(urlVideoYT)
                 var todoBien = false
                 if (url.isNullOrEmpty()||url.size<=0) {
-                    Toast.makeText(context,"Enlace no valido", Toast.LENGTH_SHORT).show()
+                    if (context != null) Toast.makeText(context,"Enlace no valido", Toast.LENGTH_SHORT).show()
                 }else if (iniciado == true) {
                     if (segundos==null) {
                        youTubePlayer.loadVideo(url[1], 0f)

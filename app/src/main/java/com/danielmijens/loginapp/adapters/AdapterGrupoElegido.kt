@@ -3,6 +3,7 @@ package com.danielmijens.loginapp.adapters
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.text.Layout
+import android.text.format.DateUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -57,7 +58,13 @@ class AdapterGrupoElegido(
             holder.binding.textViewNombreUsuario.text = mensajeRecibido.nombreUsuarioEmisor
         }
         holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
-        holder.binding.fechaMensaje.text = mensajeRecibido.hora.toString()
+        var fecha = mensajeRecibido.hora.toString()
+        DateUtils.isToday(mensajeRecibido.hora!!.time)
+        var hora = fecha.substring(fecha.indexOf(":")-2,fecha.indexOf(":")+6)
+        if (DateUtils.isToday(mensajeRecibido.hora!!.time)) {
+            hora = "Hoy - " + hora
+        }
+        holder.binding.fechaMensaje.text = hora
         holder.binding.linearLayoutTotal.setOnClickListener {
             if (holder.binding.fechaMensaje.visibility == View.GONE) {
                 holder.binding.fechaMensaje.visibility = View.VISIBLE
