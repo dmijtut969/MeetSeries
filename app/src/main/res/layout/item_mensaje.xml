@@ -62,8 +62,7 @@
                 <TextView
                     android:id="@+id/mensajeTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingLeft="10dp"
                     android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -73,13 +72,12 @@
 
                 <TextView
                     android:id="@+id/fechaMensaje"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:gravity="right"
-                    android:paddingRight="10dp"
                     android:text="33:33"
                     android:textAlignment="textEnd"
                     android:textColor="#009F8C"

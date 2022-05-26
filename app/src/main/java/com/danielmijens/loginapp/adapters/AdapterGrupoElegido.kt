@@ -51,7 +51,6 @@ class AdapterGrupoElegido(
             holder.binding.linearLayoutTotal.gravity = Gravity.LEFT
             holder.binding.textViewNombreUsuario.visibility = View.VISIBLE
         }
-
         if (mensajeRecibido.nombreUsuarioEmisor.isNullOrEmpty()) {
             holder.binding.textViewNombreUsuario.text = mensajeRecibido.emisor
         }else {
