@@ -40,6 +40,8 @@ public class MisGruposFragment(
     private lateinit var listaGrupos : ArrayList<Grupo>
     private lateinit var  adapter : AdapterMisGrupos
     private lateinit var db : FirebaseFirestore
+    private lateinit var botonAuxiliar : ImageButton
+    private lateinit var botonAtras : ImageButton
     lateinit var listener : OnFragmentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,6 +80,8 @@ public class MisGruposFragment(
                 return true
             }
         })
+        botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
+        botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
     }
 
     private fun filter(strings: ArrayList<Grupo>, text: String): ArrayList<Grupo> {
@@ -91,6 +95,7 @@ public class MisGruposFragment(
     override fun onStart() {
         super.onStart()
         toolbar.setTitle("Mis Grupos")
+        botonAuxiliar.visibility = View.GONE
 
     }
 

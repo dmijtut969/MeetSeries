@@ -97,15 +97,18 @@
             <SearchView
                 android:id="@+id/buscarYtLink"
                 android:layout_width="match_parent"
+                android:clickable="true"
                 android:layout_height="match_parent"
                 android:layout_margin="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/search_view_background"
+                android:backgroundTint="#FFFFFF"
                 android:queryHint="Introduce link de yt..."
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:focusable="true" />
 
         </LinearLayout>
-        ºº
+
     </RelativeLayout>
 
 </FrameLayout>

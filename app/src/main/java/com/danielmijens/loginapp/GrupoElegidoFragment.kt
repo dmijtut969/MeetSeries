@@ -315,7 +315,7 @@ class GrupoElegidoFragment(
                 val url = sacarUrlYT(urlVideoYT)
                 var todoBien = false
                 if (url.isNullOrEmpty()||url.size<=0) {
-                    if (context != null) Toast.makeText(context,"Enlace no valido", Toast.LENGTH_SHORT).show()
+                    if (context != null && usuarioActual.email==grupoElegido.creador) Toast.makeText(context,"Enlace no valido", Toast.LENGTH_SHORT).show()
                 }else if (iniciado == true) {
                     if (segundos==null) {
                        youTubePlayer.loadVideo(url[1], 0f)
@@ -398,7 +398,7 @@ class GrupoElegidoFragment(
                     }
                     for (interaccionUsuario in value?.documentChanges!!) {
                         if (interaccionUsuario.type == DocumentChange.Type.MODIFIED) {
-                            //Toast.makeText(view?.context,"Ha entrado modificado un usuario",Toast.LENGTH_SHORT).show()
+                            Toast.makeText(view?.context,"Ha entrado un usuario",Toast.LENGTH_SHORT).show()
                             var interaccionVideo = interaccionUsuario.document.toObject(Grupo::class.java)
                             Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
                             Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())

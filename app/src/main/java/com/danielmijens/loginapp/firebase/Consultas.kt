@@ -179,8 +179,8 @@ class Consultas() {
         }
 
         suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String) {
-            //var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-            //modificarRef.update("videoElegido",nuevoVideoElegido).await()
+            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            modificarRef.update("videoElegido",nuevoVideoElegido).await()
         }
 
         suspend fun actualizarVideoIniciado(grupoElegido: Grupo,
