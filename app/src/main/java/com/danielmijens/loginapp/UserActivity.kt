@@ -3,8 +3,10 @@ package com.danielmijens.loginapp
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.SharedPreferences
+import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -48,10 +50,11 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var usuarioActual : UsuarioActual
     lateinit var toolbar : androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         binding = ActivityUserBinding.inflate(layoutInflater)
         bindingToolbar = AppBarMainBinding.inflate(layoutInflater)
         bindingNavHeader = NavHeaderMainBinding.inflate(layoutInflater)
-        super.onCreate(savedInstanceState)
+
 
         usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
 
@@ -117,7 +120,13 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
                 R.id.nav_cambiarFotoPerfil -> {
                     Snackbar.make(binding.root, "Se implementara en un futuro ", Snackbar.LENGTH_SHORT).show()
-                    cambiarFragment(VerVideoFragment(usuarioActual))
+                    if (toolbar.visibility == View.GONE) {
+                        toolbar.visibility = View.VISIBLE
+                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    }else {
+                        toolbar.visibility = View.GONE
+                        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    }
                     false
                 }
                 R.id.nav_logOut -> {

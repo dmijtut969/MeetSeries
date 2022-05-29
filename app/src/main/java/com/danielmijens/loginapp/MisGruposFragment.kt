@@ -31,6 +31,8 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MisGruposFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+
 public class MisGruposFragment(
     var usuarioActual: UsuarioActual,
     var toolbar: androidx.appcompat.widget.Toolbar
