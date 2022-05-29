@@ -98,7 +98,6 @@ class GrupoElegidoFragment(
 
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
-
         //Para mover el videoview
         //binding.constraintLayoutVideo?.setOnTouchListener(onTouchListener())
     }
@@ -398,7 +397,7 @@ class GrupoElegidoFragment(
                     }
                     for (interaccionUsuario in value?.documentChanges!!) {
                         if (interaccionUsuario.type == DocumentChange.Type.MODIFIED) {
-                            Toast.makeText(view?.context,"Ha entrado un usuario",Toast.LENGTH_SHORT).show()
+                            if (view?.context != null) Toast.makeText(view?.context,"Ha entrado un usuario",Toast.LENGTH_SHORT).show()
                             var interaccionVideo = interaccionUsuario.document.toObject(Grupo::class.java)
                             Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
                             Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())
