@@ -2,12 +2,12 @@ package com.danielmijens.loginapp.firebase
 
 import android.annotation.SuppressLint
 import android.util.Log
-import com.danielmijens.loginapp.entidades.Grupo
-import com.danielmijens.loginapp.entidades.Mensaje
-import com.danielmijens.loginapp.entidades.Usuario
-import com.danielmijens.loginapp.entidades.UsuarioActual
+import com.danielmijens.loginapp.entidades.*
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -32,6 +32,9 @@ class Consultas() {
             var idGrupo = nombreGrupo + " - " + creador
             var nuevoGrupo = Grupo(nombreGrupo,categoriaGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo,fotoGrupo)
             var todoCorrecto = true
+            GlobalScope.launch(Dispatchers.IO) {
+                crearControlVideo(idGrupo,creador)
+            }
             var grupoNuevoRef  = mFirestore.collection("Grupos").document(idGrupo)
             grupoNuevoRef.set(nuevoGrupo).addOnCompleteListener { task ->
                 if (task.isCanceled) {
@@ -45,6 +48,17 @@ class Consultas() {
             }*/
 
             return todoCorrecto
+        }
+
+        suspend fun crearControlVideo(idGrupo: String,creador : String) {
+            var grupoNuevoRef  = mFirestore.collection("ControlVideos").document(idGrupo)
+            var nuevoControlVideo = ControlVideo(idGrupo,creador,"",false,0f)
+            var todoCorrecto = true
+            grupoNuevoRef.set(nuevoControlVideo).addOnCompleteListener { task ->
+                if (task.isCanceled) {
+                    todoCorrecto = false
+                }
+            }.await()
         }
 
         fun borrarGrupo (usuarioActual: UsuarioActual,
@@ -64,6 +78,31 @@ class Consultas() {
                         for (dc : DocumentChange in value?.documentChanges!!) {
                             if (dc.type == DocumentChange.Type.ADDED) {
                                 mFirestore.collection("Grupos").document(dc.document.id).delete()
+                                Log.d("Se ha borrado", dc.document.id.toString())
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    borrarControlVideo(idGrupo)
+                                }
+                            }
+                        }
+                    }
+                })
+        }
+
+        fun borrarControlVideo (idGrupo: String) {
+            mFirestore.collection("ControlVideos").whereEqualTo("idGrupo",idGrupo)
+                .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                    @SuppressLint("LongLogTag")
+                    override fun onEvent(
+                        value: QuerySnapshot?,
+                        error: FirebaseFirestoreException?
+                    ) {
+                        if (error != null) {
+                            Log.e("Firestore Error",error.message.toString())
+                            return
+                        }
+                        for (dc : DocumentChange in value?.documentChanges!!) {
+                            if (dc.type == DocumentChange.Type.ADDED) {
+                                mFirestore.collection("ControlVideos").document(dc.document.id).delete()
                                 Log.d("Se ha borrado", dc.document.id.toString())
                             }
                         }
@@ -119,19 +158,6 @@ class Consultas() {
             return existe
         }
 
-        suspend fun sacarMensajesDeGrupo(grupoElegido: Grupo): MutableList<Mensaje> {
-            var listaMensajes = mutableListOf<Mensaje>()
-            mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-                .collection("Mensajes").get().addOnSuccessListener { grupos ->
-                    for (grupo in grupos) {
-                        listaMensajes.add(grupo.toObject(Mensaje::class.java))
-                    }
-                }.await()
-            Log.d("ListaMensajes: ", listaMensajes.toString())
-            return listaMensajes
-        }
-
-
         suspend fun enviarMensajeAGrupo(mensajeEnviado : String, grupoElegido : Grupo, usuarioEmisor : UsuarioActual) {
             var formato = SimpleDateFormat("HH:mm:ss")
             var hora = formato.format(Date())
@@ -178,24 +204,25 @@ class Consultas() {
             return urlFotoGoogle
         }
 
-        suspend fun actualizarVideoElegido(grupoElegido: Grupo,nuevoVideoElegido : String) {
-            var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+        suspend fun actualizarVideoElegido(control: ControlVideo,nuevoVideoElegido : String) {
+            var modificarRef = mFirestore.collection("ControlVideos").document(control.idGrupo.toString())
             modificarRef.update("videoElegido",nuevoVideoElegido).await()
         }
 
-        suspend fun actualizarVideoIniciado(grupoElegido: Grupo,
+        suspend fun actualizarVideoIniciado(control: ControlVideo,
                                             videoIniciado: Boolean) {
-            //var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
+            var modificarRef = mFirestore.collection("ControlVideos").document(control.idGrupo.toString())
             if (videoIniciado) {
-                //modificarRef.update("videoIniciado",videoIniciado).await()
+                modificarRef.update("videoIniciado",videoIniciado).await()
             }else {
-                //modificarRef.update("videoIniciado",videoIniciado).await()
+                modificarRef.update("videoIniciado",videoIniciado).await()
             }
+            Log.d("videoIniciado control " , videoIniciado.toString())
         }
 
-        suspend fun actualizarSegundos(grupoElegido: Grupo, seg: Float) {
-            //var modificarRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
-            //modificarRef.update("videoSegundos",seg).await()
+        suspend fun actualizarSegundos(control: ControlVideo, seg: Float) {
+            var modificarRef = mFirestore.collection("ControlVideos").document(control.idGrupo.toString())
+            modificarRef.update("videoSegundos",seg).await()
         }
 
         suspend fun usuarioOnline(grupoElegido: Grupo,
@@ -219,6 +246,15 @@ class Consultas() {
             var arrayOnline = arrayListOf<String>()
             arrayOnline.addAll(listaOn)
             docRef.update("listaOnline",arrayOnline).await()
+        }
+
+        suspend fun buscarControlVideoPorID (idGrupo : String) : ControlVideo {
+            var controlVideoBuscado : ControlVideo = ControlVideo()
+            val docRef = mFirestore.collection("ControlVideos").document(idGrupo)
+            docRef.get().addOnSuccessListener { document ->
+                controlVideoBuscado = document.toObject(ControlVideo::class.java)!!
+            }.await()
+            return controlVideoBuscado
         }
 
 

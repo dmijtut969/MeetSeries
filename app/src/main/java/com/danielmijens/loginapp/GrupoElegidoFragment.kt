@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.SearchView
 import androidx.annotation.NonNull
+import com.danielmijens.loginapp.entidades.ControlVideo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -60,6 +61,7 @@ class GrupoElegidoFragment(
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var botonAuxiliar : ImageButton
     private lateinit var botonAtras : ImageButton
+    private lateinit var controlVideo : ControlVideo
 
     lateinit var listener : OnFragmentListener
 
@@ -70,6 +72,8 @@ class GrupoElegidoFragment(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = FragmentGrupoElegidoBinding.inflate(layoutInflater)
+        controlVideo = ControlVideo()
+
         youTubePlayerView = binding.playerViewGrupo!!
         var recyclerView = binding.mensajesRecyclerView
 
@@ -85,7 +89,12 @@ class GrupoElegidoFragment(
         recyclerView.adapter = adapter
         leerMensajesListener(recyclerView)
 
-        videoYT()
+        GlobalScope.launch (Dispatchers.IO) {
+            controlVideo = Consultas.buscarControlVideoPorID(grupoElegido.idGrupo!!)
+            withContext(Dispatchers.Main) {
+                videoYT()
+            }
+        }
 
         GlobalScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {
@@ -164,7 +173,7 @@ class GrupoElegidoFragment(
                 //if (videoSearch.contains("youtube")){
                     Log.d("searchView Contiene", "Es youtube")
                     if (videoSearch != null) {
-                        cambiarVideoYT(grupoElegido,videoSearch,0f,false)
+                        cambiarVideoYT(controlVideo,videoSearch,0f,false)
                     }
 
                 return true
@@ -254,7 +263,7 @@ class GrupoElegidoFragment(
     }
 
      fun videoYT() {
-         if (grupoElegido.videoElegido != null) {
+         if (controlVideo.videoElegido != null) {
              youtubePlayerTracker = YouTubePlayerTracker()
 
              if (youTubePlayerView != null) {
@@ -264,10 +273,10 @@ class GrupoElegidoFragment(
              youTubePlayerView!!.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                  override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
                      //if your url is something like this -> https://www.youtube.com/watch?v=EzyXVfyx7CU
-                     val urlToLoad = grupoElegido.videoElegido
+                     val urlToLoad = controlVideo.videoElegido!!
                      val url = sacarUrlYT(urlToLoad)
-                     var segundos = grupoElegido.videoSegundos
-                     if (grupoElegido.videoIniciado != true || segundos == null || segundos == 0f) {
+                     var segundos = controlVideo.videoSegundos
+                     if (controlVideo.videoIniciado != true || segundos == null || segundos == 0f) {
                          youTubePlayer.cueVideo(url[1], 0f)
                      }else {
                          youTubePlayer.loadVideo(url[1], segundos)
@@ -291,12 +300,12 @@ class GrupoElegidoFragment(
                          GlobalScope.launch(Dispatchers.IO) {
                              if (state.equals(PlayerConstants.PlayerState.PAUSED)) {
                                  Log.d("Se ha pausado Dani"," Pausadoooo")
-                                 Consultas.actualizarSegundos(grupoElegido,segundos)
-                                 Consultas.actualizarVideoIniciado(grupoElegido,false)
+                                 Consultas.actualizarSegundos(controlVideo,segundos)
+                                 Consultas.actualizarVideoIniciado(controlVideo,false)
                              }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
                                  Log.d("Esta playing Dani"," Playiiiing")
                                  //Consultas.actualizarSegundos(grupoElegido,segundos)
-                                 Consultas.actualizarVideoIniciado(grupoElegido,true)
+                                 Consultas.actualizarVideoIniciado(controlVideo,true)
                              }
                          }
                      }
@@ -308,7 +317,7 @@ class GrupoElegidoFragment(
          }
     }
 
-    fun cambiarVideoYT (grupoACambiar : Grupo,urlVideoYT : String, segundos : Float?,iniciado : Boolean?) {
+    fun cambiarVideoYT (controlVideoCambiar: ControlVideo, urlVideoYT: String, segundos: Float?, iniciado: Boolean?) {
         youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
             override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
                 val url = sacarUrlYT(urlVideoYT)
@@ -329,11 +338,11 @@ class GrupoElegidoFragment(
                 if (todoBien && usuarioActual.email==grupoElegido.creador) {
                     GlobalScope.launch(Dispatchers.IO) {
                         if (segundos==null) {
-                            Consultas.actualizarSegundos(grupoACambiar,0f)
-                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT)
+                            Consultas.actualizarSegundos(controlVideoCambiar,0f)
+                            Consultas.actualizarVideoElegido(controlVideoCambiar,urlVideoYT)
                             }else {
-                            Consultas.actualizarSegundos(grupoACambiar,segundos)
-                            Consultas.actualizarVideoElegido(grupoACambiar,urlVideoYT)
+                            Consultas.actualizarSegundos(controlVideoCambiar,segundos)
+                            Consultas.actualizarVideoElegido(controlVideoCambiar,urlVideoYT)
                         }
 
                     }
@@ -355,7 +364,7 @@ class GrupoElegidoFragment(
     @SuppressLint("NotifyDataSetChanged")
     fun notificarAlModificarVideo() {
         youtubePlayerTracker = YouTubePlayerTracker()
-        mFirestore.collection("Grupos").whereEqualTo("idGrupo",grupoElegido.idGrupo)
+        mFirestore.collection("ControlVideos").whereEqualTo("idGrupo",grupoElegido.idGrupo)
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 @SuppressLint("LongLogTag")
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
@@ -368,14 +377,14 @@ class GrupoElegidoFragment(
 
                             if (grupoElegido.creador == usuarioActual.email) {
                                 //Toast.makeText(context,"Se esta cambiando a los demas",Toast.LENGTH_SHORT).show()
-                                var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
+                                var grupoControlVideo = cambioVideo.document.toObject(ControlVideo::class.java)
                             }else {
-                                var grupoCambioVideo = cambioVideo.document.toObject(Grupo::class.java)
-                                Log.d("test grupoCambioVideo",grupoCambioVideo.toString())
-                                cambiarVideoYT(grupoCambioVideo
-                                    ,grupoCambioVideo.videoElegido.toString()
-                                    ,grupoCambioVideo.videoSegundos,
-                                    grupoCambioVideo.videoIniciado)
+                                var grupoControlVideo = cambioVideo.document.toObject(ControlVideo::class.java)
+                                Log.d("test grupoCambioVideo",grupoControlVideo.toString())
+                                cambiarVideoYT(controlVideo
+                                    ,grupoControlVideo.videoElegido.toString()
+                                    ,grupoControlVideo.videoSegundos,
+                                    grupoControlVideo.videoIniciado)
                             }
 
                         }
@@ -397,14 +406,15 @@ class GrupoElegidoFragment(
                     }
                     for (interaccionUsuario in value?.documentChanges!!) {
                         if (interaccionUsuario.type == DocumentChange.Type.MODIFIED) {
+                            var interaccionVideo = interaccionUsuario.document.toObject(ControlVideo::class.java)
                             if (view?.context != null) Toast.makeText(view?.context,"Ha entrado un usuario",Toast.LENGTH_SHORT).show()
-                            var interaccionVideo = interaccionUsuario.document.toObject(Grupo::class.java)
                             Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
                             Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())
                             var seg = youtubePlayerTracker.currentSecond
                             GlobalScope.launch (Dispatchers.IO){
                                 Log.d("interaccionUsuario youtubePlayerTracker.currentSecond",youtubePlayerTracker.currentSecond.toString())
-                                //Consultas.actualizarSegundos(grupoElegido,seg)
+                                Consultas.actualizarSegundos(controlVideo,seg)
+
                             }
                         }
                     }

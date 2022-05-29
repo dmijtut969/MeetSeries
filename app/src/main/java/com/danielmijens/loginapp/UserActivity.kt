@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.content.res.Configuration
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -60,6 +61,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         //Utilidades de navegacion
 
         toolbar.setTitle("Mis Grupos")
+        toolbar.setTitleTextColor(Color.WHITE)
         setSupportActionBar(toolbar)
         drawer = findViewById(R.id.drawer_layout)
         toggle = ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close)

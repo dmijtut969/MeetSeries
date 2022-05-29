@@ -70,6 +70,9 @@ dependencies {
     //Firebase Storage
     implementation 'com.google.firebase:firebase-storage-ktx'
 
+    //Firebase Realtime
+    implementation 'com.google.firebase:firebase-database-ktx'
+
     //Analytics y crashlytics
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
