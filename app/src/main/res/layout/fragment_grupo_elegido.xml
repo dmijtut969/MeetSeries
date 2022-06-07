@@ -20,12 +20,12 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mensajesRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="76dp"
+                android:layout_height="0dp"
                 android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@+id/relativeLayoutEnviarMensajes"
+                app:layout_constraintBottom_toTopOf="@id/linearLayoutEnviarMensajes"
+                app:layout_constraintStart_toStartOf="@id/linearLayoutEnviarMensajes"
                 app:layout_constraintTop_toBottomOf="@+id/playerViewGrupo"
+                app:layout_constraintVertical_bias="0.837"
                 tools:listitem="@layout/item_mensaje">
 
             </androidx.recyclerview.widget.RecyclerView>
@@ -34,15 +34,16 @@
                 android:id="@+id/playerViewGrupo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="10dp"
                 android:visibility="gone"
                 app:autoPlay="false"
-                tools:ignore="MissingConstraints" />
+                tools:ignore="MissingConstraints"
+                tools:visibility="visible" />
 
-            <RelativeLayout
-                android:id="@+id/relativeLayoutEnviarMensajes"
+            <LinearLayout
+                android:id="@+id/linearLayoutEnviarMensajes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="#0C3E2A"
                 android:paddingBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="60dp"
+                    android:layout_weight="1"
                     android:background="@color/white"
                     android:backgroundTint="#FFFFFF"
                     android:padding="10dp"
@@ -66,17 +67,15 @@
 
                 <ImageButton
                     android:id="@+id/imageButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginStart="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_weight="5"
+                    android:padding="10dp"
                     android:src="@mipmap/icono_enviar_mensaje" />
 
 
-            </RelativeLayout>
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -85,7 +84,7 @@
             android:id="@+id/linearLayoutControles"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:background="#012C1B"
+            android:background="#0C3E2A"
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 

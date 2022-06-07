@@ -65,7 +65,6 @@
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingLeft="10dp"
-                    android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                     android:textAlignment="textStart"
                     android:textColor="@android:color/white"
                     android:textColorHighlight="#00FFF6" />
