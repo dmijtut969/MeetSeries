@@ -89,13 +89,6 @@ class GrupoElegidoFragment(
         recyclerView.adapter = adapter
         leerMensajesListener(recyclerView)
 
-        GlobalScope.launch (Dispatchers.IO) {
-            controlVideo = Consultas.buscarControlVideoPorID(grupoElegido.idGrupo!!)
-            withContext(Dispatchers.Main) {
-                videoYT()
-            }
-        }
-
         GlobalScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {
                 binding.mostrarVideo?.isEnabled = true
@@ -187,6 +180,13 @@ class GrupoElegidoFragment(
     @SuppressLint("LongLogTag")
     override fun onStart() {
         super.onStart()
+        GlobalScope.launch (Dispatchers.IO) {
+            controlVideo = Consultas.buscarControlVideoPorID(grupoElegido.idGrupo!!)
+            withContext(Dispatchers.Main) {
+                videoYT()
+            }
+        }
+
         GlobalScope.launch(Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido, usuarioActual, true)
         }
@@ -295,6 +295,7 @@ class GrupoElegidoFragment(
                      youTubePlayer: YouTubePlayer,
                      state: PlayerConstants.PlayerState
                  ) {
+
                      if (grupoElegido.creador==usuarioActual.email) {
                          var segundos = youtubePlayerTracker.currentSecond
                          GlobalScope.launch(Dispatchers.IO) {
@@ -312,8 +313,10 @@ class GrupoElegidoFragment(
 
                      super.onStateChange(youTubePlayer, state)
                  }
+
              })
              youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
+
          }
     }
 
