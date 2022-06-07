@@ -98,6 +98,7 @@ public class MisGruposFragment(
         super.onStart()
         toolbar.setTitle("Mis Grupos")
         botonAuxiliar.visibility = View.GONE
+        videoIniciadoGrupos()
 
     }
 
@@ -140,6 +141,45 @@ public class MisGruposFragment(
 
                             listaGrupos.add(grupoNuevo)
                             Log.d("Eventchangelistener documento : ", dc.document.toString())
+                        }
+                    }
+                    Log.d("Eventchangelistener lista : ", listaGrupos.toString())
+
+                    adapter.notifyDataSetChanged()
+                }
+
+            })
+    }
+
+    private fun videoIniciadoGrupos() {
+        db = FirebaseFirestore.getInstance()
+        db.collection("ControlVideos")
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                @SuppressLint("LongLogTag")
+                override fun onEvent(
+                    value: QuerySnapshot?,
+                    error: FirebaseFirestoreException?
+                ) {
+                    if (error != null) {
+                        Log.e("Firestore Error",error.message.toString())
+                        return
+                    }
+                    Log.d("Value del document ", value!!.documents.toString())
+                    for (dc : DocumentChange in value?.documentChanges!!) {
+                        var controlNuevo = dc.document.toObject(Grupo::class.java)
+                        Log.d("controlGrupoNuevo", controlNuevo.toString())
+                        if (!listaGrupos.isNullOrEmpty() && dc.type == DocumentChange.Type.MODIFIED) {
+                            for (grupito in listaGrupos) {
+                                if (grupito.idGrupo.equals(controlNuevo.idGrupo) && controlNuevo.videoIniciado == true) {
+                                    listaGrupos.remove(grupito)
+                                    grupito.videoIniciado = true
+                                    listaGrupos.add(grupito)
+                                }else if(grupito.idGrupo.equals(controlNuevo.idGrupo) && controlNuevo.videoIniciado == false) {
+                                    listaGrupos.remove(grupito)
+                                    grupito.videoIniciado = false
+                                    listaGrupos.add(grupito)
+                                }
+                            }
                         }
                     }
                     Log.d("Eventchangelistener lista : ", listaGrupos.toString())

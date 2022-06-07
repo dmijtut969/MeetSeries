@@ -11,6 +11,6 @@ data class Grupo(val nombreGrupo : String ?= null,
                  val idGrupo : String ?= null,
                  val fotoGrupo : String?= null,
                  val videoElegido : String ?= null,
-                 val videoIniciado : Boolean ?= null,
+                 var videoIniciado : Boolean ?= null,
                  val videoSegundos : Float ?= null,
                  val listaOnline : List<String> ?= arrayListOf<String>() ) : Serializable
