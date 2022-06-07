@@ -137,20 +137,24 @@ class GrupoElegidoFragment(
         binding.mostrarVideo?.setOnClickListener {
             if (binding.buscarYtLink?.query != null) {
                 if (binding.playerViewGrupo?.visibility == View.GONE) {
+                    toolbar.visibility = View.GONE
+                    //binding.linearLayoutControles.visibility = View.VISIBLE
                     binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_arriba)
-                    ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -550f).apply {
+                    ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -500f).apply {
                         this.duration = 0
                         start()
                     }.doOnEnd {
                         binding.playerViewGrupo?.visibility = View.VISIBLE
-                        ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 90f).apply {
+                        ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 0f).apply {
                             this.duration = 500
                             start()
                         }
                     }
                 } else {
+                    toolbar.visibility = View.VISIBLE
+                    //binding.linearLayoutControles.visibility = View.GONE
                     binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_abajo)
-                    ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -550f).apply {
+                    ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -500f).apply {
                         this.duration = 500
                         start()
                     }.doOnEnd {
@@ -432,17 +436,19 @@ class GrupoElegidoFragment(
         youTubePlayerView.getPlayerUiController().setFullScreenButtonClickListener(View.OnClickListener {
             if (youTubePlayerView.isFullScreen()) {
                 binding.linearLayoutControles.visibility = View.VISIBLE
+                binding.linearLayoutEnviarMensajes.visibility = View.VISIBLE
                 binding.mensajesRecyclerView.visibility = View.VISIBLE
                 toolbar.visibility = View.VISIBLE
                 youTubePlayerView.exitFullScreen()
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }else {
                 Log.d("Full", "Pantalla completa")
                 youTubePlayerView.enterFullScreen()
                 binding.linearLayoutControles.visibility = View.GONE
+                binding.linearLayoutEnviarMensajes.visibility = View.GONE
                 binding.mensajesRecyclerView.visibility = View.GONE
                 toolbar.visibility = View.GONE
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             }
         })
     }
