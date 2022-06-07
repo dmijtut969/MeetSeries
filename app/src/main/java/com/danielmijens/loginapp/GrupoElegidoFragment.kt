@@ -3,6 +3,7 @@ package com.danielmijens.loginapp
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -186,6 +187,8 @@ class GrupoElegidoFragment(
                 videoYT()
             }
         }
+
+        youtubeFullscreen()
 
         GlobalScope.launch(Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido, usuarioActual, true)
@@ -423,6 +426,25 @@ class GrupoElegidoFragment(
                     }
                 }
             })
+    }
+
+    fun youtubeFullscreen() {
+        youTubePlayerView.getPlayerUiController().setFullScreenButtonClickListener(View.OnClickListener {
+            if (youTubePlayerView.isFullScreen()) {
+                binding.linearLayoutControles.visibility = View.VISIBLE
+                binding.mensajesRecyclerView.visibility = View.VISIBLE
+                toolbar.visibility = View.VISIBLE
+                youTubePlayerView.exitFullScreen()
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            }else {
+                Log.d("Full", "Pantalla completa")
+                youTubePlayerView.enterFullScreen()
+                binding.linearLayoutControles.visibility = View.GONE
+                binding.mensajesRecyclerView.visibility = View.GONE
+                toolbar.visibility = View.GONE
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            }
+        })
     }
 
 }
