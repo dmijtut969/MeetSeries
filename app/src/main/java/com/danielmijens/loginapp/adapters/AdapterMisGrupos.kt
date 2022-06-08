@@ -41,7 +41,7 @@ class AdapterMisGrupos(
     override fun onBindViewHolder(holder: AdapterMisGruposViewHolder, position: Int) {
         var grupo : Grupo = listaGrupos[position]
         holder.binding.nombreItemGrupoTextView.text = grupo.nombreGrupo
-        holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
+        holder.binding.contadorPersonasTextView.text = grupo.listaParticipantes?.size.toString() + " participantes"
         GlobalScope.launch(Dispatchers.IO) {
             var uriFotoElegido = Storage.extraerImagenGrupo(grupo.idGrupo)
 

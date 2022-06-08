@@ -39,7 +39,7 @@ class AdapterBusqueda(var binding: FragmentBusquedaBinding
     override fun onBindViewHolder(holder: AdapterBusquedaViewHolder, position: Int) {
         val grupo : Grupo = listaGruposBusqueda[position]
         holder.binding.nombreItemGrupoTextView.text = grupo.nombreGrupo
-        holder.binding.categoriaItemGrupoTextView.text = grupo.categoriaGrupo
+        holder.binding.contadorPersonasTextView.text = grupo.listaParticipantes?.size.toString() + " participantes"
 
         GlobalScope.launch(Dispatchers.IO) {
             var uriFotoElegido = Storage.extraerImagenGrupo(grupo.idGrupo)

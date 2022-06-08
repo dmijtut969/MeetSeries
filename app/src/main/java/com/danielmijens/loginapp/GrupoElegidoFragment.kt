@@ -215,7 +215,7 @@ class GrupoElegidoFragment(
         GlobalScope.launch (Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
         }
-
+        toolbar.visibility = View.VISIBLE
         Log.d("Salgo","Salgo del fragment")
         super.onStop()
     }
@@ -226,6 +226,7 @@ class GrupoElegidoFragment(
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
         }
         botonAtras.visibility = View.GONE
+        toolbar.visibility = View.VISIBLE
         super.onDestroy()
     }
 
@@ -270,7 +271,7 @@ class GrupoElegidoFragment(
     }
 
      fun videoYT() {
-         if (controlVideo.videoElegido != null) {
+         if (controlVideo.videoElegido != null && esYT(controlVideo.videoElegido!!)) {
              youtubePlayerTracker = YouTubePlayerTracker()
 
              if (youTubePlayerView != null) {
@@ -369,6 +370,16 @@ class GrupoElegidoFragment(
             urlReturn = url.split("be/").toTypedArray()
         }
         return urlReturn
+    }
+
+    fun esYT(url: String): Boolean {
+        var urlCorrecta = false
+        if (url.contains("youtube.com/watch?v=")) {
+            urlCorrecta = true
+        }else if (url.contains("be/")) {
+            urlCorrecta = true
+        }
+        return urlCorrecta
     }
 
     @SuppressLint("NotifyDataSetChanged")

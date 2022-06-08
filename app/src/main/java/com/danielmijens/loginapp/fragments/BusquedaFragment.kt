@@ -40,11 +40,7 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
         adapter = AdapterBusqueda(binding,listaGruposBusqueda,usuarioActual,this)
 
         recyclerView.adapter = adapter
-        if (!valorABuscar.isNullOrEmpty()) { //Con esto permitimos que si no se busca nada, se traigan todos los grupos existentes.
-            eventChangeListener(campo, valorABuscar!!)
-        }else {
-            eventChangeListenerTodos()
-        }
+
 
         binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -74,7 +70,11 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
 
     override fun onStart() {
         super.onStart()
-
+        if (!valorABuscar.isNullOrEmpty()) { //Con esto permitimos que si no se busca nada, se traigan todos los grupos existentes.
+            eventChangeListener(campo, valorABuscar!!)
+        }else {
+            eventChangeListenerTodos()
+        }
     }
 
     override fun onCreateView(
@@ -153,7 +153,10 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
                         Log.d("Contadorrrr", dc.document.toString())
                         if (dc.type == DocumentChange.Type.ADDED) {
                             Log.d("Eventchangelistener documento : ", dc.document.toString())
-                            listaGruposBusqueda.add(dc.document.toObject(Grupo::class.java))
+                            var grupoEncontrado = dc.document.toObject(Grupo::class.java)
+                            if (!grupoEncontrado.listaParticipantes!!.contains(usuarioActual.email.toString())) {
+                                listaGruposBusqueda.add(dc.document.toObject(Grupo::class.java))
+                            }
                         }
                     }
                     Log.d("Valor a buscar : ", valorABuscar.toString())

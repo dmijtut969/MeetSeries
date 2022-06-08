@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.adapters.AdapterMisGrupos
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
+import com.danielmijens.loginapp.entidades.ControlVideo
 import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
@@ -59,8 +60,6 @@ public class MisGruposFragment(
 
         recyclerView.adapter = adapter
 
-        eventChangeListener()
-
         binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchViewMisGrupos.clearFocus()
@@ -99,6 +98,7 @@ public class MisGruposFragment(
         toolbar.setTitle("Mis Grupos")
         botonAuxiliar.visibility = View.GONE
         videoIniciadoGrupos()
+        eventChangeListener()
 
     }
 
@@ -166,20 +166,23 @@ public class MisGruposFragment(
                     }
                     Log.d("Value del document ", value!!.documents.toString())
                     for (dc : DocumentChange in value?.documentChanges!!) {
-                        var controlNuevo = dc.document.toObject(Grupo::class.java)
+                        var controlNuevo = dc.document.toObject(ControlVideo::class.java)
                         Log.d("controlGrupoNuevo", controlNuevo.toString())
                         if (!listaGrupos.isNullOrEmpty() && dc.type == DocumentChange.Type.MODIFIED) {
+                            var listaTemporal = arrayListOf<Grupo>()
+                            listaTemporal.addAll(listaGrupos)
                             for (grupito in listaGrupos) {
                                 if (grupito.idGrupo.equals(controlNuevo.idGrupo) && controlNuevo.videoIniciado == true) {
-                                    listaGrupos.remove(grupito)
+                                    listaTemporal.remove(grupito)
                                     grupito.videoIniciado = true
-                                    listaGrupos.add(grupito)
+                                    listaTemporal.add(grupito)
                                 }else if(grupito.idGrupo.equals(controlNuevo.idGrupo) && controlNuevo.videoIniciado == false) {
-                                    listaGrupos.remove(grupito)
+                                    listaTemporal.remove(grupito)
                                     grupito.videoIniciado = false
-                                    listaGrupos.add(grupito)
+                                    listaTemporal.add(grupito)
                                 }
                             }
+                            listaGrupos = listaTemporal
                         }
                     }
                     Log.d("Eventchangelistener lista : ", listaGrupos.toString())
