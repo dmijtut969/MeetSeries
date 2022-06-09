@@ -216,6 +216,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
         } else {
