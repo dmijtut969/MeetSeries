@@ -51,17 +51,17 @@
                 app:civ_border_width="0dp" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_weight="5"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="1dp"
-                android:textAlignment="center">
+                android:textAlignment="textEnd">
 
                 <TextView
                     android:id="@+id/mensajeTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="left"
                     android:paddingLeft="10dp"
@@ -71,7 +71,7 @@
 
                 <TextView
                     android:id="@+id/fechaMensaje"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
@@ -79,8 +79,9 @@
                     android:gravity="right"
                     android:text="33:33"
                     android:textAlignment="textEnd"
-                    android:textColor="#009F8C"
-                    android:visibility="gone" />
+                    android:textColor="#11573B"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
             </LinearLayout>
 

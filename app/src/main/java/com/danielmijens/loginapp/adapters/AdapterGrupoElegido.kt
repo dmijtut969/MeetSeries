@@ -2,6 +2,7 @@ package com.danielmijens.loginapp.adapters
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Color
 import android.text.Layout
 import android.text.format.DateUtils
 import android.view.Gravity
@@ -47,9 +48,11 @@ class AdapterGrupoElegido(
         if (usuarioActual.email==mensajeRecibido.emisor) {
             holder.binding.linearLayoutTotal.gravity = Gravity.RIGHT
             holder.binding.textViewNombreUsuario.visibility = View.GONE
+            holder.binding.linearLayoutMensajito.setBackgroundResource( R.drawable.mensaje_fondo_enviado)
         }else {
             holder.binding.linearLayoutTotal.gravity = Gravity.LEFT
             holder.binding.textViewNombreUsuario.visibility = View.VISIBLE
+            holder.binding.linearLayoutMensajito.setBackgroundResource( R.drawable.mensaje_fondo)
         }
         if (mensajeRecibido.nombreUsuarioEmisor.isNullOrEmpty()) {
             holder.binding.textViewNombreUsuario.text = mensajeRecibido.emisor
@@ -67,28 +70,15 @@ class AdapterGrupoElegido(
         holder.binding.linearLayoutTotal.setOnClickListener {
             if (holder.binding.fechaMensaje.visibility == View.GONE) {
                 holder.binding.fechaMensaje.visibility = View.VISIBLE
-                if (usuarioActual.email==mensajeRecibido.emisor) {
+               if (usuarioActual.email==mensajeRecibido.emisor) {
                     holder.binding.mensajeTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
                 }else {
                     holder.binding.mensajeTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
                 }
             }else {
                 holder.binding.fechaMensaje.visibility = View.GONE
-              //  holder.binding.mensajeTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
             }
         }
-
-        /*GlobalScope.launch (Dispatchers.IO){
-            withContext(Dispatchers.Main) {
-                var fotoAMostrar = Storage.extraerImagenPerfil(mensajeRecibido.emisor.toString())
-                if (fotoAMostrar.toString().isNullOrEmpty()) {
-                    holder.binding.imageViewFotoUsuario.setImageResource(R.drawable.icono_meet)
-                }else {
-                    Picasso.get().load(fotoAMostrar).into(holder.binding.imageViewFotoUsuario)
-                }
-
-            }
-        }*/
     }
 
     override fun getItemCount(): Int {
