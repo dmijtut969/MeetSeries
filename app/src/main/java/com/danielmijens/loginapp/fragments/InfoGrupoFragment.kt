@@ -91,6 +91,12 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
             }
         })
         binding.textViewInfoNombreGrupo.setText(grupoElegido.nombreGrupo)
+        if (!grupoElegido.descripcionGrupo.isNullOrEmpty() || grupoElegido.descripcionGrupo!!.trim() != "") {
+            binding.editTextDescripcion.setText(grupoElegido.descripcionGrupo)
+        }else {
+            binding.linearLayoutDescripcion.visibility = View.GONE
+        }
+
 
         toolbar.setTitle("")
         var botonAuxiliar = toolbar.findViewById<ImageButton>(R.id.botonAuxiliar)
@@ -104,6 +110,11 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
     ): View? {
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        toolbar.title = "Informacion de Grupo"
+        super.onViewCreated(view, savedInstanceState)
     }
 
     @SuppressLint("NotifyDataSetChanged")

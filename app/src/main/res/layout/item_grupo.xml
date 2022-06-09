@@ -39,7 +39,7 @@
             android:layout_weight="3"
             android:text="TextView"
             android:textAlignment="center"
-            android:textColor="@color/hintColor"
+            android:textColor="#11573B"
             android:textSize="16sp" />
     </LinearLayout>
 

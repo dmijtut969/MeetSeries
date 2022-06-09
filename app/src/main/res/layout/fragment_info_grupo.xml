@@ -14,27 +14,72 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.mikhaellopez.circularimageview.CircularImageView
-            android:id="@+id/infoImagenGrupo"
-            android:layout_width="150dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:layout_weight="1"
-            android:src="@drawable/icono_meet">
+            android:orientation="horizontal">
 
-        </com.mikhaellopez.circularimageview.CircularImageView>
+            <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/infoImagenGrupo"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:src="@drawable/icono_meet">
 
-        <TextView
-            android:id="@+id/textViewInfoNombreGrupo"
-            android:layout_width="300dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="16dp"
+            </com.mikhaellopez.circularimageview.CircularImageView>
+
+            <TextView
+                android:id="@+id/textViewInfoNombreGrupo"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:maxHeight="400dp"
+                android:paddingBottom="10dp"
+                android:text="Nombre de grupo bastante largoadadadadNombre de grupo bastante largoadadadad"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayoutDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
             android:layout_weight="1"
-            android:gravity="center"
-            android:maxHeight="400dp"
-            android:paddingBottom="10dp"
-            android:text="Nombre de grupo bastante largoadadadadNombre de grupo bastante largoadadadad"
-            android:textSize="24sp" />
+            android:background="#81000923"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textViewDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3dp"
+                android:layout_weight="1"
+                android:text="Descripción"
+                android:textAlignment="center"
+                android:textColor="#11573B"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTextDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="#00FFFFFF"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
+                android:shadowColor="#00FFFFFF"
+                android:text="adadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadadaadadadadadada"
+                android:textColor="#FFFFFF" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

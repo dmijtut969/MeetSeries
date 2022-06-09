@@ -6,12 +6,13 @@ import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.WindowInsets
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -20,7 +21,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.AppBarMainBinding
 import com.danielmijens.loginapp.databinding.NavHeaderMainBinding
@@ -31,8 +31,8 @@ import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
 import com.danielmijens.loginapp.fragments.*
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -59,14 +59,19 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         usuarioActual = intent.getSerializableExtra("usuario") as UsuarioActual
 
         setContentView(binding.root)
+        drawer = findViewById(R.id.drawer_layout)
         toolbar = findViewById(R.id.toolbar_main)
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(usuarioActual,toolbar)).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(
+            usuarioActual,
+            toolbar,
+            drawer
+        )).commit()
         //Utilidades de navegacion
 
         toolbar.setTitle("Mis Grupos")
         toolbar.setTitleTextColor(Color.WHITE)
         setSupportActionBar(toolbar)
-        drawer = findViewById(R.id.drawer_layout)
+
         toggle = ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close)
 
         drawer.addDrawerListener(toggle)
@@ -85,9 +90,11 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut || it.itemId == R.id.nav_verDatosUsuario) {
                 permitirMovimiento = it.itemId
             }
+            drawer?.findViewById<View>(R.id.nav_logOut)?.visibility = View.VISIBLE
             when (permitirMovimiento) {
+
                 R.id.nav_mis_grupos -> {
-                    cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+                    cambiarFragment(MisGruposFragment(usuarioActual,toolbar,drawer))
                     botonAuxiliar.visibility = View.VISIBLE
                     botonAtras.visibility = View.GONE
                     toolbar.setTitle("Mis Grupos")
@@ -118,19 +125,25 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     drawer.closeDrawer(GravityCompat.START)
                     false
                 }
-                R.id.nav_cambiarFotoPerfil -> {
-                    Snackbar.make(binding.root, "Se implementara en un futuro ", Snackbar.LENGTH_SHORT).show()
-                    if (toolbar.visibility == View.GONE) {
-                        toolbar.visibility = View.VISIBLE
-                        ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    }else {
-                        toolbar.visibility = View.GONE
-                        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                    }
-                    false
-                }
                 R.id.nav_logOut -> {
-                    onBackPressed()
+                    AlertDialog.Builder(binding.root.context)
+                        .setTitle("Va a cerrar sesion")
+                        .setMessage("¿Esta seguro?")
+                        .setPositiveButton(android.R.string.ok,
+                            DialogInterface.OnClickListener { dialog, which ->
+                                try {
+                                    logOut()
+                                    finish()
+                                }catch (e : FirebaseFirestoreException) {
+                                    Log.d("Fallo permisos", " Fallo Permisos")
+                                }
+
+                                //super.onBackPressed()
+                            })
+                        .setNegativeButton(android.R.string.cancel,
+                            DialogInterface.OnClickListener { dialog, which ->
+                            })
+                        .show()
                     false
                 }
                 0 -> {
@@ -217,6 +230,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onBackPressed() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            window.insetsController?.show(WindowInsets.Type.statusBars())
+        }
         if (supportFragmentManager.backStackEntryCount > 0) {
                 supportFragmentManager.popBackStack()
         } else {
@@ -264,11 +280,11 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onElegirCategoria() {
-        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+        cambiarFragment(MisGruposFragment(usuarioActual, toolbar, drawer))
     }
 
     override fun onVerMisGruposClick() {
-        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+        cambiarFragment(MisGruposFragment(usuarioActual, toolbar, drawer))
     }
 
     override fun onBuscarClick(campo: String, valorABuscar: String) {
@@ -276,7 +292,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun actualizarRecyclerMisGrupos() {
-        cambiarFragment(MisGruposFragment(usuarioActual,toolbar))
+        cambiarFragment(MisGruposFragment(usuarioActual, toolbar, drawer))
     }
 
     override fun onVerInfoGrupo(grupoElegido: Grupo, toolbar: Toolbar) {

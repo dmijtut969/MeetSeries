@@ -97,8 +97,6 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
                     for (participante in grupo.listaParticipantes) {
                         if (participante.contains(text)) filterString.add(grupo)
                     }
-                }else if (grupo.categoriaGrupo != null && binding.radioButtonCategoria.isChecked) {
-                    if (grupo.categoriaGrupo.contains(text))  filterString.add(grupo)
                 }
             }
         }

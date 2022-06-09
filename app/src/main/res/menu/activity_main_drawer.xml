@@ -29,10 +29,6 @@
                 android:icon="@mipmap/icono_ver_perfil"
                 android:title="Ver datos usuario" />
             <item
-                android:id="@+id/nav_cambiarFotoPerfil"
-                android:icon="@mipmap/icono_cambiar_perfil"
-                android:title="Cambiar datos del perfil" />
-            <item
                 android:id="@+id/nav_logOut"
                 android:icon="@mipmap/icono_logout"
                 android:title="Cerrar Sesion" />

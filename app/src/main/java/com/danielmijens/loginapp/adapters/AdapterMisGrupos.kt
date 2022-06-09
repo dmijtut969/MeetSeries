@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.MisGruposFragment
 import com.danielmijens.loginapp.OnFragmentListener
@@ -27,6 +28,7 @@ class AdapterMisGrupos(
     , var usuarioActual: UsuarioActual
     , var misGruposFragment: MisGruposFragment
     , var toolbar: androidx.appcompat.widget.Toolbar
+    , var drawer: DrawerLayout?= null
 ) : RecyclerView.Adapter<AdapterMisGrupos.AdapterMisGruposViewHolder>() {
     class AdapterMisGruposViewHolder (val binding: ItemGrupoBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -35,6 +37,7 @@ class AdapterMisGrupos(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterMisGruposViewHolder {
         val binding = ItemGrupoBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+
         return AdapterMisGruposViewHolder(binding)
     }
 
@@ -56,6 +59,7 @@ class AdapterMisGrupos(
         }
         holder.binding.itemGrupoLinearLayout.setOnClickListener() {
             misGruposFragment.listener.onElegirGrupoClick(usuarioActual,grupo,toolbar)
+            drawer?.findViewById<View>(R.id.nav_logOut)?.visibility = View.GONE
             true
         }
         holder.binding.itemGrupoLinearLayout.setOnLongClickListener {

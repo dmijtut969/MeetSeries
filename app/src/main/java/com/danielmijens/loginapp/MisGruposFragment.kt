@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.SearchView
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.danielmijens.loginapp.adapters.AdapterMisGrupos
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
@@ -36,7 +38,8 @@ private const val ARG_PARAM2 = "param2"
 
 public class MisGruposFragment(
     var usuarioActual: UsuarioActual,
-    var toolbar: androidx.appcompat.widget.Toolbar
+    var toolbar: Toolbar,
+    var drawer: DrawerLayout ?= null
 ) : Fragment() {
 
     private lateinit var binding : FragmentMisGruposBinding
@@ -45,6 +48,7 @@ public class MisGruposFragment(
     private lateinit var db : FirebaseFirestore
     private lateinit var botonAuxiliar : ImageButton
     private lateinit var botonAtras : ImageButton
+    private lateinit var snapshot : ListenerRegistration
     lateinit var listener : OnFragmentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +60,7 @@ public class MisGruposFragment(
         recyclerView.setHasFixedSize(true)
 
         listaGrupos = arrayListOf()
-        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this,toolbar)
+        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this,toolbar,drawer)
 
         recyclerView.adapter = adapter
 
@@ -98,7 +102,13 @@ public class MisGruposFragment(
         toolbar.setTitle("Mis Grupos")
         botonAuxiliar.visibility = View.GONE
         videoIniciadoGrupos()
+        listaGrupos.clear()
         eventChangeListener()
+    }
+
+    override fun onStop() {
+        snapshot.remove()
+        super.onStop()
 
     }
 
@@ -122,7 +132,7 @@ public class MisGruposFragment(
 
     private fun eventChangeListener() {
         db = FirebaseFirestore.getInstance()
-        db.collection("Grupos").whereArrayContains("listaParticipantes",usuarioActual.email.toString())
+        snapshot = db.collection("Grupos").whereArrayContains("listaParticipantes",usuarioActual.email.toString())
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 @SuppressLint("LongLogTag")
                 override fun onEvent(
