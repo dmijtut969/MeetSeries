@@ -2,14 +2,15 @@ package com.danielmijens.loginapp
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.core.animation.doOnEnd
@@ -28,6 +29,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.SearchView
 import androidx.annotation.NonNull
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import androidx.viewpager2.widget.ViewPager2
 import com.danielmijens.loginapp.entidades.ControlVideo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -76,6 +81,7 @@ class GrupoElegidoFragment(
         controlVideo = ControlVideo()
 
         youTubePlayerView = binding.playerViewGrupo!!
+
         var recyclerView = binding.mensajesRecyclerView
 
         var linearLayout = LinearLayoutManager(context)
@@ -101,6 +107,8 @@ class GrupoElegidoFragment(
 
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
+
+
         //Para mover el videoview
         //binding.constraintLayoutVideo?.setOnTouchListener(onTouchListener())
     }
@@ -109,6 +117,7 @@ class GrupoElegidoFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         if (grupoElegido.creador.equals(usuarioActual.email)) {
             binding.buscarYtLink?.visibility  = View.VISIBLE
         }else {
@@ -140,17 +149,25 @@ class GrupoElegidoFragment(
                     toolbar.visibility = View.GONE
                     //binding.linearLayoutControles.visibility = View.VISIBLE
                     binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_arriba)
-                    ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -500f).apply {
-                        this.duration = 0
-                        start()
-                    }.doOnEnd {
+                    if (activity?.resources?.configuration?.orientation == ORIENTATION_LANDSCAPE ){
+                        binding.linearLayoutEnviarMensajes.visibility = View.GONE
                         binding.playerViewGrupo?.visibility = View.VISIBLE
-                        ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 0f).apply {
-                            this.duration = 500
+                    }else {
+
+                        ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", -500f).apply {
+                            this.duration = 0
                             start()
+                        }.doOnEnd {
+                            binding.playerViewGrupo?.visibility = View.VISIBLE
+                            ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 90f).apply {
+                                this.duration = 500
+                                start()
+                            }
                         }
                     }
+
                 } else {
+                    binding.linearLayoutEnviarMensajes.visibility = View.VISIBLE
                     toolbar.visibility = View.VISIBLE
                     //binding.linearLayoutControles.visibility = View.GONE
                     binding.mostrarVideo!!.setImageResource(R.mipmap.deslizar_abajo)
@@ -446,22 +463,50 @@ class GrupoElegidoFragment(
     fun youtubeFullscreen() {
         youTubePlayerView.getPlayerUiController().setFullScreenButtonClickListener(View.OnClickListener {
             if (youTubePlayerView.isFullScreen()) {
+                ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 90f).apply {
+                    this.duration = 500
+                    start()
+                }
                 binding.linearLayoutControles.visibility = View.VISIBLE
                 binding.linearLayoutEnviarMensajes.visibility = View.VISIBLE
                 binding.mensajesRecyclerView.visibility = View.VISIBLE
                 toolbar.visibility = View.VISIBLE
                 youTubePlayerView.exitFullScreen()
                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                /*activity?.window?.setFlags(
+                    WindowManager.LayoutParams.,
+                    WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN)*/
+                showSystemUI()
             }else {
                 Log.d("Full", "Pantalla completa")
+                ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 0f).apply {
+                    this.duration = 500
+                    start()
+                }
                 youTubePlayerView.enterFullScreen()
                 binding.linearLayoutControles.visibility = View.GONE
                 binding.linearLayoutEnviarMensajes.visibility = View.GONE
                 binding.mensajesRecyclerView.visibility = View.GONE
                 toolbar.visibility = View.GONE
                 activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                /*activity?.window?.setFlags(
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN)*/
+                hideSystemUI()
             }
         })
+    }
+
+    private fun hideSystemUI() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity!!.window.insetsController?.hide(WindowInsets.Type.statusBars())
+        }
+    }
+
+    private fun showSystemUI() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            activity!!.window.insetsController?.show(WindowInsets.Type.statusBars())
+        }
     }
 
 }
