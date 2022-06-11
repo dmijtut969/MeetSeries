@@ -30,7 +30,7 @@
             android:id="@+id/linearLayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#81000923"
+            android:background="@drawable/fondo_componente"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="20dp"

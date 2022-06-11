@@ -45,7 +45,7 @@
                 android:id="@+id/linearLayoutEnviarMensajes"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="#0C3E2A"
+                android:background="@drawable/fondo_componente"
                 android:paddingBottom="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

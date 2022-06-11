@@ -52,7 +52,7 @@
             android:layout_marginTop="3dp"
             android:layout_marginBottom="3dp"
             android:layout_weight="1"
-            android:background="#81000923"
+            android:background="@drawable/fondo_componente"
             android:orientation="vertical">
 
             <TextView
@@ -63,7 +63,7 @@
                 android:layout_weight="1"
                 android:text="Descripción"
                 android:textAlignment="center"
-                android:textColor="#11573B"
+                android:textColor="#27BC80"
                 android:textSize="20sp" />
 
             <EditText
@@ -85,7 +85,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="50"
-            android:background="#81000923"
+            android:background="@drawable/fondo_componente"
             android:orientation="vertical"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
