@@ -229,25 +229,29 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     override fun onBackPressed() {
-        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            window.insetsController?.show(WindowInsets.Type.statusBars())
-        }
-        if (supportFragmentManager.backStackEntryCount > 0) {
-                supportFragmentManager.popBackStack()
-        } else {
-            AlertDialog.Builder(binding.root.context)
-                .setTitle("Va a cerrar sesion")
-                .setMessage("¿Esta seguro?")
-                .setPositiveButton(android.R.string.ok,
-                    DialogInterface.OnClickListener { dialog, which ->
-                        logOut()
-                        super.onBackPressed()
-                    })
-                .setNegativeButton(android.R.string.cancel,
-                    DialogInterface.OnClickListener { dialog, which ->
-                    })
-                .show()
+        if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.insetsController?.show(WindowInsets.Type.statusBars())
+            }
+            if (supportFragmentManager.backStackEntryCount > 0) {
+                    supportFragmentManager.popBackStack()
+            } else {
+                AlertDialog.Builder(binding.root.context)
+                    .setTitle("Va a cerrar sesion")
+                    .setMessage("¿Esta seguro?")
+                    .setPositiveButton(android.R.string.ok,
+                        DialogInterface.OnClickListener { dialog, which ->
+                            logOut()
+                            super.onBackPressed()
+                        })
+                    .setNegativeButton(android.R.string.cancel,
+                        DialogInterface.OnClickListener { dialog, which ->
+                        })
+                    .show()
+            }
+        }   else {
+            makeAlert("No tiene permisos para moverse por la app","Debe ingresar un nombre de usuario y una foto de perfil")
         }
     }
     override fun onStart() {

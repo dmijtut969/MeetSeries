@@ -115,6 +115,7 @@ public class MisGruposFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         var botonInfoGrupo = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
+        drawer?.findViewById<View>(R.id.nav_logOut)?.visibility = View.VISIBLE
         botonInfoGrupo.setBackgroundResource(R.drawable.icono_meet)
         botonInfoGrupo.setOnClickListener {
             if (context != null) {

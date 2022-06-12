@@ -80,7 +80,6 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
                     Picasso.get().load(usuarioActual.fotoPerfil).into(binding.imageViewFotoPerfil)
                 }else {
                     Picasso.get().load(R.drawable.add_image).into(binding.imageViewFotoPerfil)
-
         }
         if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
             var jsonUsuario = prefs?.getString("usuario","")
@@ -132,6 +131,11 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
                 showAlert(
                     "El nombre de usuario no puede contener espacios o vacio",
                     "Cambie el nombre de de usuario ",
+                )
+            }else if (usuarioActual.fotoPerfil.isNullOrEmpty() || usuarioActual.fotoPerfil=="2131230807") {
+                showAlert(
+                    "La imagen esta por defecto o esta vacia",
+                    "Cambie la foto de usuario",
                 )
             }else {
                 var edadUsuario = binding.editTextEdad.text.toString()
