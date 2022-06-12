@@ -40,6 +40,8 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.views.YouTubePlayerSeekBar
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.views.YouTubePlayerSeekBarListener
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -63,11 +65,13 @@ class GrupoElegidoFragment(
     private var listaMensajes = mutableListOf<Mensaje>()
     private lateinit var youTubePlayerView : YouTubePlayerView
     private lateinit var youtubePlayerTracker : YouTubePlayerTracker
+    private lateinit var youtubePlayerSeekBar : YouTubePlayerSeekBar
     private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var botonAuxiliar : ImageButton
     private lateinit var botonAtras : ImageButton
     private lateinit var controlVideo : ControlVideo
+    private var segundosActual = 0f
 
     lateinit var listener : OnFragmentListener
 
@@ -290,6 +294,8 @@ class GrupoElegidoFragment(
      fun videoYT() {
          if (controlVideo.videoElegido != null && esYT(controlVideo.videoElegido!!)) {
              youtubePlayerTracker = YouTubePlayerTracker()
+             youtubePlayerSeekBar = YouTubePlayerSeekBar(context!!,null)
+             //youtubeSeekListener()
 
              if (youTubePlayerView != null) {
                  lifecycle.addObserver(youTubePlayerView)
@@ -322,15 +328,18 @@ class GrupoElegidoFragment(
                  ) {
 
                      if (grupoElegido.creador==usuarioActual.email) {
-                         var segundos = youtubePlayerTracker.currentSecond
+                         var segundos = 0f
+
                          GlobalScope.launch(Dispatchers.IO) {
                              if (state.equals(PlayerConstants.PlayerState.PAUSED)) {
                                  Log.d("Se ha pausado Dani"," Pausadoooo")
+                                 segundos = youtubePlayerTracker.currentSecond
                                  Consultas.actualizarSegundos(controlVideo,segundos)
                                  Consultas.actualizarVideoIniciado(controlVideo,false)
                              }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
                                  Log.d("Esta playing Dani"," Playiiiing")
-                                 //Consultas.actualizarSegundos(grupoElegido,segundos)
+                                 segundos = youtubePlayerTracker.currentSecond
+                                 //Consultas.actualizarSegundos(controlVideo,segundos) //Cuidado DANI
                                  Consultas.actualizarVideoIniciado(controlVideo,true)
                              }
                          }
@@ -339,6 +348,23 @@ class GrupoElegidoFragment(
                      super.onStateChange(youTubePlayer, state)
                  }
 
+                 @SuppressLint("LongLogTag")
+                 override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
+                     super.onCurrentSecond(youTubePlayer, second)
+                     if (grupoElegido.creador==usuarioActual.email) {
+                         var comprobacion =  youtubePlayerTracker.currentSecond-segundosActual
+                         Log.d("Varia comprobacion", comprobacion.toString())
+                         if (comprobacion < 0 || comprobacion>= 1) {
+                             GlobalScope.launch(Dispatchers.IO) {
+                                 Consultas.actualizarSegundos(controlVideo,second)
+                                 Log.d("Varia segundosActual", segundosActual.toString())
+                                 Log.d("Varia second", second.toString())
+                                 Log.d("Varia current", youtubePlayerTracker.currentSecond.toString())
+                             }
+                         }
+                         segundosActual = second
+                     }
+                 }
              })
              youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
 
@@ -448,10 +474,11 @@ class GrupoElegidoFragment(
                             if (view?.context != null) Toast.makeText(view?.context,"Ha entrado un usuario",Toast.LENGTH_SHORT).show()
                             Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
                             Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())
-                            var seg = youtubePlayerTracker.currentSecond
+                            //var seg = youtubePlayerTracker.currentSecond
+                            var seg = interaccionVideo.videoSegundos
                             GlobalScope.launch (Dispatchers.IO){
                                 Log.d("interaccionUsuario youtubePlayerTracker.currentSecond",youtubePlayerTracker.currentSecond.toString())
-                                Consultas.actualizarSegundos(controlVideo,seg)
+                                Consultas.actualizarSegundos(controlVideo,seg!!)
 
                             }
                         }
@@ -507,6 +534,22 @@ class GrupoElegidoFragment(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity!!.window.insetsController?.show(WindowInsets.Type.statusBars())
         }
+    }
+
+    fun youtubeSeekListener() {
+        youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
+            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
+                youTubePlayer.addListener(youtubePlayerSeekBar)
+
+                youtubePlayerSeekBar.youtubePlayerSeekBarListener = object : YouTubePlayerSeekBarListener {
+                    override fun seekTo(time: Float) {
+                        youTubePlayer.seekTo(time)
+                        Log.d("Dani seekTo", time.toString())
+                    }
+                }
+            }
+
+        })
     }
 
 
