@@ -63,7 +63,12 @@ class AdapterMisGrupos(
             true
         }
         holder.binding.itemGrupoLinearLayout.setOnLongClickListener {
-            showDialogAlertSimple(grupo)
+            if (usuarioActual.email==grupo.creador) {
+                borrarGrupoDialog(grupo)
+            }else {
+                salirseDeGrupo(grupo)
+            }
+
             true
         }
         if (grupo.videoIniciado == null || grupo.videoIniciado == false) {
@@ -74,13 +79,30 @@ class AdapterMisGrupos(
 
     }
 
-    fun showDialogAlertSimple(grupo: Grupo) {
+    fun borrarGrupoDialog(grupo: Grupo) {
         AlertDialog.Builder(misGruposFragment.context)
-            .setTitle("Va a borrar un grupo")
-            .setMessage("¿Esta seguro?")
+            .setTitle("¿Quiere borrar el siguiente grupo?")
+            .setMessage(grupo.nombreGrupo)
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
-                    Consultas.borrarGrupo(usuarioActual,grupo.nombreGrupo.toString())
+                    Consultas.salirseDeGrupo(usuarioActual,grupo)
+                    Thread.sleep(1000)
+                    misGruposFragment.refrescarRecycler()
+                })
+            .setNegativeButton(android.R.string.cancel,
+                DialogInterface.OnClickListener { dialog, which ->
+
+                })
+            .show()
+    }
+
+    fun salirseDeGrupo(grupo: Grupo) {
+        AlertDialog.Builder(misGruposFragment.context)
+            .setTitle("¿Quiere salir del siguiente grupo?")
+            .setMessage(grupo.nombreGrupo)
+            .setPositiveButton(android.R.string.ok,
+                DialogInterface.OnClickListener { dialog, which ->
+                    Consultas.salirseDeGrupo(usuarioActual,grupo)
                     Thread.sleep(1000)
                     misGruposFragment.refrescarRecycler()
                 })

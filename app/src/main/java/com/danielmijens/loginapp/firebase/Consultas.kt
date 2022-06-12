@@ -88,6 +88,20 @@ class Consultas() {
                 })
         }
 
+        fun salirseDeGrupo (usuarioActual: UsuarioActual,
+                         grupoElegido: Grupo) {
+            var listaParticipantesNueva = arrayListOf<String>()
+            listaParticipantesNueva.addAll(grupoElegido.listaParticipantes!!)
+            for (participante in grupoElegido.listaParticipantes!!) {
+                if (participante.equals(usuarioActual.email)) {
+                    listaParticipantesNueva.remove(participante)
+                }
+            }
+            mFirestore.collection("Grupos").document(grupoElegido.idGrupo!!).update("listaParticipantes",
+                listaParticipantesNueva)
+            Log.d("Actualizado", "listaparticipantes")
+        }
+
         fun borrarControlVideo (idGrupo: String) {
             mFirestore.collection("ControlVideos").whereEqualTo("idGrupo",idGrupo)
                 .addSnapshotListener(object : EventListener<QuerySnapshot> {
