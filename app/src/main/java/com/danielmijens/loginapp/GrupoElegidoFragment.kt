@@ -190,11 +190,14 @@ class GrupoElegidoFragment(
                 binding.buscarYtLink?.clearFocus()
                 var videoSearch = binding.buscarYtLink?.query.toString()
                 //if (videoSearch.contains("youtube")){
-                    Log.d("searchView Contiene", "Es youtube")
-                    if (videoSearch != null) {
-                        cambiarVideoYT(controlVideo,videoSearch,0f,false)
-                    }
-
+                Log.d("controlVideo Contiene", controlVideo.toString())
+                if (videoSearch != null && esYT(videoSearch)) {
+                    controlVideo.videoElegido = videoSearch
+                    cambiarVideoYT(controlVideo,videoSearch,0f,false)
+                }else {
+                    Toast.makeText(context,"No puede añadir un link vacio o que no sea de YT",Toast.LENGTH_SHORT).show()
+                }
+                videoYT()
                 return true
             }
             override fun onQueryTextChange(newText: String): Boolean {
@@ -372,6 +375,10 @@ class GrupoElegidoFragment(
     }
 
     fun cambiarVideoYT (controlVideoCambiar: ControlVideo, urlVideoYT: String, segundos: Float?, iniciado: Boolean?) {
+        var iniciarListener = false
+        if (!controlVideoCambiar.videoElegido.isNullOrEmpty()) {
+            iniciarListener = true
+        }
         youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
             override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
                 val url = sacarUrlYT(urlVideoYT)
@@ -400,6 +407,9 @@ class GrupoElegidoFragment(
                         }
 
                     }
+                }
+                if (iniciarListener) {
+                    videoYT()
                 }
             }
         })
@@ -474,12 +484,14 @@ class GrupoElegidoFragment(
                             if (view?.context != null) Toast.makeText(view?.context,"Ha entrado un usuario",Toast.LENGTH_SHORT).show()
                             Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
                             Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())
-                            //var seg = youtubePlayerTracker.currentSecond
-                            var seg = interaccionVideo.videoSegundos
-                            GlobalScope.launch (Dispatchers.IO){
-                                Log.d("interaccionUsuario youtubePlayerTracker.currentSecond",youtubePlayerTracker.currentSecond.toString())
-                                Consultas.actualizarSegundos(controlVideo,seg!!)
+                            if (interaccionVideo.videoSegundos!= null && interaccionVideo.videoIniciado!=null) {
+                                //var seg = youtubePlayerTracker.currentSecond
+                                var seg = interaccionVideo.videoSegundos
+                                GlobalScope.launch (Dispatchers.IO){
+                                    Log.d("interaccionUsuario youtubePlayerTracker.currentSecond",youtubePlayerTracker.currentSecond.toString())
+                                    Consultas.actualizarSegundos(controlVideo,seg!!)
 
+                                }
                             }
                         }
                     }
