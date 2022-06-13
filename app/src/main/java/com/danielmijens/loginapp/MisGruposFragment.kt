@@ -21,6 +21,11 @@ import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -101,9 +106,12 @@ public class MisGruposFragment(
         super.onStart()
         toolbar.setTitle("Mis Grupos")
         botonAuxiliar.visibility = View.GONE
-        videoIniciadoGrupos()
-        listaGrupos.clear()
         eventChangeListener()
+        videoIniciado()
+        videoIniciadoGrupos()
+
+        listaGrupos.clear()
+
     }
 
     override fun onStop() {
@@ -122,6 +130,7 @@ public class MisGruposFragment(
                 Toast.makeText(context,"Adios", Toast.LENGTH_SHORT).show()
             }
         }
+
 
     }
     override fun onCreateView(
@@ -149,7 +158,6 @@ public class MisGruposFragment(
                         var grupoNuevo = dc.document.toObject(Grupo::class.java)
                         Log.d("grupoNuevo", grupoNuevo.toString())
                         if (dc.type == DocumentChange.Type.ADDED) {
-
                             listaGrupos.add(grupoNuevo)
                             Log.d("Eventchangelistener documento : ", dc.document.toString())
                         }
@@ -160,6 +168,26 @@ public class MisGruposFragment(
                 }
 
             })
+    }
+
+    private fun videoIniciado() {
+        db = FirebaseFirestore.getInstance()
+        GlobalScope.launch (Dispatchers.IO){
+            withContext(Dispatchers.Main) {
+                var listaControlVideo = db.collection("ControlVideos").get().await().documents
+                for (control in listaControlVideo) {
+                    var controlObjeto = control.toObject(ControlVideo::class.java)
+                    for (grupito in listaGrupos) {
+                        if (grupito.idGrupo==controlObjeto?.idGrupo) {
+                            listaGrupos.removeAt(listaGrupos.indexOf(grupito))
+                            grupito.videoIniciado = controlObjeto?.videoIniciado==true
+                            listaGrupos.add(grupito)
+                            adapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun videoIniciadoGrupos() {

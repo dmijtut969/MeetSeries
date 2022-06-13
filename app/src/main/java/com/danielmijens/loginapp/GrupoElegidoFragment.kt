@@ -40,8 +40,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.YouTubePlayerCallback
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.views.YouTubePlayerSeekBar
-import com.pierfrancescosoffritti.androidyoutubeplayer.core.ui.views.YouTubePlayerSeekBarListener
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -65,7 +63,6 @@ class GrupoElegidoFragment(
     private var listaMensajes = mutableListOf<Mensaje>()
     private lateinit var youTubePlayerView : YouTubePlayerView
     private lateinit var youtubePlayerTracker : YouTubePlayerTracker
-    private lateinit var youtubePlayerSeekBar : YouTubePlayerSeekBar
     private var shortAnimationDuration: Int = 10000000
     var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
     private lateinit var botonAuxiliar : ImageButton
@@ -213,6 +210,9 @@ class GrupoElegidoFragment(
             controlVideo = Consultas.buscarControlVideoPorID(grupoElegido.idGrupo!!)
             withContext(Dispatchers.Main) {
                 videoYT()
+                if (controlVideo.videoIniciado==true) {
+
+                }
             }
         }
 
@@ -297,7 +297,6 @@ class GrupoElegidoFragment(
      fun videoYT() {
          if (controlVideo.videoElegido != null && esYT(controlVideo.videoElegido!!)) {
              youtubePlayerTracker = YouTubePlayerTracker()
-             youtubePlayerSeekBar = YouTubePlayerSeekBar(context!!,null)
              //youtubeSeekListener()
 
              if (youTubePlayerView != null) {
@@ -450,7 +449,6 @@ class GrupoElegidoFragment(
                         if (cambioVideo.type == DocumentChange.Type.MODIFIED) {
 
                             if (grupoElegido.creador == usuarioActual.email) {
-                                //Toast.makeText(context,"Se esta cambiando a los demas",Toast.LENGTH_SHORT).show()
                                 var grupoControlVideo = cambioVideo.document.toObject(ControlVideo::class.java)
                             }else {
                                 var grupoControlVideo = cambioVideo.document.toObject(ControlVideo::class.java)
@@ -547,22 +545,5 @@ class GrupoElegidoFragment(
             activity!!.window.insetsController?.show(WindowInsets.Type.statusBars())
         }
     }
-
-    fun youtubeSeekListener() {
-        youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
-            override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
-                youTubePlayer.addListener(youtubePlayerSeekBar)
-
-                youtubePlayerSeekBar.youtubePlayerSeekBarListener = object : YouTubePlayerSeekBarListener {
-                    override fun seekTo(time: Float) {
-                        youTubePlayer.seekTo(time)
-                        Log.d("Dani seekTo", time.toString())
-                    }
-                }
-            }
-
-        })
-    }
-
 
 }

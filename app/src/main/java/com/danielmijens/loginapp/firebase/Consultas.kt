@@ -24,13 +24,12 @@ class Consultas() {
             usuarioActual: UsuarioActual,
             nombreGrupo: String,
             descripcionGrupo: String,
-            categoriaGrupo: String,
             fotoGrupo : String
         ) : Boolean{
             var creador = usuarioActual.email.toString()
             var listaParticipantes = arrayListOf<String>(creador)
             var idGrupo = nombreGrupo + " - " + creador
-            var nuevoGrupo = Grupo(nombreGrupo,categoriaGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo,fotoGrupo)
+            var nuevoGrupo = Grupo(nombreGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo,fotoGrupo)
             var todoCorrecto = true
             GlobalScope.launch(Dispatchers.IO) {
                 crearControlVideo(idGrupo,creador)

@@ -94,9 +94,9 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
                 Log.d("Fotogrupo drawable: ", binding.crearFotoGrupoImageView.drawable.toString())
                 var  idGrupoNuevo = nuevoNombreGrupo + " - " + usuarioActual.email
                 subirImagen(idGrupoNuevo)
-                Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,"Pruebas","fotoGrupo/" + idGrupoNuevo)
+                Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,"fotoGrupo/" + idGrupoNuevo)
                 var creadorGrupo = usuarioActual.email.toString()
-                var nuevoGrupoElegido = Grupo(nuevoNombreGrupo,"Pruebas",nuevaDescripcionGrupo,arrayListOf<String>(creadorGrupo),creadorGrupo,idGrupoNuevo,Storage.extraerImagenGrupo(idGrupoNuevo).toString())
+                var nuevoGrupoElegido = Grupo(nuevoNombreGrupo,nuevaDescripcionGrupo,arrayListOf<String>(creadorGrupo),creadorGrupo,idGrupoNuevo,Storage.extraerImagenGrupo(idGrupoNuevo).toString())
                 listener.onCrearGrupoClick(nuevoGrupoElegido)
             }
         }

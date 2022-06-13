@@ -89,6 +89,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             var permitirMovimiento = 0
             if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut || it.itemId == R.id.nav_verDatosUsuario) {
                 permitirMovimiento = it.itemId
+
             }
             drawer?.findViewById<View>(R.id.nav_logOut)?.visibility = View.VISIBLE
             when (permitirMovimiento) {
