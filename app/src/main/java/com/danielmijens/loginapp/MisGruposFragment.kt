@@ -177,14 +177,17 @@ public class MisGruposFragment(
                 var listaControlVideo = db.collection("ControlVideos").get().await().documents
                 for (control in listaControlVideo) {
                     var controlObjeto = control.toObject(ControlVideo::class.java)
+                    var listaTemporal = arrayListOf<Grupo>()
+                    listaTemporal.addAll(listaGrupos)
                     for (grupito in listaGrupos) {
                         if (grupito.idGrupo==controlObjeto?.idGrupo) {
-                            listaGrupos.removeAt(listaGrupos.indexOf(grupito))
+                            listaTemporal.removeAt(listaGrupos.indexOf(grupito))
                             grupito.videoIniciado = controlObjeto?.videoIniciado==true
-                            listaGrupos.add(grupito)
+                            listaTemporal.add(grupito)
                             adapter.notifyDataSetChanged()
                         }
                     }
+                    listaGrupos = listaTemporal
                 }
             }
         }
