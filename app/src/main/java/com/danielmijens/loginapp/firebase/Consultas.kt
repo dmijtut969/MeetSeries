@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,14 +27,16 @@ class Consultas() {
             descripcionGrupo: String,
             fotoGrupo : String
         ) : Boolean{
+
             var creador = usuarioActual.email.toString()
-            var listaParticipantes = arrayListOf<String>(creador)
             var idGrupo = nombreGrupo + " - " + creador
+            var listaParticipantes = arrayListOf<String>(creador)
+
             var nuevoGrupo = Grupo(nombreGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo,fotoGrupo)
             var todoCorrecto = true
-            GlobalScope.launch(Dispatchers.IO) {
-                crearControlVideo(idGrupo,creador)
-            }
+            //GlobalScope.launch(Dispatchers.IO) {
+
+            //}
             var grupoNuevoRef  = mFirestore.collection("Grupos").document(idGrupo)
             grupoNuevoRef.set(nuevoGrupo).addOnCompleteListener { task ->
                 if (task.isCanceled) {
@@ -76,6 +79,7 @@ class Consultas() {
                         }
                         for (dc : DocumentChange in value?.documentChanges!!) {
                             if (dc.type == DocumentChange.Type.ADDED) {
+                                borrarMensajesDeGrupo(idGrupo)
                                 mFirestore.collection("Grupos").document(dc.document.id).delete()
                                 Log.d("Se ha borrado", dc.document.id.toString())
                                 GlobalScope.launch(Dispatchers.IO) {
@@ -85,6 +89,15 @@ class Consultas() {
                         }
                     }
                 })
+        }
+
+        fun borrarMensajesDeGrupo(idGrupito: String) {
+            mFirestore.collection("Grupos").document(idGrupito)
+                .collection("Mensajes").get().addOnSuccessListener { mensajes ->
+                    mensajes.documents.forEach { mensaje ->
+                        mensaje.reference.delete()
+                    }
+            }
         }
 
         fun salirseDeGrupo (usuarioActual: UsuarioActual,
@@ -155,7 +168,12 @@ class Consultas() {
                 }
             }.await()
             listaParticipantes.add(usuarioActual.email.toString())
-            docRef.update("listaParticipantes",listaParticipantes).await()
+            try {
+                docRef.update("listaParticipantes",listaParticipantes).await()
+            }catch (e : FirebaseFirestoreException) {
+                Log.e("Error en unirseAGrupo ",e.toString())
+            }
+
         }
 
         suspend fun existeGrupoPorID (idGrupo : String) : Boolean {
@@ -220,6 +238,7 @@ class Consultas() {
         suspend fun actualizarVideoElegido(control: ControlVideo,nuevoVideoElegido : String) {
             var modificarRef = mFirestore.collection("ControlVideos").document(control.idGrupo.toString())
             modificarRef.update("videoElegido",nuevoVideoElegido).await()
+
         }
 
         suspend fun actualizarVideoIniciado(control: ControlVideo,
@@ -258,14 +277,22 @@ class Consultas() {
             }
             var arrayOnline = arrayListOf<String>()
             arrayOnline.addAll(listaOn)
-            docRef.update("listaOnline",arrayOnline).await()
+            try {
+                docRef.update("listaOnline",arrayOnline).await()
+            }catch (e : FirebaseFirestoreException) {
+                Log.e("Error en usuarioOnline ",e.toString())
+            }
         }
 
         suspend fun buscarControlVideoPorID (idGrupo : String) : ControlVideo {
             var controlVideoBuscado : ControlVideo = ControlVideo()
             val docRef = mFirestore.collection("ControlVideos").document(idGrupo)
             docRef.get().addOnSuccessListener { document ->
-                controlVideoBuscado = document.toObject(ControlVideo::class.java)!!
+                try {
+                    controlVideoBuscado = document.toObject(ControlVideo::class.java)!!
+                }catch (e : NullPointerException) {
+                    Log.e("Null pointer en ","buscarControlVideoPorID()")
+                }
             }.await()
             return controlVideoBuscado
         }

@@ -13,7 +13,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
+import androidx.appcompat.widget.Toolbar
 import com.danielmijens.loginapp.OnFragmentListener
+import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.UserActivity
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.FragmentCrearGrupoBinding
@@ -37,7 +40,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [CrearGrupoFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
+class CrearGrupoFragment(var usuarioActual: UsuarioActual, var toolbar: Toolbar) : Fragment() {
 
     private lateinit var binding : FragmentCrearGrupoBinding
     private lateinit var bindingActivity : ActivityUserBinding
@@ -56,6 +59,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar).visibility = View.GONE
         binding.buttonCrearGrupo.setOnClickListener {
             comprobarGrupo()
         }
@@ -94,6 +98,9 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual) : Fragment() {
                 Log.d("Fotogrupo drawable: ", binding.crearFotoGrupoImageView.drawable.toString())
                 var  idGrupoNuevo = nuevoNombreGrupo + " - " + usuarioActual.email
                 subirImagen(idGrupoNuevo)
+                var creador = usuarioActual.email.toString()
+                var idGrupo = nuevoNombreGrupo + " - " + creador
+                Consultas.crearControlVideo(idGrupo,creador)
                 Consultas.crearGrupo(usuarioActual,nuevoNombreGrupo,nuevaDescripcionGrupo,"fotoGrupo/" + idGrupoNuevo)
                 var creadorGrupo = usuarioActual.email.toString()
                 var nuevoGrupoElegido = Grupo(nuevoNombreGrupo,nuevaDescripcionGrupo,arrayListOf<String>(creadorGrupo),creadorGrupo,idGrupoNuevo,Storage.extraerImagenGrupo(idGrupoNuevo).toString())

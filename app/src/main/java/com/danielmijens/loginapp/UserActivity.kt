@@ -111,7 +111,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_crear_grupo -> {
-                    cambiarFragment(CrearGrupoFragment(usuarioActual))
+                    cambiarFragment(CrearGrupoFragment(usuarioActual,toolbar))
                     toolbar.setTitle("Crear Grupos")
                     botonAuxiliar.visibility = View.GONE
                     botonAtras.visibility = View.GONE

@@ -53,7 +53,6 @@ public class MisGruposFragment(
     private lateinit var db : FirebaseFirestore
     private lateinit var botonAuxiliar : ImageButton
     private lateinit var botonAtras : ImageButton
-    private lateinit var snapshot : ListenerRegistration
     lateinit var listener : OnFragmentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,20 +103,13 @@ public class MisGruposFragment(
     }
     override fun onStart() {
         super.onStart()
+        adapter.notifyDataSetChanged()
         toolbar.setTitle("Mis Grupos")
         botonAuxiliar.visibility = View.GONE
+        listaGrupos.clear()
         eventChangeListener()
         videoIniciado()
         videoIniciadoGrupos()
-
-        listaGrupos.clear()
-
-    }
-
-    override fun onStop() {
-        snapshot.remove()
-        super.onStop()
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -142,7 +134,7 @@ public class MisGruposFragment(
 
     private fun eventChangeListener() {
         db = FirebaseFirestore.getInstance()
-        snapshot = db.collection("Grupos").whereArrayContains("listaParticipantes",usuarioActual.email.toString())
+        db.collection("Grupos").whereArrayContains("listaParticipantes",usuarioActual.email.toString())
             .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 @SuppressLint("LongLogTag")
                 override fun onEvent(
@@ -184,10 +176,11 @@ public class MisGruposFragment(
                             listaTemporal.removeAt(listaGrupos.indexOf(grupito))
                             grupito.videoIniciado = controlObjeto?.videoIniciado==true
                             listaTemporal.add(grupito)
-                            adapter.notifyDataSetChanged()
+
                         }
                     }
                     listaGrupos = listaTemporal
+                    adapter.notifyDataSetChanged()
                 }
             }
         }
@@ -225,11 +218,12 @@ public class MisGruposFragment(
                                 }
                             }
                             listaGrupos = listaTemporal
+                            adapter.notifyDataSetChanged()
                         }
                     }
                     Log.d("Eventchangelistener lista : ", listaGrupos.toString())
 
-                    adapter.notifyDataSetChanged()
+
                 }
 
             })

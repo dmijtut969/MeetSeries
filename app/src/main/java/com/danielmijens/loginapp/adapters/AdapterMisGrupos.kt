@@ -2,6 +2,7 @@ package com.danielmijens.loginapp.adapters
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,13 @@ class AdapterMisGrupos(
         var grupo : Grupo = listaGrupos[position]
         holder.binding.nombreItemGrupoTextView.text = grupo.nombreGrupo
         holder.binding.contadorPersonasTextView.text = grupo.listaParticipantes?.size.toString() + " participantes"
+        Log.d("grupo.nombreGrupo " ,grupo.nombreGrupo.toString())
+        Log.d("grupo.videoIniciado " ,grupo.videoIniciado.toString())
+        if (grupo.videoIniciado == null || grupo.videoIniciado == false) {
+            holder.binding.videoPlaying.visibility = View.INVISIBLE
+        }else {
+            holder.binding.videoPlaying.visibility = View.VISIBLE
+        }
         GlobalScope.launch(Dispatchers.IO) {
             var uriFotoElegido = Storage.extraerImagenGrupo(grupo.idGrupo)
 
@@ -71,11 +79,7 @@ class AdapterMisGrupos(
 
             true
         }
-        if (grupo.videoIniciado == null || grupo.videoIniciado == false) {
-            holder.binding.videoPlaying.visibility = View.INVISIBLE
-        }else {
-            holder.binding.videoPlaying.visibility = View.VISIBLE
-        }
+
 
     }
 
@@ -85,7 +89,7 @@ class AdapterMisGrupos(
             .setMessage(grupo.nombreGrupo)
             .setPositiveButton(android.R.string.ok,
                 DialogInterface.OnClickListener { dialog, which ->
-                    Consultas.salirseDeGrupo(usuarioActual,grupo)
+                    Consultas.borrarGrupo(usuarioActual,grupo.nombreGrupo.toString())
                     Thread.sleep(1000)
                     misGruposFragment.refrescarRecycler()
                 })

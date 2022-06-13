@@ -210,9 +210,6 @@ class GrupoElegidoFragment(
             controlVideo = Consultas.buscarControlVideoPorID(grupoElegido.idGrupo!!)
             withContext(Dispatchers.Main) {
                 videoYT()
-                if (controlVideo.videoIniciado==true) {
-
-                }
             }
         }
 
@@ -221,7 +218,6 @@ class GrupoElegidoFragment(
         GlobalScope.launch(Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido, usuarioActual, true)
         }
-        videoYT()
         if(grupoElegido.creador!=usuarioActual.email) {
             notificarAlModificarVideo()
         }else {
@@ -238,6 +234,7 @@ class GrupoElegidoFragment(
     override fun onStop() {
         GlobalScope.launch (Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
+            Consultas.actualizarVideoIniciado(controlVideo,false)
         }
         toolbar.visibility = View.VISIBLE
         Log.d("Salgo","Salgo del fragment")
@@ -248,6 +245,9 @@ class GrupoElegidoFragment(
         Log.d("Salgo","Salgo del grupo")
         GlobalScope.launch (Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
+            Consultas.actualizarVideoIniciado(controlVideo,false)
+            controlVideo.videoIniciado = false
+            grupoElegido.videoIniciado = false
         }
         botonAtras.visibility = View.GONE
         toolbar.visibility = View.VISIBLE
@@ -341,7 +341,7 @@ class GrupoElegidoFragment(
                              }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
                                  Log.d("Esta playing Dani"," Playiiiing")
                                  segundos = youtubePlayerTracker.currentSecond
-                                 //Consultas.actualizarSegundos(controlVideo,segundos) //Cuidado DANI
+                                 Consultas.actualizarSegundos(controlVideo,segundos) //Cuidado DANI
                                  Consultas.actualizarVideoIniciado(controlVideo,true)
                              }
                          }
