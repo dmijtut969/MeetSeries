@@ -68,7 +68,7 @@ class GrupoElegidoFragment(
     private lateinit var botonAuxiliar : ImageButton
     private lateinit var botonAtras : ImageButton
     private lateinit var controlVideo : ControlVideo
-    private var segundosActual = 0f
+    private var segundosActual = 1f
 
     lateinit var listener : OnFragmentListener
 
@@ -489,15 +489,14 @@ class GrupoElegidoFragment(
                             if (view?.context != null) Toast.makeText(view?.context,"Ha entrado un usuario",Toast.LENGTH_SHORT).show()
                             Log.d("interaccionUsuario videoIniciado",interaccionVideo.videoIniciado.toString())
                             Log.d("interaccionUsuario videoSegundos",interaccionVideo.videoSegundos.toString())
-                            if (interaccionVideo.videoSegundos!= null && interaccionVideo.videoIniciado!=null) {
-                                //var seg = youtubePlayerTracker.currentSecond
-                                var seg = interaccionVideo.videoSegundos
+                            //if (interaccionVideo.videoSegundos!= null && interaccionVideo.videoIniciado!=null) {
+                                var seg = youtubePlayerTracker.currentSecond
+                                //var seg = interaccionVideo.videoSegundos
                                 GlobalScope.launch (Dispatchers.IO){
                                     Log.d("interaccionUsuario youtubePlayerTracker.currentSecond",youtubePlayerTracker.currentSecond.toString())
                                     Consultas.actualizarSegundos(controlVideo,seg!!)
-
                                 }
-                            }
+                            //}
                         }
                     }
                 }
