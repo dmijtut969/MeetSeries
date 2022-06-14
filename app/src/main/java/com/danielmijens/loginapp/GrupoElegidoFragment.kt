@@ -80,7 +80,6 @@ class GrupoElegidoFragment(
         super.onCreate(savedInstanceState)
         binding = FragmentGrupoElegidoBinding.inflate(layoutInflater)
         controlVideo = ControlVideo()
-
         youTubePlayerView = binding.playerViewGrupo!!
 
         var recyclerView = binding.mensajesRecyclerView
@@ -334,13 +333,13 @@ class GrupoElegidoFragment(
 
                          GlobalScope.launch(Dispatchers.IO) {
                              if (state.equals(PlayerConstants.PlayerState.PAUSED)) {
-                                 Log.d("Se ha pausado Dani"," Pausadoooo")
                                  segundos = youtubePlayerTracker.currentSecond
+                                 Log.d("Se ha pausado Dani"," Pausadoooo " + segundos.toString())
                                  Consultas.actualizarSegundos(controlVideo,segundos)
                                  Consultas.actualizarVideoIniciado(controlVideo,false)
                              }else if (state.equals(PlayerConstants.PlayerState.PLAYING)) {
-                                 Log.d("Esta playing Dani"," Playiiiing")
                                  segundos = youtubePlayerTracker.currentSecond
+                                 Log.d("Esta playing Dani"," Playiiiing " + segundos.toString())
                                  Consultas.actualizarSegundos(controlVideo,segundos) //Cuidado DANI
                                  Consultas.actualizarVideoIniciado(controlVideo,true)
                              }
@@ -354,13 +353,15 @@ class GrupoElegidoFragment(
                  override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
                      super.onCurrentSecond(youTubePlayer, second)
                      if (grupoElegido.creador==usuarioActual.email) {
+
                          var comprobacion =  youtubePlayerTracker.currentSecond-segundosActual
-                         Log.d("Varia comprobacion", comprobacion.toString())
+                         Log.d("Varia comprobacion Dan", comprobacion.toString())
+
                          if (comprobacion < 0 || comprobacion>= 1) {
                              GlobalScope.launch(Dispatchers.IO) {
                                  Consultas.actualizarSegundos(controlVideo,second)
-                                 Log.d("Varia segundosActual", segundosActual.toString())
-                                 Log.d("Varia second", second.toString())
+                                 Log.d("Varia segundosActual Dani", segundosActual.toString())
+                                 Log.d("Varia second Dani", second.toString())
                                  Log.d("Varia current", youtubePlayerTracker.currentSecond.toString())
                              }
                          }

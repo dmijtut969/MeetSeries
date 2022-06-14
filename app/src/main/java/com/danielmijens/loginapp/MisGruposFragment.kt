@@ -56,9 +56,9 @@ public class MisGruposFragment(
     lateinit var listener : OnFragmentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         binding = FragmentMisGruposBinding.inflate(layoutInflater)
-
         var recyclerView = binding.misGruposRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
