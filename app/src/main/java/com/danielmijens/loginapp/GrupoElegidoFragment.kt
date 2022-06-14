@@ -159,7 +159,7 @@ class GrupoElegidoFragment(
                             start()
                         }.doOnEnd {
                             binding.playerViewGrupo?.visibility = View.VISIBLE
-                            ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 90f).apply {
+                            ObjectAnimator.ofFloat(binding.playerViewGrupo, "translationY", 120f).apply {
                                 this.duration = 500
                                 start()
                             }
@@ -181,7 +181,11 @@ class GrupoElegidoFragment(
             }
         }
 
-        binding.buscarYtLink?.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
+        buscarYTQuery()
+    }
+
+    private fun buscarYTQuery() {
+        binding.buscarYtLink?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.buscarYtLink?.clearFocus()
                 var videoSearch = binding.buscarYtLink?.query.toString()
@@ -189,13 +193,18 @@ class GrupoElegidoFragment(
                 Log.d("controlVideo Contiene", controlVideo.toString())
                 if (videoSearch != null && esYT(videoSearch)) {
                     controlVideo.videoElegido = videoSearch
-                    cambiarVideoYT(controlVideo,videoSearch,0f,false)
-                }else {
-                    Toast.makeText(context,"No puede añadir un link vacio o que no sea de YT",Toast.LENGTH_SHORT).show()
+                    cambiarVideoYT(controlVideo, videoSearch, 0f, false)
+                } else {
+                    Toast.makeText(
+                        context,
+                        "No puede añadir un link vacio o que no sea de YT",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
                 videoYT()
                 return true
             }
+
             override fun onQueryTextChange(newText: String): Boolean {
                 return true
             }
@@ -204,6 +213,7 @@ class GrupoElegidoFragment(
 
     @SuppressLint("LongLogTag")
     override fun onStart() {
+        segundosActual = 1f
         super.onStart()
         GlobalScope.launch (Dispatchers.IO) {
             controlVideo = Consultas.buscarControlVideoPorID(grupoElegido.idGrupo!!)
@@ -222,7 +232,9 @@ class GrupoElegidoFragment(
         }else {
             notificarAlEntrar()
         }
-
+        if (binding.playerViewGrupo?.visibility == View.VISIBLE) {
+            toolbar.visibility = View.GONE
+        }
         botonAuxiliar.setBackgroundResource(R.drawable.info_grupo)
         botonAuxiliar.visibility = View.VISIBLE
 
@@ -365,7 +377,7 @@ class GrupoElegidoFragment(
 
                          if (comprobacion < 0 || comprobacion>= 1) {
                              GlobalScope.launch(Dispatchers.IO) {
-                                 Consultas.actualizarSegundos(controlVideo,second)
+                                 Consultas.actualizarSegundos(controlVideo,youtubePlayerTracker.currentSecond)
                                  Log.d("Varia segundosActual Dani", segundosActual.toString())
                                  Log.d("Varia second Dani", second.toString())
                                  Log.d("Varia current", youtubePlayerTracker.currentSecond.toString())

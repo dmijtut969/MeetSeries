@@ -22,7 +22,7 @@
                 android:id="@+id/mensajesRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="40dp"
                 android:visibility="visible"
                 app:layout_constraintBottom_toTopOf="@id/linearLayoutEnviarMensajes"
                 app:layout_constraintStart_toStartOf="@id/linearLayoutEnviarMensajes"
@@ -85,16 +85,11 @@
         <LinearLayout
             android:id="@+id/linearLayoutControles"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:background="#0C3E2A"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/mostrarVideo"
-                android:layout_width="100dp"
-                android:layout_height="30dp"
-                android:src="@mipmap/deslizar_abajo" />
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
 
             <SearchView
                 android:id="@+id/buscarYtLink"
@@ -107,7 +102,14 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:queryHint="Introduce link de yt..."
-                android:visibility="gone" />
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <ImageButton
+                android:id="@+id/mostrarVideo"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:src="@mipmap/deslizar_abajo" />
 
         </LinearLayout>
 
