@@ -233,7 +233,11 @@ class GrupoElegidoFragment(
     override fun onStop() {
         GlobalScope.launch (Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
-            Consultas.actualizarVideoIniciado(controlVideo,false)
+            if (grupoElegido.creador==usuarioActual.email) {
+                Consultas.actualizarVideoIniciado(controlVideo,false)
+                controlVideo.videoIniciado = false
+                grupoElegido.videoIniciado = false
+            }
         }
         toolbar.visibility = View.VISIBLE
         Log.d("Salgo","Salgo del fragment")
@@ -244,9 +248,11 @@ class GrupoElegidoFragment(
         Log.d("Salgo","Salgo del grupo")
         GlobalScope.launch (Dispatchers.IO) {
             Consultas.usuarioOnline(grupoElegido,usuarioActual,false)
-            Consultas.actualizarVideoIniciado(controlVideo,false)
-            controlVideo.videoIniciado = false
-            grupoElegido.videoIniciado = false
+            if (grupoElegido.creador==usuarioActual.email) {
+                Consultas.actualizarVideoIniciado(controlVideo,false)
+                controlVideo.videoIniciado = false
+                grupoElegido.videoIniciado = false
+            }
         }
         botonAtras.visibility = View.GONE
         toolbar.visibility = View.VISIBLE

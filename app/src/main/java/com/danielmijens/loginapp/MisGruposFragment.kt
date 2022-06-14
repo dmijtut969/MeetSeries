@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.adapters.AdapterMisGrupos
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.entidades.ControlVideo
@@ -53,19 +54,20 @@ public class MisGruposFragment(
     private lateinit var db : FirebaseFirestore
     private lateinit var botonAuxiliar : ImageButton
     private lateinit var botonAtras : ImageButton
+    private lateinit var recyclerView : RecyclerView
     lateinit var listener : OnFragmentListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         binding = FragmentMisGruposBinding.inflate(layoutInflater)
-        var recyclerView = binding.misGruposRecyclerView
+        recyclerView = binding.misGruposRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.setHasFixedSize(true)
 
         listaGrupos = arrayListOf()
-        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this,toolbar,drawer)
 
+        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this,toolbar,drawer)
         recyclerView.adapter = adapter
 
         binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
@@ -91,6 +93,11 @@ public class MisGruposFragment(
         })
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
+
+        listaGrupos.clear()
+        eventChangeListener()
+        videoIniciado()
+        videoIniciadoGrupos()
     }
 
     private fun filter(strings: ArrayList<Grupo>, text: String): ArrayList<Grupo> {
@@ -102,14 +109,18 @@ public class MisGruposFragment(
         return filterString
     }
     override fun onStart() {
-        super.onStart()
+        adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this,toolbar,drawer)
+
+        recyclerView.adapter = adapter
+
         adapter.notifyDataSetChanged()
         toolbar.setTitle("Mis Grupos")
         botonAuxiliar.visibility = View.GONE
-        listaGrupos.clear()
+        /*listaGrupos.clear()
         eventChangeListener()
         videoIniciado()
-        videoIniciadoGrupos()
+        videoIniciadoGrupos()*/
+        super.onStart()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -163,6 +174,7 @@ public class MisGruposFragment(
     }
 
     private fun videoIniciado() {
+        Log.d("Dani videoIniciado()", "entro")
         db = FirebaseFirestore.getInstance()
         GlobalScope.launch (Dispatchers.IO){
             withContext(Dispatchers.Main) {
@@ -186,6 +198,7 @@ public class MisGruposFragment(
         }
     }
 
+    @SuppressLint("LongLogTag")
     private fun videoIniciadoGrupos() {
         db = FirebaseFirestore.getInstance()
         db.collection("ControlVideos")
@@ -195,6 +208,7 @@ public class MisGruposFragment(
                     value: QuerySnapshot?,
                     error: FirebaseFirestoreException?
                 ) {
+                    Log.d("Dani videoIniciadoGrupos()", "entro")
                     if (error != null) {
                         Log.e("Firestore Error",error.message.toString())
                         return
@@ -222,10 +236,7 @@ public class MisGruposFragment(
                         }
                     }
                     Log.d("Eventchangelistener lista : ", listaGrupos.toString())
-
-
                 }
-
             })
     }
 
