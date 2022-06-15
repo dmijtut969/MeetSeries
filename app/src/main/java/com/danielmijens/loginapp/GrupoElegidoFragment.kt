@@ -201,7 +201,7 @@ class GrupoElegidoFragment(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                videoYT()
+                //videoYT()
                 return true
             }
 
@@ -426,9 +426,9 @@ class GrupoElegidoFragment(
 
                     }
                 }
-                if (iniciarListener) {
+                /*if (iniciarListener) {
                     videoYT()
-                }
+                }*/
             }
         })
     }

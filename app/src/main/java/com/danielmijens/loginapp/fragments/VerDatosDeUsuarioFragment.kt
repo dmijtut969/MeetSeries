@@ -14,17 +14,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.danielmijens.loginapp.R
-import com.danielmijens.loginapp.UserActivity
 import com.danielmijens.loginapp.databinding.FragmentVerDatosDeUsuarioBinding
 import com.danielmijens.loginapp.entidades.Usuario
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
+import com.google.android.material.navigation.NavigationView
 import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
@@ -43,11 +44,15 @@ private const val ARG_PARAM2 = "param2"
  * Use the [VerDatosDeUsuarioFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
-                                var toolbar: androidx.appcompat.widget.Toolbar) : Fragment() {
+class VerDatosDeUsuarioFragment(
+    val usuarioActual: UsuarioActual,
+    var toolbar: Toolbar,
+    var navigationView: NavigationView
+) : Fragment() {
     // TODO: Rename and change types of parameters
     lateinit var binding : FragmentVerDatosDeUsuarioBinding
     private lateinit var botonAuxiliar : ImageButton
+    private var subidaFoto = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbar.setTitle("Datos de usuario")
@@ -66,6 +71,7 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
             binding.editTextSerieFavorita.setHintTextColor(Color.LTGRAY)
         }else {
             binding.editTextNombreUsuario.setText(usuarioActual.nombreUsuario)
+            botonAuxiliar.isEnabled = true
         }
 
     }
@@ -74,12 +80,11 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
         super.onStart()
         var prefs = traerPrefs()
         botonAuxiliar.setBackgroundResource(R.mipmap.icono_cambiar_perfil)
-
-                Log.d("UsuarioActual ",usuarioActual.toString())
-                if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
-                    Picasso.get().load(usuarioActual.fotoPerfil).into(binding.imageViewFotoPerfil)
-                }else {
-                    Picasso.get().load(R.drawable.add_image).into(binding.imageViewFotoPerfil)
+       Log.d("UsuarioActual ",usuarioActual.toString())
+        if (!usuarioActual.nombreUsuario.isNullOrEmpty() || subidaFoto) {
+            Picasso.get().load(usuarioActual.fotoPerfil).into(binding.imageViewFotoPerfil)
+        }else {
+            Picasso.get().load(R.drawable.add_image).into(binding.imageViewFotoPerfil)
         }
         if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
             var jsonUsuario = prefs?.getString("usuario","")
@@ -88,6 +93,7 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
                 binding.editTextEdad.setText(usuario.edad)
                 binding.editTextSerieFavorita.setText(usuario.serieFav)
             }
+            botonAuxiliar.isEnabled = true
         }
 
     }
@@ -142,29 +148,27 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
                 var serieFav = binding.editTextSerieFavorita.text.toString()
                 var nuevoUsuario = Usuario(usuarioActual.email,usuarioActual.fotoPerfil,nombreUsuarioNuevo,edadUsuario,serieFav)
                 GlobalScope.launch(Dispatchers.IO) {
-                    //if (Consultas.sacarNombreUsuario(nuevoUsuario) != "") {
-                    Consultas.establecerUsuario(nuevoUsuario)
+                    withContext(Dispatchers.Main) {
+                        Consultas.establecerUsuario(nuevoUsuario)
+                        navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav).setText(nombreUsuarioNuevo)
+                        var fotoNav = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
+                        Picasso.get().load(usuarioActual.fotoPerfil)
+                            .into(fotoNav)
+                        showAlert("Usuario definido correctamente","Ya puede moverse por la aplicación")
+                    }
                     var prefs = traerPrefs()
                     var gson = Gson().toJson(nuevoUsuario)
                     prefs?.edit()?.putString("usuario",gson)?.commit()
-                    var intent =  Intent(context, UserActivity::class.java)
-                    startActivity(intent)
-                    activity?.finish()
+
+
                 }
                 usuarioActual.nombreUsuario = nombreUsuarioNuevo
-                /*GlobalScope.launch(Dispatchers.IO) {
-                    Consultas.establecerNombreUsuario(usuarioActual)
-                    withContext(Dispatchers.Main) {
-                        binding.editTextNombreUsuario.isEnabled = false
-                    }
-
-                    //UserActivity().actualizarNavView(usuarioActual)
-                }*/
             }
         }
 
         binding.imageViewFotoPerfil.setOnClickListener {
             if (!usuarioActual.fotoPerfil?.contains("googleusercontent")!!) {
+                if (binding.buttonModificar.visibility == View.VISIBLE) {
                 AlertDialog.Builder(context)
                     .setTitle("Va a cambiar la foto de perfil")
                     .setMessage("¿Esta seguro?")
@@ -176,6 +180,7 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
 
                     })
                     .show()
+                }
             }else {
                 AlertDialog.Builder(context)
                     .setTitle("No puedes cambiar la foto de perfil")
@@ -226,11 +231,11 @@ class VerDatosDeUsuarioFragment(val usuarioActual: UsuarioActual,
 
                 Picasso.get().load(uri).into(binding.imageViewFotoPerfil)
                 usuarioActual.fotoPerfil = uri.toString()
+                subidaFoto = true
                 GlobalScope.launch(Dispatchers.IO) {
                     withContext(Dispatchers.Main) {
                         Storage.subirImagenPerfil(usuarioActual,uri)
                     }
-
                 }
             }
         }

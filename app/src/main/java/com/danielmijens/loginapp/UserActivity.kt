@@ -47,6 +47,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var toggle : ActionBarDrawerToggle
     private lateinit var botonAuxiliar : ImageButton
     private lateinit var botonAtras : ImageButton
+    lateinit var navigationView : NavigationView
     lateinit var usuarioActual : UsuarioActual
     lateinit var toolbar : androidx.appcompat.widget.Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +79,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
 
-        val navigationView : NavigationView= findViewById(R.id.nav_view)
+        navigationView = findViewById(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener(this)
         navigationView.bringToFront()
 
@@ -119,7 +120,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     false
                 }
                 R.id.nav_verDatosUsuario -> {
-                    cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual,toolbar))
+                    cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual,toolbar,navigationView))
                     toolbar.setTitle("Ver Mis Datos")
                     botonAuxiliar.visibility = View.VISIBLE
                     botonAtras.visibility = View.GONE
@@ -160,7 +161,6 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
 
         GlobalScope.launch(Dispatchers.IO) {
-            val navigationView : NavigationView= findViewById(R.id.nav_view)
             var foto = navigationView.getHeaderView(0).findViewById<ImageView>(R.id.imageViewPerfilUsuario)
             usuarioActual.nombreUsuario = Consultas.sacarNombreUsuario(Usuario(usuarioActual.email)).toString()
             var nombreUsu = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)
@@ -185,7 +185,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                 }
             }
             if (!Consultas.comprobarNombreUsuario(usuarioActual)){
-                cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual,toolbar))
+                cambiarFragment(VerDatosDeUsuarioFragment(usuarioActual, toolbar, navigationView))
             }
         }
 
