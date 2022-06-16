@@ -20,7 +20,7 @@ class Consultas() {
     companion object {
         var mFirestore : FirebaseFirestore = FirebaseFirestore.getInstance()
 
-
+        //Funcion en la que permite crear un grupo en Firestore.
         suspend fun  crearGrupo(
             usuarioActual: UsuarioActual,
             nombreGrupo: String,
@@ -34,25 +34,17 @@ class Consultas() {
 
             var nuevoGrupo = Grupo(nombreGrupo,descripcionGrupo,listaParticipantes,creador,idGrupo,fotoGrupo)
             var todoCorrecto = true
-            //GlobalScope.launch(Dispatchers.IO) {
-
-            //}
             var grupoNuevoRef  = mFirestore.collection("Grupos").document(idGrupo)
             grupoNuevoRef.set(nuevoGrupo).addOnCompleteListener { task ->
                 if (task.isCanceled) {
                     todoCorrecto = false
                 }
             }.await()
-            /*grupoNuevoRef.collection("Mensajes").add(Mensaje("Aqui va el emisor", "Bienvenido! Este es un mensaje de prueba",hora)).addOnCompleteListener { task ->
-                if (task.isCanceled) {
-                    todoCorrecto = false
-                }
-            }*/
-
             return todoCorrecto
         }
 
-        suspend fun crearControlVideo(idGrupo: String,creador : String) {
+        //Funcion que crea el control del video en Firestore.
+        suspend fun crearControlVideo(idGrupo: String,creador : String) : Boolean{
             var grupoNuevoRef  = mFirestore.collection("ControlVideos").document(idGrupo)
             var nuevoControlVideo = ControlVideo(idGrupo,creador,"",false,0f)
             var todoCorrecto = true
@@ -61,8 +53,10 @@ class Consultas() {
                     todoCorrecto = false
                 }
             }.await()
+            return todoCorrecto
         }
 
+        //Funcion que permite borrar el grupo de Firestore.
         fun borrarGrupo (usuarioActual: UsuarioActual,
                          nombreGrupo: String) {
             var idGrupo = nombreGrupo + " - " + usuarioActual.email.toString()
@@ -91,6 +85,7 @@ class Consultas() {
                 })
         }
 
+        //Funcion necesaria ya que al borrar un grupo de Firestore, primero ha que borrar los mensajes de dentro.
         fun borrarMensajesDeGrupo(idGrupito: String) {
             mFirestore.collection("Grupos").document(idGrupito)
                 .collection("Mensajes").get().addOnSuccessListener { mensajes ->
@@ -100,6 +95,7 @@ class Consultas() {
             }
         }
 
+        //Funcion para salirse de grupo de Firestore.
         fun salirseDeGrupo (usuarioActual: UsuarioActual,
                          grupoElegido: Grupo) {
             var listaParticipantesNueva = arrayListOf<String>()
@@ -114,6 +110,7 @@ class Consultas() {
             Log.d("Actualizado", "listaparticipantes")
         }
 
+        //Funcion que borra el control del video en Firestore.
         fun borrarControlVideo (idGrupo: String) {
             mFirestore.collection("ControlVideos").whereEqualTo("idGrupo",idGrupo)
                 .addSnapshotListener(object : EventListener<QuerySnapshot> {
@@ -136,15 +133,7 @@ class Consultas() {
                 })
         }
 
-        fun buscarGrupoPorID (idGrupo : String) : Grupo {
-            var grupoBuscado : Grupo = Grupo()
-            val docRef = mFirestore.collection("Grupos").document(idGrupo)
-            docRef.get().addOnSuccessListener { document ->
-                grupoBuscado = document.toObject(Grupo::class.java)!!
-            }
-            return grupoBuscado
-        }
-
+        //Funcion de utilidad para comprobar si el usuario tiene nombre de usuario.
         suspend fun comprobarNombreUsuario(usuario: UsuarioActual) : Boolean {
             var tieneNombreUsuario = false
             val docRef = mFirestore.collection("Usuarios").document(usuario.email.toString())
@@ -156,6 +145,7 @@ class Consultas() {
             return tieneNombreUsuario
         }
 
+        //Funcion que permite unirse a un grupo ya creado en Firestore.
         suspend fun unirseAGrupo(usuarioActual: UsuarioActual, grupoElegido: Grupo) {
             val docRef = mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
             val listaParticipantes = mutableListOf<String>()
@@ -176,6 +166,7 @@ class Consultas() {
 
         }
 
+        //Funcion de utilidad que comprueba si ya existe el grupo con esa id.
         suspend fun existeGrupoPorID (idGrupo : String) : Boolean {
             var existe : Boolean = false
             val docRef = mFirestore.collection("Grupos").document(idGrupo)
@@ -189,21 +180,21 @@ class Consultas() {
             return existe
         }
 
+        //Funcion para enviar mensaje al grupo en el que se esta.
         suspend fun enviarMensajeAGrupo(mensajeEnviado : String, grupoElegido : Grupo, usuarioEmisor : UsuarioActual) {
-            var formato = SimpleDateFormat("HH:mm:ss")
-            var hora = formato.format(Date())
             var horaField = Date()
-
             var mensajeAEnviar = Mensaje(usuarioEmisor.email,mensajeEnviado, horaField,usuarioEmisor.nombreUsuario)
             mFirestore.collection("Grupos").document(grupoElegido.idGrupo.toString())
                 .collection("Mensajes").add(mensajeAEnviar).await()
             Log.d("Enviarmensaje ", "Se ha enviado el mensaje : " + mensajeEnviado)
         }
 
+        //Funcion para establecer el nuevo usuario en Firestore.
         suspend fun establecerUsuario(usuario: Usuario) {
             mFirestore.collection("Usuarios").document(usuario.email.toString()).set(usuario).await()
         }
 
+        //Funcion de utilidad para traer el nombre de usuario del usuario actual.
         suspend fun sacarNombreUsuario(usuarioActual: Usuario): String? {
             var nombreUsuario = ""
             mFirestore.collection("Usuarios").document(usuarioActual.email.toString()).get().addOnSuccessListener { grupo ->
@@ -215,6 +206,7 @@ class Consultas() {
             return nombreUsuario
         }
 
+        //Funcion de utilidad para traer atraves del email de usuario, el usuario en concreto.
         suspend fun sacarUsuario(emailUsuario: String): Usuario? {
             var usuarioEncontrado = Usuario()
             mFirestore.collection("Usuarios").document(emailUsuario).get().addOnSuccessListener { user ->
@@ -226,21 +218,14 @@ class Consultas() {
             return usuarioEncontrado
         }
 
-        suspend fun extraerFotoGoogle (emailUsuario: String) : String {
-            var urlFotoGoogle = ""
-            mFirestore.collection("Usuarios").document(emailUsuario).get().addOnSuccessListener { user ->
-                var usuario = user.toObject(Usuario::class.java)
-                urlFotoGoogle = usuario?.fotoPerfil.toString()
-            }
-            return urlFotoGoogle
-        }
-
+        //Funcion para actualizar en nuevo video elegido en el control de video.
         suspend fun actualizarVideoElegido(control: ControlVideo,nuevoVideoElegido : String) {
             var modificarRef = mFirestore.collection("ControlVideos").document(control.idGrupo.toString())
             modificarRef.update("videoElegido",nuevoVideoElegido).await()
 
         }
 
+        //Funcion para actualizar si el video esta inicido en el control de video.
         suspend fun actualizarVideoIniciado(control: ControlVideo,
                                             videoIniciado: Boolean) {
             var modificarRef = mFirestore.collection("ControlVideos").document(control.idGrupo.toString())
@@ -252,11 +237,13 @@ class Consultas() {
             Log.d("videoIniciado control " , videoIniciado.toString())
         }
 
+        //Funcion para actualizar los segundos del video en el control de video.
         suspend fun actualizarSegundos(control: ControlVideo, seg: Float) {
             var modificarRef = mFirestore.collection("ControlVideos").document(control.idGrupo.toString())
             modificarRef.update("videoSegundos",seg).await()
         }
 
+        //Funcion que detecta cuando el usuario entra en un grupo o sale, para actualizar si esta online o no.
         suspend fun usuarioOnline(grupoElegido: Grupo,
                                             usuario : UsuarioActual,
                                             online: Boolean) {
@@ -284,6 +271,7 @@ class Consultas() {
             }
         }
 
+        //Funcion de utilizar para buscar el control de video por ID.
         suspend fun buscarControlVideoPorID (idGrupo : String) : ControlVideo {
             var controlVideoBuscado : ControlVideo = ControlVideo()
             val docRef = mFirestore.collection("ControlVideos").document(idGrupo)

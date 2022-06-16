@@ -17,11 +17,6 @@ import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.UsuarioActual
 import com.google.firebase.firestore.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
 class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var valorABuscar: String ?= null) : Fragment() {
 
     private lateinit var binding : FragmentBusquedaBinding
@@ -41,7 +36,7 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
 
         recyclerView.adapter = adapter
 
-
+        //Listener para el searchView.
         binding.searchViewMisGrupos.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchViewMisGrupos.clearFocus()
@@ -86,6 +81,7 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
         return binding.root
     }
 
+    //Filtro para poder hacer la busqueda en el searchView.
     private fun filter(strings: ArrayList<Grupo>, text: String): ArrayList<Grupo> {
         var filterString = ArrayList<Grupo>()
 
@@ -103,6 +99,7 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
         return filterString
     }
 
+    //Listener para detectar si se crean nuevos grupos mientras se busca.
     private fun eventChangeListener(campo : String,valorABuscar: String) {
         db = FirebaseFirestore.getInstance()
         db.collection("Grupos").whereEqualTo(campo,valorABuscar)
@@ -132,6 +129,8 @@ class BusquedaFragment(var usuarioActual: UsuarioActual, var campo: String, var 
 
             })
     }
+
+    //Por si no se busca un parametro en concreto.
     private fun eventChangeListenerTodos() {
         listaGruposBusqueda.clear()
         db = FirebaseFirestore.getInstance()

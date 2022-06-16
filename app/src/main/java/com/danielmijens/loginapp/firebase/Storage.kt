@@ -15,6 +15,7 @@ abstract class Storage {
     companion object {
         val storage : FirebaseStorage = Firebase.storage
 
+        //Funcion para extraer la imagen de perfil de Firebase Storage.
         suspend fun extraerImagenPerfil(email: String) : Uri {
             var uri : Uri = Uri.EMPTY
             try {
@@ -25,6 +26,7 @@ abstract class Storage {
             return uri
         }
 
+        //Funcion para subir la imagen de perfil a Firebase Storage.
         suspend fun subirImagenPerfil(usuarioActual: UsuarioActual, imagen: Uri)  {
 
             val uploadTask = storage.reference.child("fotoPerfil/" + usuarioActual.email).putFile(imagen)
@@ -35,6 +37,7 @@ abstract class Storage {
             }.await()
         }
 
+        //Funcion para extraer la imagen de grupo de Firebase Storage.
         suspend fun extraerImagenGrupo(idGrupo: String?) : Uri {
             var uri : Uri = Uri.EMPTY
             try {
@@ -48,6 +51,8 @@ abstract class Storage {
             return uri
         }
 
+
+        //Funcion para subir la imagen de grupo a Firebase Storage.
         suspend fun subirImagenGrupo(idGrupo: String, imagen: Uri)  {
             Log.d("idGrupo: ",idGrupo)
             val uploadTask = storage.reference.child("fotoGrupo/" + idGrupo).putFile(imagen)
@@ -56,10 +61,6 @@ abstract class Storage {
             }.addOnSuccessListener { taskSnapshot ->
                 Log.d("Ha ido todo bien: ","Se ha subido la imagen de grupo")
             }.await()
-        }
-
-        suspend fun elegirVideo(usuarioActual: UsuarioActual) : Uri {
-            return storage.reference.child("videos/prueba_video.mp4").downloadUrl.await()
         }
 
     }

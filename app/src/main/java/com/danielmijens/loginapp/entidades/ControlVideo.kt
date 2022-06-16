@@ -1,10 +1,8 @@
 package com.danielmijens.loginapp.entidades
 
-import androidx.collection.arraySetOf
 import java.io.Serializable
 
-data class ControlVideo(//val nombreGrupo : String ?= null,
-                        //val listaParticipantes : List<String> ?= null,
+data class ControlVideo(
     val idGrupo : String ?= null,
     val creador : String ?= null,
     var videoElegido : String ?= null,

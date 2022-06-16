@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.danielmijens.loginapp.MisGruposFragment
-import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.databinding.ItemGrupoBinding
@@ -34,11 +33,9 @@ class AdapterMisGrupos(
     class AdapterMisGruposViewHolder (val binding: ItemGrupoBinding) : RecyclerView.ViewHolder(binding.root) {
 
     }
-    private lateinit var listener : OnFragmentListener
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterMisGruposViewHolder {
         val binding = ItemGrupoBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-
         return AdapterMisGruposViewHolder(binding)
     }
 
@@ -48,11 +45,15 @@ class AdapterMisGrupos(
         holder.binding.contadorPersonasTextView.text = grupo.listaParticipantes?.size.toString() + " participantes"
         Log.d("grupo.nombreGrupo " ,grupo.nombreGrupo.toString())
         Log.d("grupo.videoIniciado " ,grupo.videoIniciado.toString())
+
+        //Con este condicional controlamos que se muestre si el video esta iniciado o no
         if (grupo.videoIniciado == null || grupo.videoIniciado == false) {
             holder.binding.videoPlaying.visibility = View.INVISIBLE
         }else {
             holder.binding.videoPlaying.visibility = View.VISIBLE
         }
+
+        //Lanzamos una corutina para que vaya trayendo las fotos de los grupos.
         GlobalScope.launch(Dispatchers.IO) {
             var uriFotoElegido = Storage.extraerImagenGrupo(grupo.idGrupo)
 
@@ -65,24 +66,26 @@ class AdapterMisGrupos(
                 }
 
         }
+
+        //Al elegir un grupo nos mandara a su pestaña.
         holder.binding.itemGrupoLinearLayout.setOnClickListener() {
             misGruposFragment.listener.onElegirGrupoClick(usuarioActual,grupo,toolbar)
             drawer?.findViewById<View>(R.id.nav_logOut)?.visibility = View.GONE
             true
         }
+
+        //Si el usuario mantiene pulsado, si es el creador podra borrar el grupo, y si es un usuario corriente podra salirse.
         holder.binding.itemGrupoLinearLayout.setOnLongClickListener {
             if (usuarioActual.email==grupo.creador) {
                 borrarGrupoDialog(grupo)
             }else {
                 salirseDeGrupo(grupo)
             }
-
             true
         }
-
-
     }
 
+    //Funcion para borrar el grupo elegido.
     fun borrarGrupoDialog(grupo: Grupo) {
         AlertDialog.Builder(misGruposFragment.context)
             .setTitle("¿Quiere borrar el siguiente grupo?")
@@ -100,6 +103,7 @@ class AdapterMisGrupos(
             .show()
     }
 
+    //Funcion para salirse del grupo elegido.
     fun salirseDeGrupo(grupo: Grupo) {
         AlertDialog.Builder(misGruposFragment.context)
             .setTitle("¿Quiere salir del siguiente grupo?")
@@ -121,6 +125,7 @@ class AdapterMisGrupos(
         return listaGrupos.size
     }
 
+    //Utilidad para el filtro del searchView.
     fun setFilter(filterString: ArrayList<Grupo>) {
         listaGrupos = filterString
         notifyDataSetChanged()

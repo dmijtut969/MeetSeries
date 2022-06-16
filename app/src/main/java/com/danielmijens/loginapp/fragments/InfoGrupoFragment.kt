@@ -19,7 +19,6 @@ import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.Usuario
 import com.danielmijens.loginapp.firebase.Consultas
 import com.danielmijens.loginapp.firebase.Storage
-import com.google.firebase.firestore.*
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -28,18 +27,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [InfoGrupoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragment() {
-    // TODO: Rename and change types of parameters
     private lateinit var binding : FragmentInfoGrupoBinding
     private var listaUsuarios = mutableListOf<Usuario>()
     private lateinit var  adapter : AdapterInfoGrupo
@@ -54,14 +42,11 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
         linearLayout.stackFromEnd = false
         linearLayout.reverseLayout = false
         recyclerView.layoutManager = linearLayout
-        //recyclerView.setHasFixedSize(true)
-
-        //listaUsuarios = arrayListOf<Usuario>()
-        //listaUsuarios.add(Usuario("paquito","dadad","dani"))
         adapter = AdapterInfoGrupo(binding, listaUsuarios,this,toolbar)
 
         recyclerView.adapter = adapter
-        leerMensajesListener(recyclerView)
+        listaParticipantesListener(recyclerView)
+
         GlobalScope.launch(Dispatchers.IO) {
             var uriFotoElegido = Storage.extraerImagenGrupo(grupoElegido.idGrupo)
             withContext(Dispatchers.Main) {
@@ -90,6 +75,7 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
                 return true
             }
         })
+
         binding.textViewInfoNombreGrupo.setText(grupoElegido.nombreGrupo)
         if (!grupoElegido.descripcionGrupo.isNullOrEmpty() || grupoElegido.descripcionGrupo!!.trim() != "") {
             binding.editTextDescripcion.setText(grupoElegido.descripcionGrupo)
@@ -97,8 +83,6 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
             binding.linearLayoutDescripcion.visibility = View.GONE
         }
 
-
-        toolbar.setTitle("")
         var botonAuxiliar = toolbar.findViewById<ImageButton>(R.id.botonAuxiliar)
         botonAuxiliar.visibility = View.GONE
 
@@ -117,8 +101,9 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
         super.onViewCreated(view, savedInstanceState)
     }
 
+    //Listener para los participantes del grupo.
     @SuppressLint("NotifyDataSetChanged")
-    fun leerMensajesListener(recyclerView: RecyclerView) {
+    fun listaParticipantesListener(recyclerView: RecyclerView) {
         for (emailUsuario in grupoElegido.listaParticipantes!!) {
             GlobalScope.launch(Dispatchers.IO) {
                 var usuarioAdd = Consultas.sacarUsuario(emailUsuario)
@@ -132,6 +117,7 @@ class InfoGrupoFragment(var grupoElegido: Grupo, var toolbar: Toolbar) : Fragmen
         }
     }
 
+    //Filtro para el searchView de listaparticipantes.
     private fun filter(usuarios: MutableList<Usuario>, text: String): ArrayList<Usuario> {
         var filterString = ArrayList<Usuario>()
         var buscado = text.uppercase(Locale.getDefault())

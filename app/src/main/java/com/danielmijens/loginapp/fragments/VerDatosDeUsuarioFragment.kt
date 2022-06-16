@@ -33,26 +33,15 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [VerDatosDeUsuarioFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class VerDatosDeUsuarioFragment(
     val usuarioActual: UsuarioActual,
     var toolbar: Toolbar,
     var navigationView: NavigationView
 ) : Fragment() {
-    // TODO: Rename and change types of parameters
     lateinit var binding : FragmentVerDatosDeUsuarioBinding
     private lateinit var botonAuxiliar : ImageButton
     private var subidaFoto = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         toolbar.setTitle("Datos de usuario")
@@ -81,11 +70,13 @@ class VerDatosDeUsuarioFragment(
         var prefs = traerPrefs()
         botonAuxiliar.setBackgroundResource(R.mipmap.icono_cambiar_perfil)
        Log.d("UsuarioActual ",usuarioActual.toString())
+
         if (!usuarioActual.nombreUsuario.isNullOrEmpty() || subidaFoto) {
             Picasso.get().load(usuarioActual.fotoPerfil).into(binding.imageViewFotoPerfil)
         }else {
             Picasso.get().load(R.drawable.add_image).into(binding.imageViewFotoPerfil)
         }
+
         if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
             var jsonUsuario = prefs?.getString("usuario","")
             if (!jsonUsuario.isNullOrEmpty()) {
@@ -175,7 +166,6 @@ class VerDatosDeUsuarioFragment(
                     .setPositiveButton(android.R.string.ok) { dialog, which ->
                         openFile(Uri.parse(""))
                     }
-
                     .setNegativeButton(android.R.string.cancel,  {dialog, which ->
 
                     })
@@ -188,12 +178,11 @@ class VerDatosDeUsuarioFragment(
                     .setPositiveButton(android.R.string.ok) { dialog, which ->
                     }.show()
             }
-
             true
         }
     }
 
-
+    //Funcion de utilidad para crear alertas.
     fun showAlert(title: String, message: String) {
         AlertDialog.Builder(context)
             .setTitle(title)
@@ -204,8 +193,7 @@ class VerDatosDeUsuarioFragment(
             .show()
     }
 
-
-
+    //Funcion que abre el intent para pickear una foto de perfil.
     fun openFile(pickerInitialUri: Uri) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -219,6 +207,7 @@ class VerDatosDeUsuarioFragment(
         startActivityForResult(intent, 1)
     }
 
+    //Funcion que recibe la foto de perfil elegida y la procesa.
     override fun onActivityResult(
         requestCode: Int, resultCode: Int, resultData: Intent?) {
         Log.d("onActivityResult  ",  "He entrado con " + requestCode +" y "+ resultCode)
@@ -241,6 +230,7 @@ class VerDatosDeUsuarioFragment(
         }
     }
 
+    //Funcion que trae las sharedPreferences para su uso.
     fun traerPrefs(): SharedPreferences?{
         val prefs = activity?.getSharedPreferences(
             getString(R.string.prefs_file),

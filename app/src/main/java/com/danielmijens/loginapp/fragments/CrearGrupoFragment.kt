@@ -17,7 +17,6 @@ import android.widget.ImageButton
 import androidx.appcompat.widget.Toolbar
 import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.R
-import com.danielmijens.loginapp.UserActivity
 import com.danielmijens.loginapp.databinding.ActivityUserBinding
 import com.danielmijens.loginapp.databinding.FragmentCrearGrupoBinding
 import com.danielmijens.loginapp.entidades.Grupo
@@ -30,23 +29,12 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CrearGrupoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CrearGrupoFragment(var usuarioActual: UsuarioActual, var toolbar: Toolbar) : Fragment() {
 
     private lateinit var binding : FragmentCrearGrupoBinding
     private lateinit var bindingActivity : ActivityUserBinding
     private lateinit var listener : OnFragmentListener
     private lateinit var uriFotoGrupo : Uri
-    private var userActivity = UserActivity()
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -78,6 +66,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual, var toolbar: Toolbar)
         }
     }
 
+    //Funcion para hacer comprobaciones previas al crear el grupo.
     private fun comprobarGrupo() {
         var nuevoNombreGrupo = binding.editTextNombreGrupo.text.toString()
         var nuevaDescripcionGrupo = binding.editTextDescripcionGrupo.text.toString()
@@ -109,6 +98,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual, var toolbar: Toolbar)
         }
     }
 
+    //Funcion para hacer alertas.
     fun showAlert(titulo : String, mensaje : String) {
         AlertDialog.Builder(this.context)
             .setTitle(titulo)
@@ -119,6 +109,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual, var toolbar: Toolbar)
                 }).show()
     }
 
+    //Funcion que empieza el intent para pickear una foto de grupo.
     fun openFile(pickerInitialUri: Uri) {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -132,6 +123,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual, var toolbar: Toolbar)
         startActivityForResult(intent, 2)
     }
 
+    //Recoje la foto elegida para su procesado.
     override fun onActivityResult(
         requestCode: Int, resultCode: Int, resultData: Intent?) {
         Log.d("onActivityResult  ",  "He entrado con " + requestCode +" y "+ resultCode)
@@ -147,6 +139,7 @@ class CrearGrupoFragment(var usuarioActual: UsuarioActual, var toolbar: Toolbar)
         }
     }
 
+    //Crea una corutina para subir la imagen elegida a Firestore Storage.
     fun subirImagen(idGrupo : String) {
         GlobalScope.launch(Dispatchers.IO) {
             withContext(Dispatchers.Main) {

@@ -1,12 +1,8 @@
 package com.danielmijens.loginapp.adapters
 
-import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.DialogInterface
-import android.graphics.Color
-import android.text.Layout
 import android.text.format.DateUtils
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -19,13 +15,8 @@ import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding
 import com.danielmijens.loginapp.databinding.ItemMensajeBinding
-import com.danielmijens.loginapp.entidades.Grupo
 import com.danielmijens.loginapp.entidades.Mensaje
 import com.danielmijens.loginapp.entidades.UsuarioActual
-import com.danielmijens.loginapp.firebase.Consultas
-import com.danielmijens.loginapp.firebase.Storage
-import com.squareup.picasso.Picasso
-import kotlinx.coroutines.*
 
 class AdapterGrupoElegido(
     var binding: FragmentGrupoElegidoBinding
@@ -57,11 +48,15 @@ class AdapterGrupoElegido(
             holder.binding.textViewNombreUsuario.visibility = View.VISIBLE
             holder.binding.linearLayoutMensajito.setBackgroundResource( R.drawable.mensaje_fondo)
         }
+
+        //Si el usuario no tiene nombre, se le pondra el email
         if (mensajeRecibido.nombreUsuarioEmisor.isNullOrEmpty()) {
             holder.binding.textViewNombreUsuario.text = mensajeRecibido.emisor
         }else {
             holder.binding.textViewNombreUsuario.text = mensajeRecibido.nombreUsuarioEmisor
         }
+
+        //Controlamos la hora del mensaje
         holder.binding.mensajeTextView.text = mensajeRecibido.mensaje
         var fecha = mensajeRecibido.hora.toString()
         DateUtils.isToday(mensajeRecibido.hora!!.time)
@@ -70,6 +65,8 @@ class AdapterGrupoElegido(
             hora = "Hoy - " + hora
         }
         holder.binding.fechaMensaje.text = hora
+
+        //Listener para visualizar la hora del mensaje
         holder.binding.linearLayoutTotal.setOnClickListener {
             if (holder.binding.fechaMensaje.visibility == View.GONE) {
                 holder.binding.fechaMensaje.visibility = View.VISIBLE
@@ -82,6 +79,8 @@ class AdapterGrupoElegido(
                 holder.binding.fechaMensaje.visibility = View.GONE
             }
         }
+
+        //Listener para copiar al portapapeles el mensaje al mantener pulsado
         holder.binding.linearLayoutTotal.setOnLongClickListener {
             var portapapeles = misGruposFragment.context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip: ClipData = ClipData.newPlainText("mensajeElegido", mensajeRecibido.mensaje)
