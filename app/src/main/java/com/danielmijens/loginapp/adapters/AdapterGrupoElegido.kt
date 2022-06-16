@@ -1,6 +1,9 @@
 package com.danielmijens.loginapp.adapters
 
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.text.Layout
@@ -70,7 +73,7 @@ class AdapterGrupoElegido(
         holder.binding.linearLayoutTotal.setOnClickListener {
             if (holder.binding.fechaMensaje.visibility == View.GONE) {
                 holder.binding.fechaMensaje.visibility = View.VISIBLE
-               if (usuarioActual.email==mensajeRecibido.emisor) {
+                if (usuarioActual.email==mensajeRecibido.emisor) {
                     holder.binding.mensajeTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_END
                 }else {
                     holder.binding.mensajeTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
@@ -78,6 +81,13 @@ class AdapterGrupoElegido(
             }else {
                 holder.binding.fechaMensaje.visibility = View.GONE
             }
+        }
+        holder.binding.linearLayoutTotal.setOnLongClickListener {
+            var portapapeles = misGruposFragment.context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip: ClipData = ClipData.newPlainText("mensajeElegido", mensajeRecibido.mensaje)
+            portapapeles.setPrimaryClip(clip)
+            Toast.makeText(misGruposFragment.context,"Mensaje copiado",Toast.LENGTH_SHORT).show()
+            true
         }
     }
 

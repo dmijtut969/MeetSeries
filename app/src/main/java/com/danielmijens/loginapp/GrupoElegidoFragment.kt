@@ -201,7 +201,7 @@ class GrupoElegidoFragment(
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                //videoYT()
+                videoYT()
                 return true
             }
 
@@ -370,13 +370,14 @@ class GrupoElegidoFragment(
                  @SuppressLint("LongLogTag")
                  override fun onCurrentSecond(youTubePlayer: YouTubePlayer, second: Float) {
                      super.onCurrentSecond(youTubePlayer, second)
-                     if (grupoElegido.creador==usuarioActual.email) {
+                     GlobalScope.launch(Dispatchers.IO) {
+                         if (grupoElegido.creador==usuarioActual.email) {
 
                          var comprobacion =  youtubePlayerTracker.currentSecond-segundosActual
                          Log.d("Varia comprobacion Dan", comprobacion.toString())
 
                          if (comprobacion < 0 || comprobacion>= 1) {
-                             GlobalScope.launch(Dispatchers.IO) {
+
                                  Consultas.actualizarSegundos(controlVideo,youtubePlayerTracker.currentSecond)
                                  Log.d("Varia segundosActual Dani", segundosActual.toString())
                                  Log.d("Varia second Dani", second.toString())
