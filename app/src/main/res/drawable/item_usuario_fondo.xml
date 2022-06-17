@@ -2,11 +2,11 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
     <item >
         <shape android:shape="rectangle"  >
-            <corners android:radius="25dp" />
+            <corners android:radius="10dp" />
             <stroke android:width="1dip" android:color="#ffffff" />
-            <solid android:color="#b6d4bf" />
+            <solid android:color="#008858" />
             <margin android:top="5dp"
-                android:bottom="5dp"
+                android:bottom="10dp"
                 android:left="15dp"
                 android:right="15dp"></margin>
         </shape>

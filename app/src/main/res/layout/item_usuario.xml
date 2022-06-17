@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="75dp"
     android:layout_marginTop="1dp"
-    android:background="@drawable/item_usuario_fondo">
+    android:background="@drawable/item_usuario_fondo"
+    android:padding="3dp">
 
     <com.mikhaellopez.circularimageview.CircularImageView
         android:id="@+id/fotoUsuariomageView"
@@ -30,7 +31,7 @@
             android:layout_weight="1"
             android:gravity="center"
             android:text="TextView"
-            android:textColor="@color/white"
+            android:textColor="#FFFFFF"
             android:textSize="24sp" />
 
     </LinearLayout>
