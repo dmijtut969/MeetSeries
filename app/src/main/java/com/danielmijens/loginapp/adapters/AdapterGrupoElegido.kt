@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.danielmijens.loginapp.GrupoElegidoFragment
+import com.danielmijens.loginapp.fragments.GrupoElegidoFragment
 import com.danielmijens.loginapp.OnFragmentListener
 import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.databinding.FragmentGrupoElegidoBinding

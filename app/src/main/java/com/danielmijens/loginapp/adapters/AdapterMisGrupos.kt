@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
-import com.danielmijens.loginapp.MisGruposFragment
+import com.danielmijens.loginapp.fragments.MisGruposFragment
 import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.databinding.ItemGrupoBinding

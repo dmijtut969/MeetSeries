@@ -62,13 +62,15 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(binding.root)
         drawer = findViewById(R.id.drawer_layout)
         toolbar = findViewById(R.id.toolbar_main)
-        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,MisGruposFragment(
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentContainerView,
+            MisGruposFragment(
             usuarioActual,
             toolbar,
             drawer
-        )).commit()
-        //Utilidades de navegacion
+        )
+        ).commit()
 
+        //Utilidades de navegacion
         toolbar.setTitle("Mis Grupos")
         toolbar.setTitleTextColor(Color.WHITE)
         setSupportActionBar(toolbar)
@@ -85,7 +87,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
-        //botonAuxiliar.visibility = View.GONE
+
         navigationView.setNavigationItemSelectedListener {
             var permitirMovimiento = 0
             if (!usuarioActual.nombreUsuario.isNullOrEmpty() || it.itemId == R.id.nav_logOut || it.itemId == R.id.nav_verDatosUsuario) {
@@ -157,6 +159,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
         }
         //Termino utilidades de navegacion
+
         bindingNavHeader.emailUsuarioNav.text = usuarioActual.email.toString()
 
 
@@ -190,12 +193,12 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         //Guardado de datos
-
         val prefs = traerPrefs().edit()
         prefs?.putString("emailUsuarioActual", usuarioActual.email)
         prefs?.apply()
     }
 
+    //Funcion que trae las sharedPreferences para su uso
     fun traerPrefs(): SharedPreferences{
         val prefs = getSharedPreferences(
             getString(R.string.prefs_file),
@@ -204,6 +207,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return prefs
     }
 
+    //Funcion que hace el logout del usuario.
     private fun logOut() {
         val prefs = getSharedPreferences(
             getString(R.string.prefs_file),
@@ -219,6 +223,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return false
     }
 
+    //Funcion de utilidad para cambiar los fragments elegidos.
     fun cambiarFragment(fragmentNuevo : Fragment) = supportFragmentManager.beginTransaction().apply {
         replace(R.id.fragmentContainerView,fragmentNuevo).addToBackStack(fragmentNuevo.tag).commit()
     }
@@ -226,9 +231,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
         toggle.syncState()
-
     }
 
+    //Funcion para sobreescribir la pulsacion para atras de Android
     override fun onBackPressed() {
         if (!usuarioActual.nombreUsuario.isNullOrEmpty()) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -255,9 +260,9 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             makeAlert("No tiene permisos para moverse por la app","Debe ingresar un nombre de usuario y una foto de perfil")
         }
     }
+
     override fun onStart() {
         super.onStart()
-
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -304,6 +309,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         cambiarFragment(InfoGrupoFragment(grupoElegido,toolbar))
     }
 
+    //Funcion para crear alertas.
     fun showDialogAlert(usuarioActual: UsuarioActual) {
         AlertDialog.Builder(application)
             .setTitle("Tiene que elegir un nombre de usuario : ")
@@ -319,6 +325,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .show()
     }
 
+    //Funcion para crear alertas.
     fun makeAlert(titulo : String, mensaje : String) {
         AlertDialog.Builder(binding.root.context)
             .setTitle(titulo)
@@ -329,9 +336,7 @@ class UserActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             .show()
     }
 
-    fun cerrarSesionAtrasAlert(titulo : String, mensaje : String) {
-
-    }
+    //Funcion actualizar el nav View.
     suspend fun actualizarNavView(usuarioActual: UsuarioActual) {
         val navigationView : NavigationView= findViewById(R.id.nav_view)
         var nombreUsu = navigationView.getHeaderView(0).findViewById<TextView>(R.id.emailUsuarioNav)

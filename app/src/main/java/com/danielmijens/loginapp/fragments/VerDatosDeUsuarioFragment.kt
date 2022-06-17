@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.danielmijens.loginapp.R
@@ -124,6 +125,15 @@ class VerDatosDeUsuarioFragment(
         binding.buttonModificar.setOnClickListener {
             var nombreUsuarioNuevo = binding.editTextNombreUsuario.text.toString().trim()
 
+            var edadUsuario = binding.editTextEdad.text.toString()
+            var edadFormato = true
+            var serieFav = binding.editTextSerieFavorita.text.toString()
+            try {
+                val num = Integer.parseInt(edadUsuario)
+            } catch (e: NumberFormatException) {
+                edadFormato = false
+            }
+
             if (nombreUsuarioNuevo.contains(" ")||nombreUsuarioNuevo.isBlank()) {
                 showAlert(
                     "El nombre de usuario no puede contener espacios o vacio",
@@ -134,9 +144,10 @@ class VerDatosDeUsuarioFragment(
                     "La imagen esta por defecto o esta vacia",
                     "Cambie la foto de usuario",
                 )
+            }else if (!edadFormato) {
+                Toast.makeText(context,"La edad tiene que ser un numero entero",Toast.LENGTH_SHORT).show()
             }else {
-                var edadUsuario = binding.editTextEdad.text.toString()
-                var serieFav = binding.editTextSerieFavorita.text.toString()
+
                 var nuevoUsuario = Usuario(usuarioActual.email,usuarioActual.fotoPerfil,nombreUsuarioNuevo,edadUsuario,serieFav)
                 GlobalScope.launch(Dispatchers.IO) {
                     withContext(Dispatchers.Main) {

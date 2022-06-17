@@ -6,11 +6,11 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.danielmijens.loginapp.databinding.ActivityAuthBinding
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.danielmijens.loginapp.entidades.UsuarioActual
@@ -37,33 +37,27 @@ class AuthActivity : AppCompatActivity() {
         videoView.setOnPreparedListener { it.isLooping = true}
         mAuth = FirebaseAuth.getInstance()
 
-
-
         buttonListeners()
         session()
-
-
     }
 
-
+    //Listener de los botones y campos
     private fun buttonListeners() {
-
         val editTextEmail = binding.editTextEmail
         val editTextPass= binding.editTextTextPassword
-
         binding.btnRegistrarse.setOnClickListener {
             if (!editTextEmail.text.isNullOrEmpty() && !editTextPass.text.isNullOrEmpty()) {
                 if (editTextPass.text.length >= 6) {
                     registrarUsuario()
                 } else {
-                    Snackbar.make(
-                        binding.root,
+                    Toast.makeText(
+                        applicationContext,
                         "El password tiene que ser de mas de 6 caracteres",
-                        Snackbar.LENGTH_SHORT
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             } else {
-                Snackbar.make(binding.root, "Algun campo esta sin rellenar", Snackbar.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "Algun campo esta sin rellenar", Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -73,14 +67,13 @@ class AuthActivity : AppCompatActivity() {
                 if (editTextPass.text.length >= 6) {
                     signInUsuario()
                 } else {
-                    Snackbar.make(
-                        binding.root,
+                    Toast.makeText(applicationContext,
                         "El password tiene que ser de mas de 6 caracteres",
-                        Snackbar.LENGTH_SHORT
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             } else {
-                Snackbar.make(binding.root, "Algun campo esta sin rellenar", Snackbar.LENGTH_SHORT)
+                Toast.makeText(applicationContext, "Algun campo esta sin rellenar", Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -104,6 +97,7 @@ class AuthActivity : AppCompatActivity() {
 
     }
 
+    //Funcion que detecta el inicio de sesión de Google
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == GOOGLE_SIGN_IN) {
@@ -119,12 +113,12 @@ class AuthActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             irAUserActivity(account.email ?: "")
                         }else {
-                            Snackbar.make(binding.root, "No se ha podido iniciar sesion", Snackbar.LENGTH_SHORT).show()
+                            Toast.makeText(applicationContext, "No se ha podido iniciar sesion", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             }catch (e : ApiException) {
-                Snackbar.make(binding.root, "No se ha podido iniciar sesion, ha salido una excepcion", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "No se ha podido iniciar sesion, ha salido una excepcion", Toast.LENGTH_SHORT).show()
             }
 
 
@@ -132,12 +126,15 @@ class AuthActivity : AppCompatActivity() {
 
 
     }
+
     override fun onStart() {
         super.onStart()
         binding.constraintLayoutAuth?.visibility = View.VISIBLE
         binding.videoViewBackground.start()
 
     }
+
+    //Si la sesion estaba iniciada, saltara al UserActivity
     private fun session() {
         val prefs = getSharedPreferences(getString(R.string.prefs_file),
             Context.MODE_PRIVATE)
@@ -148,18 +145,21 @@ class AuthActivity : AppCompatActivity() {
         }
     }
 
+    //Funcion para registrar el usuario en Firebase Authentication
     private fun registrarUsuario() {
         mAuth.createUserWithEmailAndPassword(binding.editTextEmail.text.toString(),
             binding.editTextTextPassword.text.toString()
         ).addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                Snackbar.make(binding.root, "Se ha registrado el usuario", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "Se ha registrado el usuario", Toast.LENGTH_SHORT).show()
+                signInUsuario()
             }else{
-                Snackbar.make(binding.root, "No se ha podido registrar el usuario", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "No se ha podido registrar el usuario", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    //Funcion para iniciar sesion del usuario en Firebase Authentication
     private fun signInUsuario() {
         mAuth.signInWithEmailAndPassword(binding.editTextEmail.text.toString(),
             binding.editTextTextPassword.text.toString()
@@ -167,16 +167,17 @@ class AuthActivity : AppCompatActivity() {
             if (task.isSuccessful) {
                 irAUserActivity(binding.editTextEmail.text.toString())
             }else {
-                Snackbar.make(binding.root, "No se ha podido iniciar sesion", Snackbar.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "No se ha podido iniciar sesion", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    //Funcion para ir al UserActivity
     private fun irAUserActivity(email : String) {
         val usuarioActual = UsuarioActual(email, "","")
         val intent = Intent(this, UserActivity::class.java)
         intent.putExtra("usuario", usuarioActual)
         startActivity(intent)
-        Snackbar.make(binding.root, "Se ha iniciado sesion", Snackbar.LENGTH_SHORT).show()
+        Toast.makeText(applicationContext, "Se ha iniciado sesion", Toast.LENGTH_SHORT).show()
     }
 }

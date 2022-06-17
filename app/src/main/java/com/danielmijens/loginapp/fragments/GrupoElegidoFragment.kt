@@ -1,8 +1,7 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.fragments
 
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
@@ -29,10 +28,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import android.widget.SearchView
 import androidx.annotation.NonNull
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.WindowInsetsControllerCompat
-import androidx.viewpager2.widget.ViewPager2
+import com.danielmijens.loginapp.OnFragmentListener
+import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.entidades.ControlVideo
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -41,23 +38,12 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.You
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.utils.YouTubePlayerTracker
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [GrupoElegidoFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class GrupoElegidoFragment(
     var usuarioActual: UsuarioActual,
     val grupoElegido: Grupo,
     var toolbar: androidx.appcompat.widget.Toolbar
 ) : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private lateinit var binding : FragmentGrupoElegidoBinding
     private lateinit var adapter : AdapterGrupoElegido
     private var listaMensajes = mutableListOf<Mensaje>()
@@ -71,10 +57,6 @@ class GrupoElegidoFragment(
     private var segundosActual = 1f
 
     lateinit var listener : OnFragmentListener
-
-    // default position of image
-    private var xDelta = 0
-    private var yDelta = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,9 +90,6 @@ class GrupoElegidoFragment(
         botonAuxiliar = toolbar.rootView.findViewById<ImageButton>(R.id.botonAuxiliar)
         botonAtras = toolbar.rootView.findViewById<ImageButton>(R.id.botonAtras)
 
-
-        //Para mover el videoview
-        //binding.constraintLayoutVideo?.setOnTouchListener(onTouchListener())
     }
 
 
@@ -123,6 +102,7 @@ class GrupoElegidoFragment(
         }else {
             binding.buscarYtLink?.visibility  = View.GONE
         }
+
         binding.imageButton.setOnClickListener {
                 var mensajeNuevo = binding.editTextMensajeNuevo.text.trim().toString()
                 GlobalScope.launch(Dispatchers.IO) {
@@ -134,6 +114,7 @@ class GrupoElegidoFragment(
                     }
                 }
         }
+
         toolbar.setTitle(grupoElegido.nombreGrupo)
 
         botonAuxiliar.setOnClickListener {
@@ -143,6 +124,7 @@ class GrupoElegidoFragment(
         botonAtras.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
         binding.mostrarVideo?.setOnClickListener {
             if (binding.buscarYtLink?.query != null) {
                 if (binding.playerViewGrupo?.visibility == View.GONE) {
@@ -184,6 +166,7 @@ class GrupoElegidoFragment(
         buscarYTQuery()
     }
 
+    //Funcion para buscar el link de YT elegido.
     private fun buscarYTQuery() {
         binding.buscarYtLink?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -279,6 +262,7 @@ class GrupoElegidoFragment(
         return binding.root
     }
 
+    //Listener de los mensajes, para que cuando se envie uno se actualize el Recycler.
     @SuppressLint("NotifyDataSetChanged")
     fun leerMensajesListener(recyclerView: RecyclerView) {
         listaMensajes.clear()
@@ -311,6 +295,7 @@ class GrupoElegidoFragment(
         }
     }
 
+    //Funcion que realiza todas las actualizaciones al control de video al iniciar, pausar y mover los segundos.
      fun videoYT() {
          if (controlVideo.videoElegido != null && esYT(controlVideo.videoElegido!!)) {
              youtubePlayerTracker = YouTubePlayerTracker()
@@ -389,15 +374,11 @@ class GrupoElegidoFragment(
                  }
              })
              youTubePlayerView.addYouTubePlayerListener(youtubePlayerTracker)
-
          }
     }
 
+    //Funcion que se lanza al cambiar un video de YT, para mayor control.
     fun cambiarVideoYT (controlVideoCambiar: ControlVideo, urlVideoYT: String, segundos: Float?, iniciado: Boolean?) {
-        var iniciarListener = false
-        if (!controlVideoCambiar.videoElegido.isNullOrEmpty()) {
-            iniciarListener = true
-        }
         youTubePlayerView.getYouTubePlayerWhenReady(object : YouTubePlayerCallback {
             override fun onYouTubePlayer(youTubePlayer: YouTubePlayer) {
                 val url = sacarUrlYT(urlVideoYT)
@@ -427,13 +408,11 @@ class GrupoElegidoFragment(
 
                     }
                 }
-                /*if (iniciarListener) {
-                    videoYT()
-                }*/
             }
         })
     }
 
+    //Para poder sacar la URL del video que se utilizara en el PlayerView.
     fun sacarUrlYT (url : String): Array<String> {
         var urlReturn = emptyArray<String>()
         if (url.contains("youtube.com/watch?v=")) {
@@ -444,6 +423,7 @@ class GrupoElegidoFragment(
         return urlReturn
     }
 
+    //Comprobaciones si el enlace es de YT.
     fun esYT(url: String): Boolean {
         var urlCorrecta = false
         if (url.contains("youtube.com/watch?v=")) {
@@ -454,6 +434,7 @@ class GrupoElegidoFragment(
         return urlCorrecta
     }
 
+    //Listener que detecta cuando el creador ha modificado el video elegido,iniciado o segundos.
     @SuppressLint("NotifyDataSetChanged")
     fun notificarAlModificarVideo() {
         youtubePlayerTracker = YouTubePlayerTracker()
@@ -485,6 +466,7 @@ class GrupoElegidoFragment(
             })
     }
 
+    //Listener que notifica al creador del grupo si ha entrado un usuario a la sala.
     @SuppressLint("NotifyDataSetChanged")
     fun notificarAlEntrar() {
         youtubePlayerTracker = YouTubePlayerTracker()
@@ -516,6 +498,7 @@ class GrupoElegidoFragment(
             })
     }
 
+    //Funcion para manegar el boton de fullscreen de el playerview.
     fun youtubeFullscreen() {
         youTubePlayerView.getPlayerUiController().setFullScreenButtonClickListener(View.OnClickListener {
             if (youTubePlayerView.isFullScreen()) {
@@ -553,12 +536,14 @@ class GrupoElegidoFragment(
         })
     }
 
+    //Funcion que oculta la barra de arriba de android.
     private fun hideSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity!!.window.insetsController?.hide(WindowInsets.Type.statusBars())
         }
     }
 
+    //Funcion que muestra la barra de arriba de android.
     private fun showSystemUI() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             activity!!.window.insetsController?.show(WindowInsets.Type.statusBars())

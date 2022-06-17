@@ -1,4 +1,4 @@
-package com.danielmijens.loginapp
+package com.danielmijens.loginapp.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,6 +15,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.danielmijens.loginapp.OnFragmentListener
+import com.danielmijens.loginapp.R
 import com.danielmijens.loginapp.adapters.AdapterMisGrupos
 import com.danielmijens.loginapp.databinding.FragmentMisGruposBinding
 import com.danielmijens.loginapp.entidades.ControlVideo
@@ -30,19 +32,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [MisGruposFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-
-
-public class MisGruposFragment(
+class MisGruposFragment(
     var usuarioActual: UsuarioActual,
     var toolbar: Toolbar,
     var drawer: DrawerLayout ?= null
@@ -100,6 +90,7 @@ public class MisGruposFragment(
         videoIniciadoGrupos()
     }
 
+    //Filtro para el searchView de MisGrupos.
     private fun filter(strings: ArrayList<Grupo>, text: String): ArrayList<Grupo> {
         var filterString = ArrayList<Grupo>()
         var buscado = text.uppercase(Locale.getDefault())
@@ -108,6 +99,7 @@ public class MisGruposFragment(
         }
         return filterString
     }
+
     override fun onStart() {
         adapter = AdapterMisGrupos(binding,listaGrupos,usuarioActual,this,toolbar,drawer)
 
@@ -116,10 +108,6 @@ public class MisGruposFragment(
         adapter.notifyDataSetChanged()
         toolbar.setTitle("Mis Grupos")
         botonAuxiliar.visibility = View.GONE
-        /*listaGrupos.clear()
-        eventChangeListener()
-        videoIniciado()
-        videoIniciadoGrupos()*/
         super.onStart()
     }
 
@@ -143,6 +131,7 @@ public class MisGruposFragment(
         return binding.root
     }
 
+    //Evento que detecta cuando se actualizan los grupos.
     private fun eventChangeListener() {
         db = FirebaseFirestore.getInstance()
         db.collection("Grupos").whereArrayContains("listaParticipantes",usuarioActual.email.toString())
@@ -173,6 +162,7 @@ public class MisGruposFragment(
             })
     }
 
+    //Listener que detecta cuando en un grupo el video esta Iniciado.
     private fun videoIniciado() {
         Log.d("Dani videoIniciado()", "entro")
         db = FirebaseFirestore.getInstance()
@@ -198,6 +188,7 @@ public class MisGruposFragment(
         }
     }
 
+    //Listener que detecta al entrar y actualiza si el video ya estaba iniciado.
     @SuppressLint("LongLogTag")
     private fun videoIniciadoGrupos() {
         db = FirebaseFirestore.getInstance()
@@ -247,6 +238,7 @@ public class MisGruposFragment(
         }
     }
 
+    //Funcion que actualiza el recycler.
     fun refrescarRecycler() {
         listener.actualizarRecyclerMisGrupos()
     }
